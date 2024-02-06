@@ -19,6 +19,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private bool _isMove = false;
 
+    private float _radius = 0f;
+
     [SerializeField]
     private Vector2 _maxCameraPosition = default;
     [SerializeField]
@@ -38,6 +40,9 @@ public class Player : MonoBehaviour
 	{
         _maxCameraPosition = Camera.main.ViewportToWorldPoint(Vector3.one);
         _minCameraPosition = Camera.main.ViewportToWorldPoint(Vector3.zero);
+
+        // 円形のため、半径の取得にはスケールｘの値で行い、yにも使う
+        _radius = transform.localScale.x / 2;
         EnhancedTouchSupport.Enable();
     }
 
@@ -60,7 +65,6 @@ public class Player : MonoBehaviour
 	{
         if (Touch.activeTouches.Count >= 1)
         {
-
             Touch active = Touch.activeTouches[0];
 
             // 指がふれたとき
@@ -73,20 +77,24 @@ public class Player : MonoBehaviour
             if (active.phase == TouchPhase.Moved)
             {
                 _isMove = true;
-                _cursorPositionDistance = active.screenPosition - active.startScreenPosition;
+                _cursorPositionDistance = Camera.main.ScreenToWorldPoint(active.screenPosition) - Camera.main.ScreenToWorldPoint(active.startScreenPosition);
             }
 
             // 指が離れているとき
             if (active.phase == TouchPhase.Ended)
             {
                 _isMove = false;
-                _startObjectPosition = active.screenPosition;
+                //_startObjectPosition = Camera.main.ScreenToWorldPoint(active.screenPosition);
             }
         }
     }
 
+    /// <summary>
+    /// プレイヤーが画面外に行くのを防ぐ
+    /// </summary>
     private void InStage()
     {
+        // プレイヤーが画面内にいるなら処理を飛ばす
         if ((this.transform.position.y <= _maxCameraPosition.y) && (this.transform.position.y >= _minCameraPosition.y) &&
             (this.transform.position.x <= _maxCameraPosition.x) && (this.transform.position.x >= _minCameraPosition.x))
         {
