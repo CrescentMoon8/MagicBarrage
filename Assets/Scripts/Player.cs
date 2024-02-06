@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private bool _isMove = false;
 
-    private float _radius = 0f;
+    private Vector3 _radius = Vector3.zero;
 
     [SerializeField]
     private Vector2 _maxCameraPosition = default;
@@ -38,11 +38,12 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Awake()
 	{
-        _maxCameraPosition = Camera.main.ViewportToWorldPoint(Vector3.one);
-        _minCameraPosition = Camera.main.ViewportToWorldPoint(Vector3.zero);
-
         // 円形のため、半径の取得にはスケールｘの値で行い、yにも使う
-        _radius = transform.localScale.x / 2;
+        _radius = transform.localScale / 2;
+
+        _maxCameraPosition = Camera.main.ViewportToWorldPoint(Vector3.one) - _radius;
+        _minCameraPosition = Camera.main.ViewportToWorldPoint(Vector3.zero) + _radius;
+        
         EnhancedTouchSupport.Enable();
     }
 
@@ -84,7 +85,6 @@ public class Player : MonoBehaviour
             if (active.phase == TouchPhase.Ended)
             {
                 _isMove = false;
-                //_startObjectPosition = Camera.main.ScreenToWorldPoint(active.screenPosition);
             }
         }
     }
@@ -101,12 +101,12 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if (this.transform.position.y >= _maxCameraPosition.y)
+        if ((this.transform.position.y) >= _maxCameraPosition.y)
         {
             this.transform.position = new Vector2(this.transform.position.x, _maxCameraPosition.y);
         }
 
-        if (this.transform.position.y <= _minCameraPosition.y)
+        if ((this.transform.position.y) <= _minCameraPosition.y)
         {
             this.transform.position = new Vector2(this.transform.position.x, _minCameraPosition.y);
         }
