@@ -5,6 +5,7 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 using TouchPhase = UnityEngine.InputSystem.TouchPhase;
@@ -19,17 +20,32 @@ public class Player : MonoBehaviour
     [SerializeField]
     private bool _isMove = false;
 
-    private Vector3 _radius = Vector3.zero;
+    private bool _isShot = false;
+    private float _shotTime = 0f;
+    private const float SHOT_INTERVAL = 0.1f;
+    private Vector3 _shotPosition = Vector3.zero;
+    private const float SHOT_POSITION_DIFFERENCE_Y = 0.75f;
 
     [SerializeField]
-    private Vector2 _maxCameraPosition = default;
+    private Vector3 _radius = Vector3.zero;
+    private const int MAX_MOVE_POSITION_INDEX = 3;
+    private const int MIN_MOVE_POSITION_INDEX = 1;
     [SerializeField]
-    private Vector2 _minCameraPosition = default;
+    private Vector2 _maxMovePosition = default;
+    [SerializeField]
+    private Vector2 _minMovePosition = default;
+
+    [SerializeField]
+    private RectTransform _header;
+    [SerializeField]
+    private RectTransform _footer;
+
+    private BulletPool _bulletPool;
 
     #endregion
 
     #region プロパティ
-
+    public Vector3 PlayerPos { get { return this.transform.position; } }
     #endregion
 
     #region メソッド
@@ -38,18 +54,27 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Awake()
 	{
-        // 円形のため、半径の取得にはスケールｘの値で行い、yにも使う
-        _radius = transform.localScale / 2;
+        _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
+        // 半径を取得する
+        _radius = transform.GetChild(0).localScale / 2;
 
-        _maxCameraPosition = Camera.main.ViewportToWorldPoint(Vector3.one) - _radius;
-        _minCameraPosition = Camera.main.ViewportToWorldPoint(Vector3.zero) + _radius;
-        
+        // UIオブジェクトの頂点の座標を取得し、移動制限の大きさを調整する
+        // 座標の取得順は左下、左上、右上、右下
+        Vector3[] headerCorners = new Vector3[4];
+        _header.GetWorldCorners(headerCorners);
+        _maxMovePosition = headerCorners[MAX_MOVE_POSITION_INDEX] - _radius;
+
+        Vector3[] footerCorners = new Vector3[4];
+        _footer.GetWorldCorners(footerCorners);
+        _minMovePosition = footerCorners[MIN_MOVE_POSITION_INDEX] + _radius;
+
         EnhancedTouchSupport.Enable();
     }
 
     private void Update()
     {
-        PlayerMove();
+        _shotTime += Time.deltaTime;
+        PlayerInput();
     }
 
     private void FixedUpdate()
@@ -60,13 +85,28 @@ public class Player : MonoBehaviour
 
             InStage();
         }
+
+        if(_isShot)
+        {
+            if(_shotTime >= SHOT_INTERVAL)
+            {
+                _shotPosition = this.transform.position;
+                _shotPosition.y += SHOT_POSITION_DIFFERENCE_Y;
+
+                _bulletPool.LendPlayerBullet(_shotPosition);
+
+                _shotTime = 0;
+            }
+        }
     }
 
-    private void PlayerMove()
+    private void PlayerInput()
 	{
         if (Touch.activeTouches.Count >= 1)
         {
             Touch active = Touch.activeTouches[0];
+
+            _isShot = true;
 
             // 指がふれたとき
             if (active.phase == TouchPhase.Began)
@@ -87,6 +127,10 @@ public class Player : MonoBehaviour
                 _isMove = false;
             }
         }
+        else
+        {
+            _isShot = false;
+        }
     }
 
     /// <summary>
@@ -95,30 +139,30 @@ public class Player : MonoBehaviour
     private void InStage()
     {
         // プレイヤーが画面内にいるなら処理を飛ばす
-        if ((this.transform.position.y <= _maxCameraPosition.y) && (this.transform.position.y >= _minCameraPosition.y) &&
-            (this.transform.position.x <= _maxCameraPosition.x) && (this.transform.position.x >= _minCameraPosition.x))
+        if ((this.transform.position.y <= _maxMovePosition.y) && (this.transform.position.y >= _minMovePosition.y) &&
+            (this.transform.position.x <= _maxMovePosition.x) && (this.transform.position.x >= _minMovePosition.x))
         {
             return;
         }
 
-        if ((this.transform.position.y) >= _maxCameraPosition.y)
+        if ((this.transform.position.y) >= _maxMovePosition.y)
         {
-            this.transform.position = new Vector2(this.transform.position.x, _maxCameraPosition.y);
+            this.transform.position = new Vector2(this.transform.position.x, _maxMovePosition.y);
         }
 
-        if ((this.transform.position.y) <= _minCameraPosition.y)
+        if ((this.transform.position.y) <= _minMovePosition.y)
         {
-            this.transform.position = new Vector2(this.transform.position.x, _minCameraPosition.y);
+            this.transform.position = new Vector2(this.transform.position.x, _minMovePosition.y);
         }
 
-        if (this.transform.position.x >= _maxCameraPosition.x)
+        if (this.transform.position.x >= _maxMovePosition.x)
         {
-            this.transform.position = new Vector2(_maxCameraPosition.x, this.transform.position.y);
+            this.transform.position = new Vector2(_maxMovePosition.x, this.transform.position.y);
         }
 
-        if (this.transform.position.x <= _minCameraPosition.x)
+        if (this.transform.position.x <= _minMovePosition.x)
         {
-            this.transform.position = new Vector2(_minCameraPosition.x, this.transform.position.y);
+            this.transform.position = new Vector2(_minMovePosition.x, this.transform.position.y);
         }
     }
     #endregion

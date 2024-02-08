@@ -12,11 +12,10 @@ using System.Collections;
 public class EnemyBase : MonoBehaviour
 {
 	#region 変数
-	protected const int ENEMY_HP = 100;
+	[SerializeField]
 	protected Slider _hpSlider = default;
 	protected int _hpValue = 0;
 
-	private 
 	protected Vector3[] _movePattern = default;
 
 	#endregion
@@ -48,6 +47,26 @@ public class EnemyBase : MonoBehaviour
 	private void Update ()
 	{
 		
+	}
+
+	protected void EnemyDamage()
+	{
+		if(_hpValue > 0)
+		{
+			_hpValue -= 1;
+			_hpSlider.value = _hpValue;
+		}
+
+		if(_hpValue <= 0)
+		{
+			EnemyDead();
+			_hpSlider.gameObject.SetActive(false);
+		}
+	}
+
+	private void EnemyDead()
+	{
+		this.gameObject.SetActive(false);
 	}
 	#endregion
 }

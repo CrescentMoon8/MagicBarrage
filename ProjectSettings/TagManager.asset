@@ -4,8 +4,13 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - PlayerBullets
-  - EnemyBullets
+  - PlayerBulletPool
+  - EnemyBulletPool
+  - PlayerBullet
+  - EnemyBullet
+  - Scripts
+  - ReturnPool
+  - Enemy
   layers:
   - Default
   - TransparentFX
