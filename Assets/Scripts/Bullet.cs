@@ -32,6 +32,7 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private MoveType _moveType = MoveType.Line;
 
+    private GameObject _playerObject;
     private Vector3 _playerPos = Vector3.zero;
 
     private int _bulletNumber = 0;
@@ -60,6 +61,7 @@ public class Bullet : MonoBehaviour
 	/// </summary>
 	private void Start ()
 	{
+        _playerObject = GameObject.FindWithTag("Player");
 		_bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
 	}
 
@@ -92,14 +94,13 @@ public class Bullet : MonoBehaviour
                         transform.Translate(Vector3.up / 15);
                         break;
                     case MoveType.Tracking:
-                        //座標計算、相対的にどれぐらい離れているか
+                        _playerPos = _playerObject.transform.position;
+                        // 座標計算、相対的にどれぐらい離れているか
                         Vector3 direction = _playerPos - this.transform.position;
-                        Debug.Log(direction);
-                        //LookRotationで相対距離から角度を求める…この値を直接Rotateに入れるとLookAtと同じ軌道になる
-                        Quaternion targetRotation = Quaternion.LookRotation(direction);
-                        Debug.Log(targetRotation);
+                        // LookRotationではうまく回転できなかった
+                        Quaternion targetRotation = Quaternion.FromToRotation(Vector3.up, direction);
                         //（現在角度、目標方向、どれぐらい曲がるか）
-                        transform.rotation = Quaternion.RotateTowards(this.transform.rotation, targetRotation, 50.0f);
+                        transform.rotation = Quaternion.RotateTowards(this.transform.rotation, targetRotation, 1f);
                         transform.Translate(Vector3.up / 15);
                         break;
                     case MoveType.Curve:

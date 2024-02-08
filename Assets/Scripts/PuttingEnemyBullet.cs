@@ -1,21 +1,20 @@
 // ---------------------------------------------------------
-// EnemyShot.cs
+// PuttingEnemyBullet.cs
 //
 // 作成日:2024/02/06
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
 
-public class EnemyShot : EnemyBase
+public class PuttingEnemyBullet
 {
     #region 変数
-    // 指定されたスケールの半径
-    protected float _radius = 0f;
+    private BulletPool _bulletPool = default;
 
-	protected GameObject _player = default;
-	protected Vector3 _playerPos = Vector3.zero;
-
-	protected BulletPool _bulletPool = default;
+    public PuttingEnemyBullet(BulletPool bulletPool)
+	{
+		_bulletPool = bulletPool;
+	}
 	#endregion
 
 	#region プロパティ
@@ -28,13 +27,13 @@ public class EnemyShot : EnemyBase
 	/// </summary>
 	private void Awake()
 	{
-		_radius = this.transform.localScale.x / 2;
+		
     }
 
 	/// <summary>
 	/// 弾を指定された方向に直線で撃ち出す
 	/// </summary>
-    protected void LineShot(Vector3 shooterPos, Vector3 direction)
+    private void LineShot(Vector3 shooterPos, Vector3 direction)
     {
         
     }
@@ -50,13 +49,14 @@ public class EnemyShot : EnemyBase
     /// <param name="direction">中心角をどのくらい回転させるか</param>
     /// <param name="bulletNumber">弾の種類</param>
     /// <param name="moveType">弾の軌道</param>
-    protected void RoundShot(Vector3 shooterPos, int maxAngle, int angleSplit, int direction, int bulletNumber, Bullet.MoveType moveType)
+    public void RoundShot(Vector3 shooterPos, int maxAngle, int angleSplit, int direction, float radius, int bulletNumber, Bullet.MoveType moveType)
 	{
+		Debug.Log(shooterPos);
         for (int i = 0; i < angleSplit; i++)
         {
 			// 0の位置がUnity上の-90にあたるため、
 			// 例えば弾の進行方向を下向きにするためにdirectionに180を入れたら最初の位置を下にするのにdirectionの半分の90を使用する
-            Vector3 bulletPos = CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i - direction / 2);
+            Vector3 bulletPos = CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i - direction / 2, radius);
 
 			Bullet bullet = _bulletPool.LendEnemyBullet(bulletPos, bulletNumber);
 
@@ -70,7 +70,7 @@ public class EnemyShot : EnemyBase
 	/// エネミーからプレイヤーへの角度を計算する
 	/// </summary>
 	/// <returns></returns>
-	/*protected Vector3 AngleFromEnemyCalculate()
+	/*private Vector3 AngleFromEnemyCalculate()
 	{
 		Vector3 playerDirection 
 	}*/
@@ -81,12 +81,12 @@ public class EnemyShot : EnemyBase
 	/// <param name="ShooterPos">射手の座標</param>
 	/// <param name="angle">中心角</param>
 	/// <returns>円周上の座標</returns>
-	protected Vector3 CirclePosCalculate(Vector3 ShooterPos, float angle)
+	private Vector3 CirclePosCalculate(Vector3 shooterPos, float angle, float radius)
 	{
-		Vector3 circlePos = Vector3.zero;
+		Vector3 circlePos = shooterPos;
 
-		circlePos.x = Mathf.Cos(angle * Mathf.Deg2Rad) * _radius;
-		circlePos.y = Mathf.Sin(angle * Mathf.Deg2Rad) * _radius;
+		circlePos.x += Mathf.Cos(angle * Mathf.Deg2Rad) * radius;
+		circlePos.y += Mathf.Sin(angle * Mathf.Deg2Rad) * radius;
 
 		// ラジアンに変換しなかったら、よくわからん挙動した（参考：スクリーンショットフォルダ）
         /*circlePosition.x = Mathf.Cos(angle) * radius;

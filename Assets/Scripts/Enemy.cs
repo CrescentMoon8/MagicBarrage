@@ -6,7 +6,7 @@
 // ---------------------------------------------------------
 using UnityEngine;
 
-public class Enemy : EnemyShot
+public class Enemy : EnemyBase
 {
 	#region 変数
 	private const string PLAYER_BULLET_TAG = "PlayerBullet";
@@ -18,9 +18,11 @@ public class Enemy : EnemyShot
 	// 最大角度を何分割するか
 	private int _angleSplit = 9;
 	// 初弾の位置調整用の変数
-	private int _direction = 315;
+	private int _direction = 225;
+    // 自分のオブジェクトの半径
+    private float _radius = 0f;
 
-	private float _shotTime = 0f;
+    private float _shotTime = 0f;
 	private const float SHOT_INTERVAL = 2f;
 
 	[SerializeField]
@@ -37,7 +39,7 @@ public class Enemy : EnemyShot
 	/// </summary>
 	private void Awake()
 	{
-        base._bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
+        
     }
 
 	/// <summary>
@@ -48,6 +50,8 @@ public class Enemy : EnemyShot
 		base._hpSlider.maxValue = ENEMY_HP;
 		base._hpSlider.value = ENEMY_HP;
 		base._hpValue = ENEMY_HP;
+
+		_radius = this.transform.localScale.x / 2;
 
 		base._player = GameObject.FindWithTag("Player");
 		base._playerPos = _player.transform.position;
@@ -66,24 +70,25 @@ public class Enemy : EnemyShot
 	{
 		_shotTime += Time.deltaTime;
 
-		base._playerPos = base._player.transform.position;
+		//base._playerPos = base._player.transform.position;
 
 		if( _shotTime > SHOT_INTERVAL )
 		{
-			// 三方向に扇形の弾を撃つ
+            /*// 三方向に扇形の弾を撃つ
 			for (int i = 0; i < 3; i++)
 			{
-				base.RoundShot(this.transform.position, _maxAngle, _angleSplit, _direction, 0, Bullet.MoveType.Tracking);
+				base.RoundShot(this.transform.position, _maxAngle, _angleSplit, _direction, 0, Bullet.MoveType.Line);
 				_direction -= 90;
-			}
-			//base.RoundShot(this.transform.position, _maxAngle, _angleSplit, _direction, _radius, 0);
-			/*base.LineShot()*/
-			_shotTime = 0f;
-			_direction = 315;
+			}*/
+            base._puttingEnemyBullet.RoundShot(this.transform.position, _maxAngle, _angleSplit, _direction, _radius, 0, Bullet.MoveType.Line);
+			//Debug.Log(this.transform.position);
+            /*base.LineShot()*/
+            _shotTime = 0f;
+			//_direction = 315;
 		}
 	}
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected override void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag(PLAYER_BULLET_TAG))
 		{
