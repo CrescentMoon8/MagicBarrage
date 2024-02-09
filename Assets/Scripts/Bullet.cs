@@ -76,7 +76,7 @@ public class Bullet : MonoBehaviour
                 switch (_moveType)
                 {
                     case MoveType.Line:
-                        transform.Translate(Vector3.up / 2);
+                        transform.Translate(Vector3.up / 3);
                         break;
                     case MoveType.Tracking:
                         break;

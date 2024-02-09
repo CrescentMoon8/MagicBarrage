@@ -13,6 +13,7 @@ public class PuttingEnemyBullet
 
     public PuttingEnemyBullet(BulletPool bulletPool)
 	{
+		Debug.Log("コンストラクト");
 		_bulletPool = bulletPool;
 	}
 	#endregion
@@ -22,14 +23,6 @@ public class PuttingEnemyBullet
 	#endregion
 
 	#region メソッド
-	/// <summary>
-	/// 初期化処理
-	/// </summary>
-	private void Awake()
-	{
-		
-    }
-
 	/// <summary>
 	/// 弾を指定された方向に直線で撃ち出す
 	/// </summary>
@@ -42,11 +35,13 @@ public class PuttingEnemyBullet
     /// <summary>
     /// 弾を円形に撃ち出す
     /// 撃つ範囲を引数で設定する
+	/// 例：maxAngle = 90, angleSplit = 9, direction = 180の場合は下向きの中心角が90度の扇形の弧を9分割する
     /// </summary>
     /// <param name="shooterPos">射手の座標</param>
     /// <param name="maxAngle">中心角の大きさ</param>
     /// <param name="angleSplit">maxAngleを何分割するか</param>
     /// <param name="direction">中心角をどのくらい回転させるか</param>
+	/// <param name="radius">配置したい円の半径</param>
     /// <param name="bulletNumber">弾の種類</param>
     /// <param name="moveType">弾の軌道</param>
     public void RoundShot(Vector3 shooterPos, int maxAngle, int angleSplit, int direction, float radius, int bulletNumber, Bullet.MoveType moveType)
@@ -66,22 +61,24 @@ public class PuttingEnemyBullet
         }
     }
 
-	/// <summary>
-	/// エネミーからプレイヤーへの角度を計算する
-	/// </summary>
-	/// <returns></returns>
-	/*private Vector3 AngleFromEnemyCalculate()
-	{
-		Vector3 playerDirection 
-	}*/
+    /// <summary>
+    /// エネミーからプレイヤーへの角度を計算する
+    /// </summary>
+    /// <returns></returns>
+    private Vector3 AngleFromEnemyCalculate(Vector3 playerPos, Vector3 shooterPos)
+    {
+        // Vector3 direction = Mathf.Atan2(playerPos, shooterPos);
+        // エラー回避用の適当設定　後で変更
+        return playerPos;
+    }
 
-	/// <summary>
-	/// 与えられた角度を使って、半径radiusの円の円周上の座標を返す
-	/// </summary>
-	/// <param name="ShooterPos">射手の座標</param>
-	/// <param name="angle">中心角</param>
-	/// <returns>円周上の座標</returns>
-	private Vector3 CirclePosCalculate(Vector3 shooterPos, float angle, float radius)
+    /// <summary>
+    /// 与えられた角度を使って、半径radiusの円の円周上の座標を返す
+    /// </summary>
+    /// <param name="ShooterPos">射手の座標</param>
+    /// <param name="angle">中心角</param>
+    /// <returns>円周上の座標</returns>
+    private Vector3 CirclePosCalculate(Vector3 shooterPos, float angle, float radius)
 	{
 		Vector3 circlePos = shooterPos;
 

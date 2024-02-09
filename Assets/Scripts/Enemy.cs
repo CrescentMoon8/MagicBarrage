@@ -5,13 +5,21 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
+using UnityEngine.Splines;
 
 public class Enemy : EnemyBase
 {
 	#region 変数
-	private const string PLAYER_BULLET_TAG = "PlayerBullet";
-
 	private const int ENEMY_HP = 20;
+
+	[SerializeField]
+	private SplineContainer _splineContainer = default;
+
+	private float _moveTime = 0;
+	private float _firstEnemyPosX = 0;
+	private float _firstEnemyPosY = 0;
+	private float _firstBezierPosX = 0;
+	private float _firstBezierPosY = 0;
 
 	// 角度の最大
 	private int _maxAngle = 90;
@@ -35,14 +43,6 @@ public class Enemy : EnemyBase
 
 	#region メソッド
 	/// <summary>
-	/// 初期化処理
-	/// </summary>
-	private void Awake()
-	{
-        
-    }
-
-	/// <summary>
 	/// 更新前処理
 	/// </summary>
 	private void Start ()
@@ -53,8 +53,21 @@ public class Enemy : EnemyBase
 
 		_radius = this.transform.localScale.x / 2;
 
-		base._player = GameObject.FindWithTag("Player");
-		base._playerPos = _player.transform.position;
+		_firstEnemyPosX = this.transform.position.x;
+		_firstEnemyPosY = this.transform.position.y;
+
+		_splineContainer = GameObject.Find("Spline").GetComponent<SplineContainer>();
+		_firstBezierPosX = _splineContainer.Splines[0].EvaluatePosition(0).x;
+		_firstBezierPosY = _splineContainer.Splines[0].EvaluatePosition(0).y;
+
+		
+
+		// _splineContainer.Splines[0].EvaluatePosition(0) → Spline0の始点の座標
+		// _splineContainer.Splines[1].EvaluatePosition(0) → Spline1の始点の座標
+		// Debug.Log(_splineContainer.Splines[0].EvaluatePosition(0).y);
+
+		/*base._player = GameObject.FindWithTag("Player");
+		base._playerPos = _player.transform.position;*/
 		// テスト用
 		/*for (int i = 0; i < _angleSplit; i++)
 		{
@@ -69,7 +82,12 @@ public class Enemy : EnemyBase
 	private void Update ()
 	{
 		_shotTime += Time.deltaTime;
+		_moveTime += Time.deltaTime / 5;
 
+		Vector3 movePos = _splineContainer.Splines[0].EvaluatePosition(_moveTime);
+		movePos.x += _firstEnemyPosX - _firstBezierPosX;
+		movePos.y += _firstEnemyPosY - _firstBezierPosY;
+		this.transform.position = movePos;
 		//base._playerPos = base._player.transform.position;
 
 		if( _shotTime > SHOT_INTERVAL )
@@ -88,12 +106,12 @@ public class Enemy : EnemyBase
 		}
 	}
 
-    protected override void OnTriggerEnter2D(Collider2D collision)
+    /*protected override void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag(PLAYER_BULLET_TAG))
 		{
 			base.EnemyDamage();
 		}
-    }
+    }*/
     #endregion
 }

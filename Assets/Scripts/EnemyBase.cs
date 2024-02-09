@@ -10,22 +10,25 @@ using System;
 using System.Collections;
 using Unity.VisualScripting;
 
-public abstract class EnemyBase : MonoBehaviour
+public class EnemyBase : MonoBehaviour
 {
 	#region 変数
+	private const string PLAYER_BULLET_TAG = "PlayerBullet";
+
 	[SerializeField]
 	protected Slider _hpSlider = default;
 	protected int _hpValue = 0;
 
-	protected GameObject _player = default;
-	protected Vector3 _playerPos = Vector3.zero;
+	// 子クラスで作るべき？
+	/*protected GameObject _player = default;
+	protected Vector3 _playerPos = Vector3.zero;*/
 
-	protected Vector3[,] _movePattern = new Vector3[10,3];
+	// Splinesパッケージで代用
+	//protected Vector3[,] _movePattern = new Vector3[10,3];
 
 	protected BulletPool _bulletPool = default;
 	protected PuttingEnemyBullet _puttingEnemyBullet = default;
 
-	protected abstract void OnTriggerEnter2D(Collider2D collision);
 	#endregion
 
 	#region プロパティ
@@ -40,22 +43,6 @@ public abstract class EnemyBase : MonoBehaviour
 	{
 		_bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
 		_puttingEnemyBullet = new PuttingEnemyBullet(_bulletPool);
-	}
-
-	/// <summary>
-	/// 更新前処理
-	/// </summary>
-	private void Start ()
-	{
-		
-	}
-
-	/// <summary>
-	/// 更新処理
-	/// </summary>
-	private void Update ()
-	{
-		
 	}
 
     protected void EnemyMove(int moveNumber)
@@ -92,6 +79,14 @@ public abstract class EnemyBase : MonoBehaviour
 	private void EnemyDead()
 	{
 		this.gameObject.SetActive(false);
+	}
+
+	private void OnTriggerEnter2D(Collider2D collision)
+    {
+		if (collision.CompareTag(PLAYER_BULLET_TAG))
+		{
+			EnemyDamage();
+		}
 	}
 	#endregion
 }

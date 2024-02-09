@@ -5,7 +5,7 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 using TouchPhase = UnityEngine.InputSystem.TouchPhase;
@@ -31,16 +31,25 @@ public class Player : MonoBehaviour
     private const int MAX_MOVE_POSITION_INDEX = 3;
     private const int MIN_MOVE_POSITION_INDEX = 1;
     [SerializeField]
-    private Vector2 _maxMovePosition = default;
+    private Vector2 _maxMovePosition = Vector2.zero;
     [SerializeField]
-    private Vector2 _minMovePosition = default;
+    private Vector2 _minMovePosition = Vector2.zero;
 
     [SerializeField]
-    private RectTransform _header;
+    private RectTransform _header = default;
     [SerializeField]
-    private RectTransform _footer;
+    private RectTransform _footer = default;
 
-    private BulletPool _bulletPool;
+    private bool _isDamage = false;
+    private int _damageCount = 0;
+    private const int GAMEOVER_MOVE_COUNT = 3;
+    private float _damageAnimationTime = 0;
+    private const float DAMAGE_ANIMATION = 3f;
+
+    private SpriteRenderer _spriteRenderer = default;
+    private CircleCollider2D _circleCollider2D = default;
+    private BulletPool _bulletPool = default;
+    private Animator _playerAnimator = default;
 
     #endregion
 
@@ -55,6 +64,10 @@ public class Player : MonoBehaviour
     private void Awake()
 	{
         _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
+        _playerAnimator = GetComponent<Animator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _circleCollider2D = GetComponent<CircleCollider2D>();
+
         // 半径を取得する
         _radius = transform.GetChild(0).localScale / 2;
 
@@ -75,6 +88,19 @@ public class Player : MonoBehaviour
     {
         _shotTime += Time.deltaTime;
         PlayerInput();
+
+        if(_isDamage)
+        {
+            _damageAnimationTime += Time.deltaTime;
+
+            if(_damageAnimationTime >= DAMAGE_ANIMATION)
+            {
+                _damageAnimationTime = 0;
+                _spriteRenderer.enabled = true;
+                _circleCollider2D.enabled = true;
+                _isDamage = false;
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -163,6 +189,24 @@ public class Player : MonoBehaviour
         if (this.transform.position.x <= _minMovePosition.x)
         {
             this.transform.position = new Vector2(_minMovePosition.x, this.transform.position.y);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("EnemyBullet"))
+        {
+            _playerAnimator.SetTrigger("IsDamage");
+            _spriteRenderer.enabled = false;
+            _circleCollider2D.enabled = false;
+            _isDamage = true;
+
+            _damageCount++;
+
+            if(_damageCount > GAMEOVER_MOVE_COUNT)
+            {
+                SceneManager.LoadScene("GameOver");
+            }
         }
     }
     #endregion

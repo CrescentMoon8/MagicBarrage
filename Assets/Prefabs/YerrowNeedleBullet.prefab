@@ -29,8 +29,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.3, z: 0.2}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.2, y: 0.15, z: 0.1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shooterType: 0
+  _moveType: 0
 --- !u!70 &944574303138619987
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -132,5 +133,5 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.058758706, y: 0}
-  m_Size: {x: 0.4529778, y: 2.15804}
+  m_Size: {x: 0.2649257, y: 2.0622}
   m_Direction: 0
