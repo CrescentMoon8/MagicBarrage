@@ -63,7 +63,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Awake()
 	{
-        _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
+        _bulletPool = UnityEngine.GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
         _playerAnimator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _circleCollider2D = GetComponent<CircleCollider2D>();

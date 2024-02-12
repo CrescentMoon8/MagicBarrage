@@ -32,7 +32,7 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private MoveType _moveType = MoveType.Line;
 
-    private GameObject _playerObject;
+    private UnityEngine.GameObject _playerObject;
     private Vector3 _playerPos = Vector3.zero;
 
     private int _bulletNumber = 0;
@@ -61,8 +61,8 @@ public class Bullet : MonoBehaviour
 	/// </summary>
 	private void Start ()
 	{
-        _playerObject = GameObject.FindWithTag("Player");
-		_bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
+        _playerObject = UnityEngine.GameObject.FindWithTag("Player");
+        _bulletPool = UnityEngine.GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
 	}
 
 	/// <summary>

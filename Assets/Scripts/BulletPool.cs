@@ -84,8 +84,8 @@ public class BulletPool : MonoBehaviour
 		_playerBulletsPool.Clear();
 		_enemyBulletsPool.Clear();
 
-		_playerBulletParent = GameObject.FindWithTag("PlayerBulletPool").transform;
-		_enemyBulletParent = GameObject.FindWithTag("EnemyBulletPool").transform;
+        _playerBulletParent = UnityEngine.GameObject.FindWithTag("PlayerBulletPool").transform;
+        _enemyBulletParent = UnityEngine.GameObject.FindWithTag("EnemyBulletPool").transform;
 
 		GenerateObjectPool();
 	}

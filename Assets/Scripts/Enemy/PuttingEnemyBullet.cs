@@ -46,7 +46,7 @@ public class PuttingEnemyBullet
     /// <param name="moveType">弾の軌道</param>
     public void RoundShot(Vector3 shooterPos, int maxAngle, int angleSplit, int direction, float radius, int bulletNumber, Bullet.MoveType moveType)
 	{
-		Debug.Log(shooterPos);
+		//Debug.Log(shooterPos);
         for (int i = 0; i < angleSplit; i++)
         {
 			// 0の位置がUnity上の-90にあたるため、

@@ -11,6 +11,8 @@ TagManager:
   - Scripts
   - ReturnPool
   - Enemy
+  - Boss
+  - Enemys
   layers:
   - Default
   - TransparentFX

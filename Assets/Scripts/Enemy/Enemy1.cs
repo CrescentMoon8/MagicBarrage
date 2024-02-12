@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// Enemy.cs
+// Enemy1.cs
 //
 // 作成日:2024/02/06
 // 作成者:小林慎
@@ -7,10 +7,12 @@
 using UnityEngine;
 using UnityEngine.Splines;
 
-public class Enemy : EnemyBase
+public class Enemy1 : EnemyBase
 {
-	#region 変数
-	private const int ENEMY_HP = 20;
+    #region 変数
+    private const string PLAYER_BULLET_TAG = "PlayerBullet";
+
+    private const int ENEMY_HP = 20;
 
 	[SerializeField]
 	private SplineContainer _splineContainer = default;
@@ -56,7 +58,7 @@ public class Enemy : EnemyBase
 		_firstEnemyPosX = this.transform.position.x;
 		_firstEnemyPosY = this.transform.position.y;
 
-		_splineContainer = GameObject.Find("Spline").GetComponent<SplineContainer>();
+        _splineContainer = UnityEngine.GameObject.Find("EnemySpline").GetComponent<SplineContainer>();
 		_firstBezierPosX = _splineContainer.Splines[0].EvaluatePosition(0).x;
 		_firstBezierPosY = _splineContainer.Splines[0].EvaluatePosition(0).y;
 
@@ -84,6 +86,8 @@ public class Enemy : EnemyBase
 		_shotTime += Time.deltaTime;
 		_moveTime += Time.deltaTime / 5;
 
+		base.FollowHpBar();
+
 		Vector3 movePos = _splineContainer.Splines[0].EvaluatePosition(_moveTime);
 		movePos.x += _firstEnemyPosX - _firstBezierPosX;
 		movePos.y += _firstEnemyPosY - _firstBezierPosY;
@@ -106,12 +110,12 @@ public class Enemy : EnemyBase
 		}
 	}
 
-    /*protected override void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision.CompareTag(PLAYER_BULLET_TAG))
+	protected override void OnTriggerEnter2D(Collider2D collision)
+	{
+		if (collision.CompareTag(PLAYER_BULLET_TAG))
 		{
 			base.EnemyDamage();
 		}
-    }*/
-    #endregion
+	}
+	#endregion
 }
