@@ -118,9 +118,9 @@ public class Bullet : MonoBehaviour
     {
         if((collision.CompareTag("Player") && _shooterType == ShooterType.Enemy) ||
            (collision.CompareTag("Enemy") && _shooterType == ShooterType.Player) ||
+           (collision.CompareTag("Boss") && _shooterType == ShooterType.Player) ||
             collision.CompareTag("ReturnPool"))
 		{
-            Debug.Log($"{this} {_shooterType}");
 			_bulletPool.ReturnBullet(this, _bulletNumber, _shooterType);
 
             _shooterType = ShooterType.None;

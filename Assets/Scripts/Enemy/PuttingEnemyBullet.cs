@@ -9,11 +9,11 @@ using UnityEngine;
 public class PuttingEnemyBullet
 {
     #region 変数
+    private const int ADJUST_ANGLE = 90;
     private BulletPool _bulletPool = default;
 
     public PuttingEnemyBullet(BulletPool bulletPool)
 	{
-		Debug.Log("コンストラクト");
 		_bulletPool = bulletPool;
 	}
 	#endregion
@@ -38,26 +38,30 @@ public class PuttingEnemyBullet
 	/// 例：maxAngle = 90, angleSplit = 9, direction = 180の場合は下向きの中心角が90度の扇形の弧を9分割する
     /// </summary>
     /// <param name="shooterPos">射手の座標</param>
-    /// <param name="maxAngle">中心角の大きさ</param>
-    /// <param name="angleSplit">maxAngleを何分割するか</param>
-    /// <param name="direction">中心角をどのくらい回転させるか</param>
+    /// <param name="centerAngle">撃ちたい角度</param>
+    /// <param name="angleSplit">角度を何分割するか</param>
+    /// <param name="angleWidth">撃ちたい角度からの角度幅</param>
 	/// <param name="radius">配置したい円の半径</param>
     /// <param name="bulletNumber">弾の種類</param>
     /// <param name="moveType">弾の軌道</param>
-    public void RoundShot(Vector3 shooterPos, int maxAngle, int angleSplit, int direction, float radius, int bulletNumber, Bullet.MoveType moveType)
+    public void RoundShot(Vector3 shooterPos, int centerAngle, int angleSplit, int angleWidth, float radius, int bulletNumber, Bullet.MoveType moveType)
 	{
-		//Debug.Log(shooterPos);
-        for (int i = 0; i < angleSplit; i++)
+        // 座標計算を始める角度
+        int minAngle = centerAngle - angleWidth;
+        // 座標計算を行う角度（minAngleからの角度）
+        int maxAngle = 2 * angleWidth;
+
+        for (int i = 0; i <= angleSplit; i++)
         {
 			// 0の位置がUnity上の-90にあたるため、
 			// 例えば弾の進行方向を下向きにするためにdirectionに180を入れたら最初の位置を下にするのにdirectionの半分の90を使用する
-            Vector3 bulletPos = CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i - direction / 2, radius);
+            Vector3 bulletPos = CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i + minAngle + ADJUST_ANGLE, radius);
 
 			Bullet bullet = _bulletPool.LendEnemyBullet(bulletPos, bulletNumber);
 
 			bullet.SettingMoveType = moveType;
 
-			bullet.transform.rotation = Quaternion.Euler(Vector3.forward * ((maxAngle / angleSplit) * i - direction));
+			bullet.transform.rotation = Quaternion.Euler(Vector3.forward * ((maxAngle / angleSplit) * i + minAngle));
         }
     }
 
@@ -65,11 +69,20 @@ public class PuttingEnemyBullet
     /// エネミーからプレイヤーへの角度を計算する
     /// </summary>
     /// <returns></returns>
-    private Vector3 AngleFromEnemyCalculate(Vector3 playerPos, Vector3 shooterPos)
+    public int AngleFromEnemyCalculate(Vector3 playerPos, Vector3 shooterPos)
     {
-        // Vector3 direction = Mathf.Atan2(playerPos, shooterPos);
-        // エラー回避用の適当設定　後で変更
-        return playerPos;
+        Vector3 direction = playerPos - shooterPos;
+        // Atan2はY軸を中心として、右が0～180、左が-180～0の範囲となる
+        float toPlayerAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+
+        if(toPlayerAngle < 0)
+        {
+            return Mathf.RoundToInt(Mathf.Abs(toPlayerAngle));
+        }
+        else
+        {
+            return 360 - Mathf.RoundToInt(toPlayerAngle);
+        }
     }
 
     /// <summary>

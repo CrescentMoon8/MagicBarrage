@@ -5,10 +5,10 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -23,7 +23,9 @@ public class EnemyManager : MonoBehaviour
 	}
 
 	[SerializeField]
-	private PhaseState _phaseNumber = PhaseState.First;
+	private PhaseState _phaseState = PhaseState.First;
+
+    private int _enemyCount = 0;
 
 	private GameObject _enemysObject = default;
 	[SerializeField]
@@ -49,6 +51,8 @@ public class EnemyManager : MonoBehaviour
         PhaseListClear();
 
         PhaseListInitialize();
+
+        SettingEnemyCount();
     }
 
     private void PhaseListInitialize()
@@ -100,27 +104,87 @@ public class EnemyManager : MonoBehaviour
 		
 	}
 
+    private void SettingEnemyCount()
+    {
+        switch (_phaseState)
+        {
+            case PhaseState.First:
+                _enemyCount = _firstPhaseEnemys.Count;
+                break;
+            case PhaseState.Second:
+                _enemyCount = _secondPhaseEnemys.Count;
+                break;
+            case PhaseState.Third:
+                _enemyCount = _thirdPhaseEnemys.Count;
+                break;
+            case PhaseState.Boss:
+                _enemyCount = _bossPhaseEnemys.Count;
+                break;
+            case PhaseState.End:
+                break;
+            default:
+                break;
+        }
+    }
+
 	/// <summary>
 	/// 更新処理
 	/// </summary>
 	private void Update ()
 	{
-		switch (_phaseNumber)
+		switch (_phaseState)
 		{
 			case PhaseState.First:
-
+                if(_enemyCount <= 0)
+                {
+                    _phaseState = PhaseState.Second;
+                    for(int i = 0; i < _secondPhaseEnemys.Count; i++)
+                    {
+                        SettingEnemyCount();
+                        _secondPhaseEnemys[i].SetActive(true);
+                    }
+                }
 				break;
 			case PhaseState.Second:
-				break;
+                if (_enemyCount <= 0)
+                {
+                    _phaseState = PhaseState.Third;
+                    for (int i = 0; i < _thirdPhaseEnemys.Count; i++)
+                    {
+                        SettingEnemyCount();
+                        _thirdPhaseEnemys[i].SetActive(true);
+                    }
+                }
+                break;
 			case PhaseState.Third:
-				break;
+                if (_enemyCount <= 0)
+                {
+                    _phaseState = PhaseState.Boss;
+                    for(int i = 0; i < _bossPhaseEnemys.Count; i++)
+                    {
+                        SettingEnemyCount();
+                        _bossPhaseEnemys[i].SetActive(true);
+                        _bossPhaseEnemys[i].GetComponent<Boss1>().SplineIndex = 1;
+                    }
+                }
+                break;
 			case PhaseState.Boss:
-				break;
+                if (_enemyCount <= 0)
+                {
+                    _phaseState = PhaseState.End;
+                }
+                break;
 			case PhaseState.End:
+                SceneManager.LoadScene("Result");
 				break;
 			default:
 				break;
 		}
 	}
+
+    public void DownEnemyCount()
+    {
+        _enemyCount--;
+    }
 	#endregion
 }

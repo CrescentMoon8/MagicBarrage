@@ -13,8 +13,7 @@ using Unity.VisualScripting;
 public abstract class EnemyBase : MonoBehaviour
 {
 	#region 変数
-	private const int HPBAR_POS_Y = 118;
-	private RectTransform _hpBarRectTransform = default;
+	private const float HPBAR_POS_Y = 0.44f;
     [SerializeField]
 	protected Slider _hpSlider = default;
 	protected int _hpValue = 0;
@@ -26,10 +25,13 @@ public abstract class EnemyBase : MonoBehaviour
 	// Splinesパッケージで代用
 	//protected Vector3[,] _movePattern = new Vector3[10,3];
 
-	protected abstract void OnTriggerEnter2D(Collider2D collisin);
+	protected abstract void OnTriggerEnter2D(Collider2D collision);
 
 	protected BulletPool _bulletPool = default;
 	protected PuttingEnemyBullet _puttingEnemyBullet = default;
+
+	private delegate void DownEnemyCount();
+	private DownEnemyCount _downEnemyCountCallBack = default;
 
 	#endregion
 
@@ -43,9 +45,10 @@ public abstract class EnemyBase : MonoBehaviour
 	/// </summary>
 	private void Awake()
 	{
-		_hpBarRectTransform = _hpSlider.GetComponent<RectTransform>();
         _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
 		_puttingEnemyBullet = new PuttingEnemyBullet(_bulletPool);
+
+		_downEnemyCountCallBack = GameObject.FindWithTag("Scripts").GetComponentInChildren<EnemyManager>().DownEnemyCount;
 	}
 
 	/*protected void EnemyMove(int moveNumber)
@@ -58,12 +61,15 @@ public abstract class EnemyBase : MonoBehaviour
         return (Mathf.Pow((1 - time), 2) * start) + (2 * (1 - time) * time * relay) + (Mathf.Pow(time, 2) * goal);
     }*/
 
-	protected void FollowHpBar()
+	/// <summary>
+	/// 敵の上にHPバーを追従させる
+	/// </summary>
+	/// <param name="enemyPos">追従対象のエネミーの座標</param>
+	protected void FollowHpBar(Vector3 enemyPos)
 	{
-        Vector3 hpBarPos = this.transform.position;
-		hpBarPos.y = this.transform.position.y + HPBAR_POS_Y;
-        _hpBarRectTransform.anchoredPosition = hpBarPos;
-        Debug.Log(_hpBarRectTransform.anchoredPosition);
+        Vector3 hpBarPos = enemyPos;
+		hpBarPos.y += HPBAR_POS_Y;
+        _hpSlider.transform.position = hpBarPos;
     }
 
 	protected void EnemyDamage()
@@ -83,12 +89,13 @@ public abstract class EnemyBase : MonoBehaviour
 		if(_hpValue <= 0)
 		{
 			EnemyDead();
-			_hpSlider.gameObject.SetActive(false);
 		}
 	}
 
 	private void EnemyDead()
 	{
+		_downEnemyCountCallBack();
+		_hpSlider.gameObject.SetActive(false);
 		this.gameObject.SetActive(false);
 	}
 	#endregion

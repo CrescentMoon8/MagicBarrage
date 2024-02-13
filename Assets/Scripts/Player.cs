@@ -108,6 +108,7 @@ public class Player : MonoBehaviour
         if (_isMove)
         {
             this.transform.position = _startObjectPosition + _cursorPositionDistance;
+            Debug.Log(_startObjectPosition + _cursorPositionDistance);
 
             InStage();
         }
@@ -128,6 +129,7 @@ public class Player : MonoBehaviour
 
     private void PlayerInput()
 	{
+#if UNITY_IOS// || UNITY_EDITOR
         if (Touch.activeTouches.Count >= 1)
         {
             Touch active = Touch.activeTouches[0];
@@ -146,17 +148,35 @@ public class Player : MonoBehaviour
                 _isMove = true;
                 _cursorPositionDistance = Camera.main.ScreenToWorldPoint(active.screenPosition) - Camera.main.ScreenToWorldPoint(active.startScreenPosition);
             }
-
-            // 指が離れているとき
-            if (active.phase == TouchPhase.Ended)
-            {
-                _isMove = false;
-            }
         }
         else
         {
+            _isMove = false;
             _isShot = false;
         }
+#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+        Vector3 startMousePos = Vector3.zero;
+
+        if(Input.GetMouseButtonDown(0))
+        {
+            _startObjectPosition = this.transform.position;
+            startMousePos = Input.mousePosition;
+        }
+        if (Input.GetMouseButton(0))
+        {
+            _isMove = true;
+            _isShot = true;
+            
+            _cursorPositionDistance = Camera.main.ScreenToWorldPoint(Input.mousePosition - startMousePos);
+            Debug.LogWarning(_cursorPositionDistance);
+        }
+        else
+        {
+            _isMove = false;
+            _isShot = false;
+            _cursorPositionDistance = Vector2.zero;
+        }
+#endif
     }
 
     /// <summary>
@@ -209,5 +229,5 @@ public class Player : MonoBehaviour
             }
         }
     }
-    #endregion
+#endregion
 }
