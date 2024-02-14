@@ -6,6 +6,7 @@
 // ---------------------------------------------------------
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 using TouchPhase = UnityEngine.InputSystem.TouchPhase;
@@ -13,6 +14,7 @@ using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 public class Player : MonoBehaviour
 {
     #region 変数
+    private Vector3 _startMousePos = Vector3.zero;
     [SerializeField]
     private Vector2 _startObjectPosition = Vector2.zero;
     [SerializeField]
@@ -129,7 +131,7 @@ public class Player : MonoBehaviour
 
     private void PlayerInput()
 	{
-#if UNITY_IOS// || UNITY_EDITOR
+#if UNITY_IOS || UNITY_EDITOR
         if (Touch.activeTouches.Count >= 1)
         {
             Touch active = Touch.activeTouches[0];
@@ -154,21 +156,19 @@ public class Player : MonoBehaviour
             _isMove = false;
             _isShot = false;
         }
-#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
-        Vector3 startMousePos = Vector3.zero;
 
+#elif UNITY_STANDALONE_WIN
         if(Input.GetMouseButtonDown(0))
         {
             _startObjectPosition = this.transform.position;
-            startMousePos = Input.mousePosition;
+            _startMousePos = Input.mousePosition;
         }
         if (Input.GetMouseButton(0))
         {
             _isMove = true;
             _isShot = true;
             
-            _cursorPositionDistance = Camera.main.ScreenToWorldPoint(Input.mousePosition - startMousePos);
-            Debug.LogWarning(_cursorPositionDistance);
+            _cursorPositionDistance = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Camera.main.ScreenToWorldPoint(_startMousePos);
         }
         else
         {

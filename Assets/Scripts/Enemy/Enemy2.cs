@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// Enemy1.cs
+// Enemy2.cs
 //
 // 作成日:2024/02/06
 // 作成者:小林慎
@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Splines;
 using System.Collections.Generic;
 
-public class Enemy1 : EnemyBase
+public class Enemy2 : EnemyBase
 {
 	#region 変数
     private const string PLAYER_BULLET_TAG = "PlayerBullet";
@@ -16,7 +16,7 @@ public class Enemy1 : EnemyBase
     private const int ENEMY_HP = 20;
 
 	private SplineContainer _splineContainer = default;
-	private int _splineIndex = 0;
+	private int _splineIndex = 1;
 
 	private float _moveTime = 0;
 	private Vector3 differencePos = Vector3.zero;
@@ -29,7 +29,6 @@ public class Enemy1 : EnemyBase
 	private int _angleWidth = 45;
     // 自分のオブジェクトの半径
     private float _radius = 0f;
-
 	private GameObject _playerObject = default;
 	private Vector3 _playerPos = Vector3.zero;
 
@@ -119,7 +118,7 @@ public class Enemy1 : EnemyBase
 				base.RoundShot(this.transform.position, _maxAngle, _angleSplit, _direction, 0, Bullet.MoveType.Line);
 				_direction -= 90;
 			}*/
-            base._puttingEnemyBullet.RoundShot(this.transform.position, base._puttingEnemyBullet.AngleFromEnemyCalculate(_playerPos, this.transform.position), _angleSplit, _angleWidth, _radius, 1, Bullet.MoveType.Line);
+            base._puttingEnemyBullet.RoundShot(this.transform.position, _centerAngle, _angleSplit, _angleWidth, _radius, 2, Bullet.MoveType.Line);
 			
 			/*int minAngle = base._puttingEnemyBullet.AngleFromEnemyCalculate(_playerPos, this.transform.position) - _angleWidth;
 			int maxAngle = 2 * _angleWidth;

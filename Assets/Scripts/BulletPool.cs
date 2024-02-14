@@ -84,24 +84,11 @@ public class BulletPool : MonoBehaviour
 		_playerBulletsPool.Clear();
 		_enemyBulletsPool.Clear();
 
-        _playerBulletParent = UnityEngine.GameObject.FindWithTag("PlayerBulletPool").transform;
-        _enemyBulletParent = UnityEngine.GameObject.FindWithTag("EnemyBulletPool").transform;
+        _playerBulletParent = GameObject.FindWithTag("PlayerBulletPool").transform;
+        _enemyBulletParent = GameObject.FindWithTag("EnemyBulletPool").transform;
 
 		GenerateObjectPool();
 	}
-
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Escape))
-		{
-			for(int i = 0; i < MAX_GENERATE_ENEMY_BULLET; i++)
-			{
-				Bullet bullet = _enemyBulletsPool[0].Dequeue();
-				Debug.LogWarning($"{bullet}、{i}");
-				_enemyBulletsPool[0].Enqueue(bullet);
-			}
-		}
-    }
 
     private void GenerateObjectPool()
 	{
@@ -139,7 +126,6 @@ public class BulletPool : MonoBehaviour
 	{
 		if(_playerBulletsPool.Count <= 0)
 		{
-			Debug.Log("空");
 			return null;
 		}
 
@@ -150,8 +136,6 @@ public class BulletPool : MonoBehaviour
 		bullet.transform.position = shotPosition;
 
 		bullet.SettingShooterType = Bullet.ShooterType.Player;
-
-		bullet.SettingBulletNumber = 0;
 
 		return bullet;
 	}

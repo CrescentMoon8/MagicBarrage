@@ -164,7 +164,7 @@ public class EnemyManager : MonoBehaviour
                     {
                         SettingEnemyCount();
                         _bossPhaseEnemys[i].SetActive(true);
-                        _bossPhaseEnemys[i].GetComponent<Boss1>().SplineIndex = 1;
+                        _bossPhaseEnemys[i].GetComponent<Boss1>().SplineIndex = 2;
                     }
                 }
                 break;

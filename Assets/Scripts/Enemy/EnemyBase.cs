@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using Unity.VisualScripting;
 
+[RequireComponent(typeof(Rigidbody2D), typeof(CircleCollider2D))]
 public abstract class EnemyBase : MonoBehaviour
 {
 	#region 変数

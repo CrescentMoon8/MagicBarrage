@@ -52,7 +52,7 @@ public class Boss1 : EnemyBase
 		float firstEnemyPosX = this.transform.position.x;
 		float firstEnemyPosY = this.transform.position.y;
 
-		_splineContainer = GameObject.Find("EnemySpline").GetComponent<SplineContainer>();
+		_splineContainer = GameObject.Find("FirstSpline").GetComponent<SplineContainer>();
 		float firstBezierPosX = _splineContainer.Splines[_splineIndex].EvaluatePosition(0).x;
 		float firstBezierPosY = _splineContainer.Splines[_splineIndex].EvaluatePosition(0).y;
 
