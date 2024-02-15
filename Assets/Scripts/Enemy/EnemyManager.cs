@@ -55,6 +55,9 @@ public class EnemyManager : MonoBehaviour
         SettingEnemyCount();
     }
 
+    /// <summary>
+    /// リストにそれぞれのエネミーを追加する
+    /// </summary>
     private void PhaseListInitialize()
     {
         _enemysObject = GameObject.FindWithTag("Enemys");
@@ -88,6 +91,9 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// リストをすべて空にする
+    /// </summary>
     private void PhaseListClear()
     {
         _firstPhaseEnemys.Clear();
@@ -96,6 +102,9 @@ public class EnemyManager : MonoBehaviour
         _bossPhaseEnemys.Clear();
     }
 
+    /// <summary>
+    /// リストの中にいるエネミーの数に応じて、フェーズごとのエネミーの数を設定する
+    /// </summary>
     private void SettingEnemyCount()
     {
         switch (_phaseState)
@@ -103,17 +112,22 @@ public class EnemyManager : MonoBehaviour
             case PhaseState.First:
                 _enemyCount = _firstPhaseEnemys.Count;
                 break;
+
             case PhaseState.Second:
                 _enemyCount = _secondPhaseEnemys.Count;
                 break;
+
             case PhaseState.Third:
                 _enemyCount = _thirdPhaseEnemys.Count;
                 break;
+
             case PhaseState.Boss:
                 _enemyCount = _bossPhaseEnemys.Count;
                 break;
+
             case PhaseState.End:
                 break;
+
             default:
                 break;
         }

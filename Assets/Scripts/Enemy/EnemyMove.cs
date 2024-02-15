@@ -9,10 +9,10 @@ using UnityEngine.Splines;
 using System;
 using System.Collections;
 
-public class EnemyMove : MonoBehaviour
+public class EnemyMove
 {
 	#region 変数
-	private enum MoveState
+	public enum MoveState
 	{
 		BeforeEnter,
 		Enter,
@@ -49,60 +49,67 @@ public class EnemyMove : MonoBehaviour
 	/// <summary>
 	/// 初期化処理
 	/// </summary>
-	private void DifferencePosInitialize(SplineContainer splineContainer)
+	public void DifferencePosInitialize(Vector3 enemyPos)
 	{
-		float nowEnemyPosX = this.transform.position.x;
-		float nowEnemyPosY = this.transform.position.y;
+        float nowEnemyPosX = enemyPos.x;
+        float nowEnemyPosY = enemyPos.y;
 
-		float firstSplinePosX = splineContainer.Splines[_splineIndex].EvaluatePosition(0).x;
-		float firstSplinePosY = splineContainer.Splines[_splineIndex].EvaluatePosition(0).y;
+        float firstSplinePosX = _enterSplineContainer.Splines[_splineIndex].EvaluatePosition(0).x;
+        float firstSplinePosY = _enterSplineContainer.Splines[_splineIndex].EvaluatePosition(0).y;
 
-		differencePos = new Vector3(nowEnemyPosX - firstSplinePosX, nowEnemyPosY - firstSplinePosY, 0);
-	}
+        differencePos = new Vector3(nowEnemyPosX - firstSplinePosX, nowEnemyPosY - firstSplinePosY, 0);
+    }
 
-	public void Move()
-	{
-		switch (_moveState)
-		{
-			case MoveState.BeforeEnter:
-				DifferencePosInitialize(_enterSplineContainer);
-				_moveState = MoveState.Enter;
-				break;
-			case MoveState.Enter:
-				_moveRatio += Time.deltaTime / 4;
+    public Vector3 MovePosCalculate()
+    {
+        _moveRatio += Time.deltaTime / 4;
 
-				// EnemySplineの指定したSplineの座標を取得する
-				Vector3 movePos = _enterSplineContainer.Splines[_splineIndex].EvaluatePosition(_moveRatio);
-				// 
-				this.transform.position = movePos + differencePos;
+        // EnemySplineの指定したSplineの座標を取得する
+        Vector3 movePos = _enterSplineContainer.Splines[_splineIndex].EvaluatePosition(_moveRatio);
 
-				if (_moveRatio >= MOVE_STOP_RATIO)
-				{
-					_moveRatio = 0f;
-					_moveState = MoveState.Stay;
-				}
-				break;
-			case MoveState.Stay:
-				_moveTime += Time.deltaTime;
+        // 
+        return movePos + differencePos;
+    }
 
-				if (_moveTime >= EXIT_MOVE_TIME)
-				{
-					DifferencePosInitialize(_exitSplineContainer);
-					_moveState = MoveState.Exit;
-				}
-				break;
-			case MoveState.Exit:
-				_moveRatio += Time.deltaTime / 4;
+    /*public void Move(Vector3 enemyPos)
+    {
+        switch (_moveState)
+        {
+            case MoveState.BeforeEnter:
+                SetSplineContainer();
+                DifferencePosInitialize(_enterSplineContainer, enemyPos);
+                _moveState = MoveState.Enter;
+                break;
+            case MoveState.Enter:
+                
 
-				// EnemySplineの指定したSplineの座標を取得する
-				movePos = _exitSplineContainer.Splines[_splineIndex].EvaluatePosition(_moveRatio);
-				// 
-				this.transform.position = movePos + differencePos;
-				break;
+                if (_moveRatio >= MOVE_STOP_RATIO)
+                {
+                    _moveRatio = 0f;
+                    _moveState = MoveState.Stay;
+                }
+                break;
+            case MoveState.Stay:
+                _moveTime += Time.deltaTime;
 
-			default:
-				break;
-		}
-	}
-	#endregion
+                if (_moveTime >= EXIT_MOVE_TIME)
+                {
+                    DifferencePosInitialize(_exitSplineContainer);
+                    _moveState = MoveState.Exit;
+                }
+                break;
+            case MoveState.Exit:
+                _moveRatio += Time.deltaTime / 4;
+
+                // EnemySplineの指定したSplineの座標を取得する
+                movePos = _exitSplineContainer.Splines[_splineIndex].EvaluatePosition(_moveRatio);
+                // 
+                this.transform.position = movePos + differencePos;
+                break;
+
+            default:
+                break;
+        }
+    }*/
+    #endregion
 }

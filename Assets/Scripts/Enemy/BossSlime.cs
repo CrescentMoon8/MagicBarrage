@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// Boss1.cs
+// SlimeBoss.cs
 //
 // 作成日:2024/02/06
 // 作成者:小林慎
@@ -7,7 +7,7 @@
 using UnityEngine;
 using UnityEngine.Splines;
 
-public class Boss1 : EnemyBase
+public class BossSlime : EnemyBase
 {
     #region 変数
     private const string PLAYER_BULLET_TAG = "PlayerBullet";
@@ -51,11 +51,11 @@ public class Boss1 : EnemyBase
 	{
 		_shotTime += Time.deltaTime;
 
-		base._enemyMove.Move();
+		this.transform.position = base._enemyMove.MovePosCalculate();
 
 		//base._playerPos = base._player.transform.position;
 
-		if( _shotTime > SHOT_INTERVAL )
+		if ( _shotTime > SHOT_INTERVAL )
 		{
             /*// 三方向に扇形の弾を撃つ
 			for (int i = 0; i < 3; i++)

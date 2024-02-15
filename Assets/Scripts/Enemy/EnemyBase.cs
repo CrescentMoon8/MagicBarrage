@@ -35,7 +35,7 @@ public abstract class EnemyBase : MonoBehaviour
 
 	protected abstract void OnTriggerEnter2D(Collider2D collision);
 
-	protected BulletPool _bulletPool = default;
+	private BulletPool _bulletPool = default;
 	protected EnemyShot _puttingEnemyBullet = default;
 	protected EnemyMove _enemyMove = default;
 
@@ -58,6 +58,7 @@ public abstract class EnemyBase : MonoBehaviour
 		_puttingEnemyBullet = new EnemyShot(_bulletPool, this.transform.localScale.x / 2);
 		_enemyMove = new EnemyMove();
 		_enemyMove.SetSplineContainer();
+		_enemyMove.DifferencePosInitialize(this.transform.position);
 
 		_downEnemyCountCallBack = GameObject.FindWithTag("Scripts").GetComponentInChildren<EnemyManager>().DownEnemyCount;
     }

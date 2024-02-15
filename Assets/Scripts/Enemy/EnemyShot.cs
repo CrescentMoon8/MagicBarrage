@@ -12,8 +12,6 @@ public class EnemyShot
     private const int ADJUST_ANGLE = 90;
     private float _radius = 0f;
 
-    private float _bulletInterval = 0.5f;
-    private float _bulletTime = 0f;
     private BulletPool _bulletPool = default;
 
     public EnemyShot(BulletPool bulletPool, float radius)
@@ -31,22 +29,13 @@ public class EnemyShot
 	/// <summary>
 	/// 弾を指定された方向に直線で撃ち出す
 	/// </summary>
-    public void LineShot(Vector3 shooterPos, int angle, int bulletAmount, int bulletNumber, Bullet.MoveType moveType)
+    public void LineShot(Vector3 shooterPos, int angle, int bulletNumber, Bullet.MoveType moveType)
     {
-        _bulletTime += Time.deltaTime;
+        Bullet bullet = _bulletPool.LendEnemyBullet(shooterPos, bulletNumber);
 
-        for (int i = 0; i < bulletAmount; i++)
-        {
-            for(float k = 0; k <= _bulletInterval; k += Time.deltaTime)
-            {
+        bullet.SettingMoveType = moveType;
 
-            }
-            Bullet bullet = _bulletPool.LendEnemyBullet(shooterPos, bulletNumber);
-
-            bullet.SettingMoveType = moveType;
-
-            bullet.transform.rotation = Quaternion.Euler(Vector3.forward * angle);
-        }
+        bullet.transform.rotation = Quaternion.Euler(Vector3.forward * angle);
     }
 
     /// <summary>

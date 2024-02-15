@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// Enemy3.cs
+// BlueSlime.cs
 //
 // 作成日:2024/02/06
 // 作成者:小林慎
@@ -8,21 +8,23 @@ using UnityEngine;
 using UnityEngine.Splines;
 using System.Collections.Generic;
 
-public class Enemy3 : EnemyBase
+public class BlueSlime : EnemyBase
 {
 	#region 変数
     private const string PLAYER_BULLET_TAG = "PlayerBullet";
 
     private const int ENEMY_HP = 20;
 
-	// 撃ちたい角度 (Unity基準)
+	// 撃ちたい角度
 	private int _centerAngle = 180;
 	// 角度を何分割するか
-	private int _angleSplit = 12;
+	private int _angleSplit = 10;
 	// 撃ちたい角度の±いくらか
-	private int _angleWidth = 180;
+	private int _angleWidth = 45;
     // 自分のオブジェクトの半径
     private float _radius = 0f;
+	private GameObject _playerObject = default;
+	private Vector3 _playerPos = Vector3.zero;
 
     private float _shotTime = 0f;
 	private const float SHOT_INTERVAL = 2f;
@@ -50,6 +52,11 @@ public class Enemy3 : EnemyBase
         // _splineContainer.Splines[0].EvaluatePosition(0) → Spline0の始点の座標
         // _splineContainer.Splines[1].EvaluatePosition(0) → Spline1の始点の座標
         // Debug.Log(_splineContainer.Splines[0].EvaluatePosition(0).y);
+
+        _playerObject = GameObject.FindWithTag("Player");
+        _playerPos = _playerObject.transform.position;
+
+        
     }
 
     /// <summary>
@@ -76,10 +83,11 @@ public class Enemy3 : EnemyBase
 	{
 		_shotTime += Time.deltaTime;
 
-		base._enemyMove.Move();
+		this.transform.position = base._enemyMove.MovePosCalculate();
 
 		base.FollowHpBar(this.transform.position);
 
+		_playerPos = _playerObject.transform.position;
 
 		if ( _shotTime > SHOT_INTERVAL )
 		{
@@ -89,17 +97,18 @@ public class Enemy3 : EnemyBase
 				base.RoundShot(this.transform.position, _maxAngle, _angleSplit, _direction, 0, Bullet.MoveType.Line);
 				_direction -= 90;
 			}*/
-            base._puttingEnemyBullet.FanShot(this.transform.position, _centerAngle, _angleSplit, _angleWidth, 8, Bullet.MoveType.Line);
+            base._puttingEnemyBullet.FanShot(this.transform.position, _centerAngle, _angleSplit, _angleWidth, 2, Bullet.MoveType.Line);
+			
+			/*int minAngle = base._puttingEnemyBullet.AngleFromEnemyCalculate(_playerPos, this.transform.position) - _angleWidth;
+			int maxAngle = 2 * _angleWidth;
 
-            int minAngle = _centerAngle - _angleWidth;
-            int maxAngle = 2 * _angleWidth;
-
-            // テスト用
-            for (int i = 0; i <= _angleSplit; i++)
-            {
-                Vector3 bulletPos = CirclePosCalculate(this.transform.position, (maxAngle / _angleSplit) * i + minAngle + 90, this.transform.localScale.x / 2);
-                Instantiate(_test, bulletPos, Quaternion.identity);
-            }
+			// テスト用
+			for (int i = 0; i <= _angleSplit; i++)
+			{
+				Vector3 bulletPos = CirclePosCalculate(this.transform.position, (maxAngle / _angleSplit) * i + minAngle + 90, this.transform.localScale.x / 2);
+				Instantiate(_test, bulletPos, Quaternion.identity);
+			}
+			Debug.Log(this.name + base._puttingEnemyBullet.AngleFromEnemyCalculate(_playerPos, this.transform.position));*/
             /*base.LineShot()*/
             _shotTime = 0f;
 			//_direction = 315;

@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// Enemy2.cs
+// RedSlime.cs
 //
 // 作成日:2024/02/06
 // 作成者:小林慎
@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Splines;
 using System.Collections.Generic;
 
-public class Enemy2 : EnemyBase
+public class RedSlime : EnemyBase
 {
 	#region 変数
     private const string PLAYER_BULLET_TAG = "PlayerBullet";
@@ -23,6 +23,12 @@ public class Enemy2 : EnemyBase
 	private int _angleWidth = 45;
     // 自分のオブジェクトの半径
     private float _radius = 0f;
+
+	private const float BULLET_INTERVAL = 0.25f;
+	private float _bulletTime = 0f;
+	private const int BULLET_AMOUNT = 5;
+	private int _bulletCount = 0;
+
 	private GameObject _playerObject = default;
 	private Vector3 _playerPos = Vector3.zero;
 
@@ -47,16 +53,12 @@ public class Enemy2 : EnemyBase
 		base._hpSlider.value = ENEMY_HP;
 		base._hpValue = ENEMY_HP;
 
-		_radius = this.transform.localScale.x / 2;
-
         // _splineContainer.Splines[0].EvaluatePosition(0) → Spline0の始点の座標
         // _splineContainer.Splines[1].EvaluatePosition(0) → Spline1の始点の座標
         // Debug.Log(_splineContainer.Splines[0].EvaluatePosition(0).y);
 
         _playerObject = GameObject.FindWithTag("Player");
         _playerPos = _playerObject.transform.position;
-
-        
     }
 
     /// <summary>
@@ -82,36 +84,35 @@ public class Enemy2 : EnemyBase
     private void Update ()
 	{
 		_shotTime += Time.deltaTime;
+		_bulletTime += Time.deltaTime;
 
-		base._enemyMove.Move();
+		this.transform.position = base._enemyMove.MovePosCalculate();
 
 		base.FollowHpBar(this.transform.position);
 
 		_playerPos = _playerObject.transform.position;
 
-		if ( _shotTime > SHOT_INTERVAL )
+		if ( _shotTime >= SHOT_INTERVAL )
 		{
-            /*// 三方向に扇形の弾を撃つ
-			for (int i = 0; i < 3; i++)
-			{
-				base.RoundShot(this.transform.position, _maxAngle, _angleSplit, _direction, 0, Bullet.MoveType.Line);
-				_direction -= 90;
-			}*/
-            base._puttingEnemyBullet.FanShot(this.transform.position, _centerAngle, _angleSplit, _angleWidth, 2, Bullet.MoveType.Line);
-			
-			/*int minAngle = base._puttingEnemyBullet.AngleFromEnemyCalculate(_playerPos, this.transform.position) - _angleWidth;
-			int maxAngle = 2 * _angleWidth;
+			if(_bulletTime < BULLET_INTERVAL)
+            {
+				return;
+            }
 
-			// テスト用
-			for (int i = 0; i <= _angleSplit; i++)
-			{
-				Vector3 bulletPos = CirclePosCalculate(this.transform.position, (maxAngle / _angleSplit) * i + minAngle + 90, this.transform.localScale.x / 2);
-				Instantiate(_test, bulletPos, Quaternion.identity);
+			if(_bulletTime >= BULLET_INTERVAL && _bulletCount < BULLET_AMOUNT)
+            {
+				base._puttingEnemyBullet.LineShot(this.transform.position, base._puttingEnemyBullet.AngleFromEnemyCalculate(_playerPos, this.transform.position), 1, Bullet.MoveType.Line);
+
+				_bulletCount++;
+				_bulletTime = 0;
 			}
-			Debug.Log(this.name + base._puttingEnemyBullet.AngleFromEnemyCalculate(_playerPos, this.transform.position));*/
-            /*base.LineShot()*/
-            _shotTime = 0f;
-			//_direction = 315;
+			else
+            {
+				_bulletCount = 0;
+				_shotTime = 0f;
+			}
+
+			//base._puttingEnemyBullet.FanShot(this.transform.position, base._puttingEnemyBullet.AngleFromEnemyCalculate(_playerPos, this.transform.position), _angleSplit, _angleWidth, 1, Bullet.MoveType.Line);
 		}
 	}
 
