@@ -29,13 +29,13 @@ public class EnemyManager : MonoBehaviour
 
 	private GameObject _enemysObject = default;
 	[SerializeField]
-	private List<GameObject> _firstPhaseEnemys = new List<GameObject>();
+	private List<EnemyBase> _firstPhaseEnemys = new List<EnemyBase>();
     [SerializeField]
-    private List<GameObject> _secondPhaseEnemys = new List<GameObject>();
+    private List<EnemyBase> _secondPhaseEnemys = new List<EnemyBase>();
     [SerializeField]
-    private List<GameObject> _thirdPhaseEnemys = new List<GameObject>();
+    private List<EnemyBase> _thirdPhaseEnemys = new List<EnemyBase>();
     [SerializeField]
-    private List<GameObject> _bossPhaseEnemys = new List<GameObject>();
+    private List<EnemyBase> _bossPhaseEnemys = new List<EnemyBase>();
 	#endregion
 
 	#region プロパティ
@@ -66,19 +66,19 @@ public class EnemyManager : MonoBehaviour
                 switch (phaseCount)
                 {
                     case 1:
-                        _firstPhaseEnemys.Add(_enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1).gameObject);
+                        _firstPhaseEnemys.Add(_enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1).GetComponent<EnemyBase>());
                         break;
 
                     case 2:
-                        _secondPhaseEnemys.Add(_enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1).gameObject);
+                        _secondPhaseEnemys.Add(_enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1).GetComponent<EnemyBase>());
                         break;
 
                     case 3:
-                        _thirdPhaseEnemys.Add(_enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1).gameObject);
+                        _thirdPhaseEnemys.Add(_enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1).GetComponent<EnemyBase>());
                         break;
 
                     case 4:
-                        _bossPhaseEnemys.Add(_enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1).gameObject);
+                        _bossPhaseEnemys.Add(_enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1).GetComponent<EnemyBase>());
                         break;
 
                     default:
@@ -95,14 +95,6 @@ public class EnemyManager : MonoBehaviour
         _thirdPhaseEnemys.Clear();
         _bossPhaseEnemys.Clear();
     }
-
-    /// <summary>
-    /// 更新前処理
-    /// </summary>
-    private void Start ()
-	{
-		
-	}
 
     private void SettingEnemyCount()
     {
@@ -138,10 +130,10 @@ public class EnemyManager : MonoBehaviour
                 if(_enemyCount <= 0)
                 {
                     _phaseState = PhaseState.Second;
-                    for(int i = 0; i < _secondPhaseEnemys.Count; i++)
+                    SettingEnemyCount();
+                    for (int i = 0; i < _secondPhaseEnemys.Count; i++)
                     {
-                        SettingEnemyCount();
-                        _secondPhaseEnemys[i].SetActive(true);
+                        _secondPhaseEnemys[i].gameObject.SetActive(true);
                     }
                 }
 				break;
@@ -149,10 +141,10 @@ public class EnemyManager : MonoBehaviour
                 if (_enemyCount <= 0)
                 {
                     _phaseState = PhaseState.Third;
+                    SettingEnemyCount();
                     for (int i = 0; i < _thirdPhaseEnemys.Count; i++)
                     {
-                        SettingEnemyCount();
-                        _thirdPhaseEnemys[i].SetActive(true);
+                        _thirdPhaseEnemys[i].gameObject.SetActive(true);
                     }
                 }
                 break;
@@ -160,11 +152,11 @@ public class EnemyManager : MonoBehaviour
                 if (_enemyCount <= 0)
                 {
                     _phaseState = PhaseState.Boss;
-                    for(int i = 0; i < _bossPhaseEnemys.Count; i++)
+                    SettingEnemyCount();
+                    for (int i = 0; i < _bossPhaseEnemys.Count; i++)
                     {
-                        SettingEnemyCount();
-                        _bossPhaseEnemys[i].SetActive(true);
-                        _bossPhaseEnemys[i].GetComponent<Boss1>().SplineIndex = 2;
+                        _bossPhaseEnemys[i].gameObject.SetActive(true);
+                        _bossPhaseEnemys[i].SettingSplineIndex(3);
                     }
                 }
                 break;

@@ -15,7 +15,7 @@ public class BulletPool : MonoBehaviour
 	#region 変数
 	private const int MAX_GENERATE_PLAYER_BULLET = 15;
 	private const int MAX_GENERATE_ENEMY_BULLET = 150;
-	private const int ALL_ENEMY_BULLET = 8;
+	private const int ALL_ENEMY_BULLET = 10;
 
     
 
@@ -163,8 +163,6 @@ public class BulletPool : MonoBehaviour
 
 	public void ReturnBullet(Bullet bullet, int bulletNumber, Bullet.ShooterType type)
 	{
-		Debug.Log(bullet.name);
-		Debug.Log(type);
         bullet.gameObject.SetActive(false);
 
         switch (type)

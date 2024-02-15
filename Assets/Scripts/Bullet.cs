@@ -79,6 +79,7 @@ public class Bullet : MonoBehaviour
                         transform.Translate(Vector3.up / 3);
                         break;
                     case MoveType.Tracking:
+                        
                         break;
                     case MoveType.Curve:
                         break;

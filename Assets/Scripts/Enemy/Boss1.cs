@@ -14,12 +14,6 @@ public class Boss1 : EnemyBase
 
     private const int BOSS_HP = 120;
 
-	private SplineContainer _splineContainer = default;
-	private int _splineIndex = 0;
-
-	private float _moveTime = 0;
-	private Vector3 differencePos = Vector3.zero;
-
 	// 撃ちたい角度
 	private int _centerAngle = 270;
 	// 角度を何分割するか
@@ -37,7 +31,7 @@ public class Boss1 : EnemyBase
 	#endregion
 
 	#region プロパティ
-	public int SplineIndex { set { _splineIndex = value; } }
+	
 	#endregion
 
 	#region メソッド
@@ -48,15 +42,6 @@ public class Boss1 : EnemyBase
 		base._hpValue = BOSS_HP;
 
 		_radius = this.transform.localScale.x / 2;
-
-		float firstEnemyPosX = this.transform.position.x;
-		float firstEnemyPosY = this.transform.position.y;
-
-		_splineContainer = GameObject.Find("FirstSpline").GetComponent<SplineContainer>();
-		float firstBezierPosX = _splineContainer.Splines[_splineIndex].EvaluatePosition(0).x;
-		float firstBezierPosY = _splineContainer.Splines[_splineIndex].EvaluatePosition(0).y;
-
-		differencePos = new Vector3(firstEnemyPosX - firstBezierPosX, firstEnemyPosY - firstBezierPosY, 0);
 	}
 
     /// <summary>
@@ -65,12 +50,9 @@ public class Boss1 : EnemyBase
     private void Update ()
 	{
 		_shotTime += Time.deltaTime;
-		_moveTime += Time.deltaTime / 5;
 
-		// base.FollowHpBar(this.transform.position);
+		base._enemyMove.Move();
 
-		Vector3 movePos = _splineContainer.Splines[_splineIndex].EvaluatePosition(_moveTime);
-		this.transform.position = movePos + differencePos;
 		//base._playerPos = base._player.transform.position;
 
 		if( _shotTime > SHOT_INTERVAL )
@@ -81,7 +63,7 @@ public class Boss1 : EnemyBase
 				base.RoundShot(this.transform.position, _maxAngle, _angleSplit, _direction, 0, Bullet.MoveType.Line);
 				_direction -= 90;
 			}*/
-            base._puttingEnemyBullet.RoundShot(this.transform.position, _centerAngle, _angleSplit, _angleWidth, _radius, 0, Bullet.MoveType.Line);
+            base._puttingEnemyBullet.FanShot(this.transform.position, _centerAngle, _angleSplit, _angleWidth, 0, Bullet.MoveType.Line);
 			//Debug.Log(this.transform.position);
             /*base.LineShot()*/
             _shotTime = 0f;

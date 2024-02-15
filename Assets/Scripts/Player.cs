@@ -110,7 +110,6 @@ public class Player : MonoBehaviour
         if (_isMove)
         {
             this.transform.position = _startObjectPosition + _cursorPositionDistance;
-            Debug.Log(_startObjectPosition + _cursorPositionDistance);
 
             InStage();
         }

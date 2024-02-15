@@ -6,14 +6,19 @@
 // ---------------------------------------------------------
 using UnityEngine;
 
-public class PuttingEnemyBullet
+public class EnemyShot
 {
     #region 変数
     private const int ADJUST_ANGLE = 90;
+    private float _radius = 0f;
+
+    private float _bulletInterval = 0.5f;
+    private float _bulletTime = 0f;
     private BulletPool _bulletPool = default;
 
-    public PuttingEnemyBullet(BulletPool bulletPool)
+    public EnemyShot(BulletPool bulletPool, float radius)
 	{
+        _radius = radius;
 		_bulletPool = bulletPool;
 	}
 	#endregion
@@ -26,14 +31,26 @@ public class PuttingEnemyBullet
 	/// <summary>
 	/// 弾を指定された方向に直線で撃ち出す
 	/// </summary>
-    private void LineShot(Vector3 shooterPos, Vector3 direction)
+    public void LineShot(Vector3 shooterPos, int angle, int bulletAmount, int bulletNumber, Bullet.MoveType moveType)
     {
-        
+        _bulletTime += Time.deltaTime;
+
+        for (int i = 0; i < bulletAmount; i++)
+        {
+            for(float k = 0; k <= _bulletInterval; k += Time.deltaTime)
+            {
+
+            }
+            Bullet bullet = _bulletPool.LendEnemyBullet(shooterPos, bulletNumber);
+
+            bullet.SettingMoveType = moveType;
+
+            bullet.transform.rotation = Quaternion.Euler(Vector3.forward * angle);
+        }
     }
 
-
     /// <summary>
-    /// 弾を円形に撃ち出す
+    /// 弾を扇形に撃ち出す
     /// 撃つ範囲を引数で設定する
 	/// 例：maxAngle = 90, angleSplit = 9, direction = 180の場合は下向きの中心角が90度の扇形の弧を9分割する
     /// </summary>
@@ -44,7 +61,7 @@ public class PuttingEnemyBullet
 	/// <param name="radius">配置したい円の半径</param>
     /// <param name="bulletNumber">弾の種類</param>
     /// <param name="moveType">弾の軌道</param>
-    public void RoundShot(Vector3 shooterPos, int centerAngle, int angleSplit, int angleWidth, float radius, int bulletNumber, Bullet.MoveType moveType)
+    public void FanShot(Vector3 shooterPos, int centerAngle, int angleSplit, int angleWidth, int bulletNumber, Bullet.MoveType moveType)
 	{
         // 座標計算を始める角度
         int minAngle = centerAngle - angleWidth;
@@ -53,15 +70,35 @@ public class PuttingEnemyBullet
 
         for (int i = 0; i <= angleSplit; i++)
         {
-			// 0の位置がUnity上の-90にあたるため、
-			// 例えば弾の進行方向を下向きにするためにdirectionに180を入れたら最初の位置を下にするのにdirectionの半分の90を使用する
-            Vector3 bulletPos = CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i + minAngle + ADJUST_ANGLE, radius);
+			// 0の位置がUnity上の-90にあたるため、ADJUST_ANGLEを足すことでUnityに合わせる
+            // そのうえで、開始位置をずらすためにminAngleを足す
+            Vector3 bulletPos = CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i + minAngle + ADJUST_ANGLE, _radius);
 
 			Bullet bullet = _bulletPool.LendEnemyBullet(bulletPos, bulletNumber);
 
 			bullet.SettingMoveType = moveType;
 
 			bullet.transform.rotation = Quaternion.Euler(Vector3.forward * ((maxAngle / angleSplit) * i + minAngle));
+        }
+    }
+
+
+    public void RoundShot(Vector3 shooterPos, int angleSplit, int bulletNumber, Bullet.MoveType moveType)
+    {
+        // 中心角の最大
+        int maxAngle = 360;
+
+        for (int i = 0; i < angleSplit; i++)
+        {
+            // 0の位置がUnity上の-90にあたるため、ADJUST_ANGLEを足すことでUnityに合わせる
+            // そのうえで、開始位置をずらすためにminAngleを足す
+            Vector3 bulletPos = CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i, _radius);
+
+            Bullet bullet = _bulletPool.LendEnemyBullet(bulletPos, bulletNumber);
+
+            bullet.SettingMoveType = moveType;
+
+            bullet.transform.rotation = Quaternion.Euler(Vector3.forward * ((maxAngle / angleSplit) * i));
         }
     }
 
