@@ -7,7 +7,6 @@
 using UnityEngine;
 using System;
 using System.Collections;
-using static UnityEngine.GraphicsBuffer;
 
 public class Bullet : MonoBehaviour
 {
@@ -61,8 +60,8 @@ public class Bullet : MonoBehaviour
 	/// </summary>
 	private void Start ()
 	{
-        _playerObject = UnityEngine.GameObject.FindWithTag("Player");
-        _bulletPool = UnityEngine.GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
+        _playerObject = GameObject.FindWithTag("Player");
+        _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
 	}
 
 	/// <summary>
@@ -79,7 +78,18 @@ public class Bullet : MonoBehaviour
                         transform.Translate(Vector3.up / 3);
                         break;
                     case MoveType.Tracking:
-                        
+                        Vector3 nearEnemyPos = Vector3.zero;
+                        for (int i = 0; i < CurrentPhaseEnemyPosition._currentEnemyPos.Count; i++)
+                        {
+                            if()
+                        }
+                        // 座標計算、相対的にどれぐらい離れているか
+                        Vector3 direction = nearEnemyPos - this.transform.position;
+                        // LookRotationではうまく回転できなかった
+                        Quaternion targetRotation = Quaternion.FromToRotation(Vector3.up, direction);
+                        //（現在角度、目標方向、どれぐらい曲がるか）
+                        transform.rotation = Quaternion.RotateTowards(this.transform.rotation, targetRotation, 0f);
+                        transform.Translate(Vector3.up / 15);
                         break;
                     case MoveType.Curve:
                         break;

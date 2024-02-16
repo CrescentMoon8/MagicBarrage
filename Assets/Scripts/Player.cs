@@ -14,28 +14,30 @@ using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 public class Player : MonoBehaviour
 {
     #region 変数
+    private const int LINE_BULLET_AMOUNT = 1;
+    private const int TRACKING_BULLET_AMOUNT = 2;
     private Vector3 _startMousePos = Vector3.zero;
     [SerializeField]
-    private Vector2 _startObjectPosition = Vector2.zero;
+    private Vector2 _startObjectPos = Vector2.zero;
     [SerializeField]
-    private Vector2 _cursorPositionDistance = Vector2.zero;
+    private Vector2 _cursorPosDistance = Vector2.zero;
     [SerializeField]
     private bool _isMove = false;
 
     private bool _isShot = false;
     private float _shotTime = 0f;
     private const float SHOT_INTERVAL = 0.1f;
-    private Vector3 _shotPosition = Vector3.zero;
-    private const float SHOT_POSITION_DIFFERENCE_Y = 0.75f;
+    private const float SHOT_POS_DIFFERENCE_Y = 0.75f;
+    private const float SHOT_POS_DIFFERENCE_X = 0.5f;
 
     [SerializeField]
     private Vector3 _radius = Vector3.zero;
-    private const int MAX_MOVE_POSITION_INDEX = 3;
-    private const int MIN_MOVE_POSITION_INDEX = 1;
+    private const int MAX_MOVE_POS_INDEX = 3;
+    private const int MIN_MOVE_POS_INDEX = 1;
     [SerializeField]
-    private Vector2 _maxMovePosition = Vector2.zero;
+    private Vector2 _maxMovePos = Vector2.zero;
     [SerializeField]
-    private Vector2 _minMovePosition = Vector2.zero;
+    private Vector2 _minMovePos = Vector2.zero;
 
     [SerializeField]
     private RectTransform _header = default;
@@ -50,8 +52,8 @@ public class Player : MonoBehaviour
 
     private SpriteRenderer _spriteRenderer = default;
     private CircleCollider2D _circleCollider2D = default;
-    private BulletPool _bulletPool = default;
     private Animator _playerAnimator = default;
+    private BulletPool _bulletPool = default;
 
     #endregion
 
@@ -77,11 +79,11 @@ public class Player : MonoBehaviour
         // 座標の取得順は左下、左上、右上、右下
         Vector3[] headerCorners = new Vector3[4];
         _header.GetWorldCorners(headerCorners);
-        _maxMovePosition = headerCorners[MAX_MOVE_POSITION_INDEX] - _radius;
+        _maxMovePos = headerCorners[MAX_MOVE_POS_INDEX] - _radius;
 
         Vector3[] footerCorners = new Vector3[4];
         _footer.GetWorldCorners(footerCorners);
-        _minMovePosition = footerCorners[MIN_MOVE_POSITION_INDEX] + _radius;
+        _minMovePos = footerCorners[MIN_MOVE_POS_INDEX] + _radius;
 
         EnhancedTouchSupport.Enable();
     }
@@ -109,22 +111,44 @@ public class Player : MonoBehaviour
     {
         if (_isMove)
         {
-            this.transform.position = _startObjectPosition + _cursorPositionDistance;
+            this.transform.position = _startObjectPos + _cursorPosDistance;
 
             InStage();
         }
 
         if(_isShot)
         {
-            if(_shotTime >= SHOT_INTERVAL)
+            PlayerShot();
+        }
+    }
+
+    private void PlayerShot()
+    {
+        if (_shotTime >= SHOT_INTERVAL)
+        {
+            Vector3 shotPos = this.transform.position;
+            shotPos.y += SHOT_POS_DIFFERENCE_Y;
+
+            for (int bulletCount = 1; bulletCount <= LINE_BULLET_AMOUNT; bulletCount++)
             {
-                _shotPosition = this.transform.position;
-                _shotPosition.y += SHOT_POSITION_DIFFERENCE_Y;
-
-                _bulletPool.LendPlayerBullet(_shotPosition);
-
-                _shotTime = 0;
+                _bulletPool.LendPlayerBullet(shotPos, Bullet.MoveType.Line);
             }
+
+            for (int bulletCount = 1; bulletCount <= TRACKING_BULLET_AMOUNT; bulletCount++)
+            {
+                if (bulletCount % 2 == 1)
+                {
+                    shotPos.x -= SHOT_POS_DIFFERENCE_X * bulletCount;
+                }
+                else
+                {
+                    shotPos.x += SHOT_POS_DIFFERENCE_X * bulletCount;
+                }
+
+                _bulletPool.LendPlayerBullet(shotPos, Bullet.MoveType.Tracking);
+            }
+
+            _shotTime = 0;
         }
     }
 
@@ -140,14 +164,14 @@ public class Player : MonoBehaviour
             // 指がふれたとき
             if (active.phase == TouchPhase.Began)
             {
-                _startObjectPosition = this.transform.position;
+                _startObjectPos = this.transform.position;
             }
 
             // 指が動いてるとき
             if (active.phase == TouchPhase.Moved)
             {
                 _isMove = true;
-                _cursorPositionDistance = Camera.main.ScreenToWorldPoint(active.screenPosition) - Camera.main.ScreenToWorldPoint(active.startScreenPosition);
+                _cursorPosDistance = Camera.main.ScreenToWorldPoint(active.screenPosition) - Camera.main.ScreenToWorldPoint(active.startScreenPosition);
             }
         }
         else
@@ -184,30 +208,30 @@ public class Player : MonoBehaviour
     private void InStage()
     {
         // プレイヤーが画面内にいるなら処理を飛ばす
-        if ((this.transform.position.y <= _maxMovePosition.y) && (this.transform.position.y >= _minMovePosition.y) &&
-            (this.transform.position.x <= _maxMovePosition.x) && (this.transform.position.x >= _minMovePosition.x))
+        if ((this.transform.position.y <= _maxMovePos.y) && (this.transform.position.y >= _minMovePos.y) &&
+            (this.transform.position.x <= _maxMovePos.x) && (this.transform.position.x >= _minMovePos.x))
         {
             return;
         }
 
-        if ((this.transform.position.y) >= _maxMovePosition.y)
+        if (this.transform.position.y >= _maxMovePos.y)
         {
-            this.transform.position = new Vector2(this.transform.position.x, _maxMovePosition.y);
+            this.transform.position = new Vector2(this.transform.position.x, _maxMovePos.y);
         }
 
-        if ((this.transform.position.y) <= _minMovePosition.y)
+        if (this.transform.position.y <= _minMovePos.y)
         {
-            this.transform.position = new Vector2(this.transform.position.x, _minMovePosition.y);
+            this.transform.position = new Vector2(this.transform.position.x, _minMovePos.y);
         }
 
-        if (this.transform.position.x >= _maxMovePosition.x)
+        if (this.transform.position.x >= _maxMovePos.x)
         {
-            this.transform.position = new Vector2(_maxMovePosition.x, this.transform.position.y);
+            this.transform.position = new Vector2(_maxMovePos.x, this.transform.position.y);
         }
 
-        if (this.transform.position.x <= _minMovePosition.x)
+        if (this.transform.position.x <= _minMovePos.x)
         {
-            this.transform.position = new Vector2(_minMovePosition.x, this.transform.position.y);
+            this.transform.position = new Vector2(_minMovePos.x, this.transform.position.y);
         }
     }
 

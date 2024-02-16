@@ -9,8 +9,10 @@ using UnityEngine.Splines;
 
 public class BossSlime : EnemyBase
 {
-    #region 変数
-    private const string PLAYER_BULLET_TAG = "PlayerBullet";
+	#region 変数
+	private const int MOVE_PATTERN_INDEX = 4;
+
+	private const string PLAYER_BULLET_TAG = "PlayerBullet";
 
     private const int BOSS_HP = 120;
 
@@ -20,14 +22,11 @@ public class BossSlime : EnemyBase
 	private int _angleSplit = 9;
 	// 撃ちたい角度の±いくらか
 	private int _angleWidth = 45;
-	// 自分のオブジェクトの半径
-	private float _radius = 0f;
 
 	private float _shotTime = 0f;
 	private const float SHOT_INTERVAL = 2f;
 
-	[SerializeField]
-	private GameObject _test;
+	private Event _bossShot;
 	#endregion
 
 	#region プロパティ
@@ -41,7 +40,8 @@ public class BossSlime : EnemyBase
 		base._hpSlider.value = BOSS_HP;
 		base._hpValue = BOSS_HP;
 
-		_radius = this.transform.localScale.x / 2;
+		_enemyMove.SetSplineContainer(MOVE_PATTERN_INDEX);
+		_enemyMove.DifferencePosInitialize(this.transform.position);
 	}
 
     /// <summary>
@@ -64,10 +64,8 @@ public class BossSlime : EnemyBase
 				_direction -= 90;
 			}*/
             base._puttingEnemyBullet.FanShot(this.transform.position, _centerAngle, _angleSplit, _angleWidth, 0, Bullet.MoveType.Line);
-			//Debug.Log(this.transform.position);
-            /*base.LineShot()*/
+
             _shotTime = 0f;
-			//_direction = 315;
 		}
 	}
 

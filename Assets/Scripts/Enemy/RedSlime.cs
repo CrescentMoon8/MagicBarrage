@@ -11,6 +11,7 @@ using System.Collections.Generic;
 public class RedSlime : EnemyBase
 {
 	#region 変数
+	private const int MOVE_PATTERN_INDEX = 0;
     private const string PLAYER_BULLET_TAG = "PlayerBullet";
 
     private const int ENEMY_HP = 20;
@@ -53,29 +54,15 @@ public class RedSlime : EnemyBase
 		base._hpSlider.value = ENEMY_HP;
 		base._hpValue = ENEMY_HP;
 
-        // _splineContainer.Splines[0].EvaluatePosition(0) → Spline0の始点の座標
-        // _splineContainer.Splines[1].EvaluatePosition(0) → Spline1の始点の座標
-        // Debug.Log(_splineContainer.Splines[0].EvaluatePosition(0).y);
+		_enemyMove.SetSplineContainer(MOVE_PATTERN_INDEX);
+		_enemyMove.DifferencePosInitialize(this.transform.position);
 
-        _playerObject = GameObject.FindWithTag("Player");
+		// _splineContainer.Splines[0].EvaluatePosition(0) → Spline0の始点の座標
+		// _splineContainer.Splines[1].EvaluatePosition(0) → Spline1の始点の座標
+		// Debug.Log(_splineContainer.Splines[0].EvaluatePosition(0).y);
+
+		_playerObject = GameObject.FindWithTag("Player");
         _playerPos = _playerObject.transform.position;
-    }
-
-    /// <summary>
-    /// 配置位置の確認用メソッド
-    /// </summary>
-    /// <param name="shooterPos"></param>
-    /// <param name="angle"></param>
-    /// <param name="radius"></param>
-    /// <returns></returns>
-    private Vector3 CirclePosCalculate(Vector3 shooterPos, float angle, float radius)
-    {
-        Vector3 circlePos = shooterPos;
-
-        circlePos.x += Mathf.Cos(angle * Mathf.Deg2Rad) * radius;
-        circlePos.y += Mathf.Sin(angle * Mathf.Deg2Rad) * radius;
-
-        return circlePos;
     }
 
     /// <summary>
@@ -94,6 +81,9 @@ public class RedSlime : EnemyBase
 
 		if ( _shotTime >= SHOT_INTERVAL )
 		{
+			/* 
+			 * 指定した秒数間隔で指定した回数撃つ
+			 */
 			if(_bulletTime < BULLET_INTERVAL)
             {
 				return;

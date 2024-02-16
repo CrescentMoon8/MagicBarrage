@@ -11,39 +11,40 @@ using System.Collections;
 
 public class EnemyMove
 {
-	#region 変数
-	public enum MoveState
-	{
-		BeforeEnter,
-		Enter,
-		Stay,
-		Exit,
-		Stop
-	}
+    #region 変数
+    /*public enum MoveState
+    {
+        BeforeEnter,
+        Enter,
+        Stay,
+        Exit,
+        Stop
+    }
 
-	private MoveState _moveState = MoveState.BeforeEnter;
+    private MoveState _moveState = MoveState.BeforeEnter;
 
-	private const float EXIT_MOVE_TIME = 15f;
-	private const float MOVE_STOP_RATIO = 1.0f;
-	private float _moveTime = 0f;
-	// Splineの長さに対する現在位置の割合（始点：０　終点：１）
-	private float _moveRatio = 0f;
+    private const float EXIT_MOVE_TIME = 15f;
+    private const float MOVE_STOP_RATIO = 1.0f;
+    private float _moveTime = 0f;*/
+    // Splineの長さに対する現在位置の割合（始点：０　終点：１）
+    private float _moveRatio = 0f;
 	private Vector3 differencePos = Vector3.zero;
+    private int _splineIndex = 0;
 
 	private SplineContainer _enterSplineContainer = default;
-	private SplineContainer _exitSplineContainer = default;
-	private int _splineIndex = 0;
+	//private SplineContainer _exitSplineContainer = default;
 	#endregion
 
 	#region プロパティ
-	public int SplineIndex { set { _splineIndex = value; } }
+
 	#endregion
 
 	#region メソッド
-	public void SetSplineContainer()
+	public void SetSplineContainer(int splineIndex)
     {
 		_enterSplineContainer = GameObject.Find("EnterSpline").GetComponent<SplineContainer>();
-		_exitSplineContainer = GameObject.Find("ExitSpline").GetComponent<SplineContainer>();
+        //_exitSplineContainer = GameObject.Find("ExitSpline").GetComponent<SplineContainer>();
+        _splineIndex = splineIndex;
 	}
 
 	/// <summary>

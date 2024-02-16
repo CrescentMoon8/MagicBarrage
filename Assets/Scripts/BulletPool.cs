@@ -17,8 +17,6 @@ public class BulletPool : MonoBehaviour
 	private const int MAX_GENERATE_ENEMY_BULLET = 150;
 	private const int ALL_ENEMY_BULLET = 10;
 
-    
-
     // Addressableを用いるときに使う、使うか未定
     /*private const int ALL_BULLET = 9;
 	private const int PLAYER_BULLET = 0;
@@ -87,10 +85,10 @@ public class BulletPool : MonoBehaviour
         _playerBulletParent = GameObject.FindWithTag("PlayerBulletPool").transform;
         _enemyBulletParent = GameObject.FindWithTag("EnemyBulletPool").transform;
 
-		GenerateObjectPool();
+		GenerateBulletPool();
 	}
 
-    private void GenerateObjectPool()
+    private void GenerateBulletPool()
 	{
 		for (int i = 0; i < MAX_GENERATE_PLAYER_BULLET; i++)
 		{
@@ -122,7 +120,7 @@ public class BulletPool : MonoBehaviour
 	/// 弾をプレイヤーに貸し出す
 	/// </summary>
 	/// <returns></returns>
-	public Bullet LendPlayerBullet(Vector3 shotPosition)
+	public Bullet LendPlayerBullet(Vector3 shotPosition, Bullet.MoveType moveType)
 	{
 		if(_playerBulletsPool.Count <= 0)
 		{
@@ -136,6 +134,7 @@ public class BulletPool : MonoBehaviour
 		bullet.transform.position = shotPosition;
 
 		bullet.SettingShooterType = Bullet.ShooterType.Player;
+		bullet.SettingMoveType = moveType;
 
 		return bullet;
 	}

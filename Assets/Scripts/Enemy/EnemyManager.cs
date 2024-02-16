@@ -15,27 +15,17 @@ public class EnemyManager : MonoBehaviour
 	#region 変数
 	private enum PhaseState
 	{
-		First,
-		Second,
-		Third,
-		Boss,
-		End
+		First = 0,
+		Second = 1,
+		Third = 2,
+		Boss = 3,
+		End = 4
 	}
 
 	[SerializeField]
 	private PhaseState _phaseState = PhaseState.First;
 
-    private int _enemyCount = 0;
-
-	private GameObject _enemysObject = default;
-	[SerializeField]
-	private List<EnemyBase> _firstPhaseEnemys = new List<EnemyBase>();
-    [SerializeField]
-    private List<EnemyBase> _secondPhaseEnemys = new List<EnemyBase>();
-    [SerializeField]
-    private List<EnemyBase> _thirdPhaseEnemys = new List<EnemyBase>();
-    [SerializeField]
-    private List<EnemyBase> _bossPhaseEnemys = new List<EnemyBase>();
+    private EnemyPhaseList _enemyPhaseList = default;
 	#endregion
 
 	#region プロパティ
@@ -48,89 +38,8 @@ public class EnemyManager : MonoBehaviour
 	/// </summary>
 	private void Awake()
     {
-        PhaseListClear();
-
-        PhaseListInitialize();
-
-        SettingEnemyCount();
-    }
-
-    /// <summary>
-    /// リストにそれぞれのエネミーを追加する
-    /// </summary>
-    private void PhaseListInitialize()
-    {
-        _enemysObject = GameObject.FindWithTag("Enemys");
-
-        for (int phaseCount = 1; phaseCount <= _enemysObject.transform.childCount; phaseCount++)
-        {
-            for (int enemyCount = 1; enemyCount <= _enemysObject.transform.GetChild(phaseCount - 1).childCount; enemyCount++)
-            {
-                switch (phaseCount)
-                {
-                    case 1:
-                        _firstPhaseEnemys.Add(_enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1).GetComponent<EnemyBase>());
-                        break;
-
-                    case 2:
-                        _secondPhaseEnemys.Add(_enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1).GetComponent<EnemyBase>());
-                        break;
-
-                    case 3:
-                        _thirdPhaseEnemys.Add(_enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1).GetComponent<EnemyBase>());
-                        break;
-
-                    case 4:
-                        _bossPhaseEnemys.Add(_enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1).GetComponent<EnemyBase>());
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// リストをすべて空にする
-    /// </summary>
-    private void PhaseListClear()
-    {
-        _firstPhaseEnemys.Clear();
-        _secondPhaseEnemys.Clear();
-        _thirdPhaseEnemys.Clear();
-        _bossPhaseEnemys.Clear();
-    }
-
-    /// <summary>
-    /// リストの中にいるエネミーの数に応じて、フェーズごとのエネミーの数を設定する
-    /// </summary>
-    private void SettingEnemyCount()
-    {
-        switch (_phaseState)
-        {
-            case PhaseState.First:
-                _enemyCount = _firstPhaseEnemys.Count;
-                break;
-
-            case PhaseState.Second:
-                _enemyCount = _secondPhaseEnemys.Count;
-                break;
-
-            case PhaseState.Third:
-                _enemyCount = _thirdPhaseEnemys.Count;
-                break;
-
-            case PhaseState.Boss:
-                _enemyCount = _bossPhaseEnemys.Count;
-                break;
-
-            case PhaseState.End:
-                break;
-
-            default:
-                break;
-        }
+        _enemyPhaseList = GetComponent<EnemyPhaseList>();
+        _enemyPhaseList.Initialize();
     }
 
 	/// <summary>
@@ -141,41 +50,37 @@ public class EnemyManager : MonoBehaviour
 		switch (_phaseState)
 		{
 			case PhaseState.First:
-                if(_enemyCount <= 0)
+                if(_enemyPhaseList.EnemyList[(int)PhaseState.First].Count <= 0)
                 {
                     _phaseState = PhaseState.Second;
-                    SettingEnemyCount();
-                    for (int i = 0; i < _secondPhaseEnemys.Count; i++)
+                    for (int i = 0; i < _enemyPhaseList.EnemyList[(int)PhaseState.Second].Count; i++)
                     {
-                        _secondPhaseEnemys[i].gameObject.SetActive(true);
+                        _enemyPhaseList.EnemyList[(int)PhaseState.Second][i].gameObject.SetActive(true);
                     }
                 }
 				break;
 			case PhaseState.Second:
-                if (_enemyCount <= 0)
+                if (_enemyPhaseList.EnemyList[(int)PhaseState.Second].Count <= 0)
                 {
                     _phaseState = PhaseState.Third;
-                    SettingEnemyCount();
-                    for (int i = 0; i < _thirdPhaseEnemys.Count; i++)
+                    for (int i = 0; i < _enemyPhaseList.EnemyList[(int)PhaseState.Third].Count; i++)
                     {
-                        _thirdPhaseEnemys[i].gameObject.SetActive(true);
+                        _enemyPhaseList.EnemyList[(int)PhaseState.Third][i].gameObject.SetActive(true);
                     }
                 }
                 break;
 			case PhaseState.Third:
-                if (_enemyCount <= 0)
+                if (_enemyPhaseList.EnemyList[(int)PhaseState.Third].Count <= 0)
                 {
                     _phaseState = PhaseState.Boss;
-                    SettingEnemyCount();
-                    for (int i = 0; i < _bossPhaseEnemys.Count; i++)
+                    for (int i = 0; i < _enemyPhaseList.EnemyList[(int)PhaseState.Boss].Count; i++)
                     {
-                        _bossPhaseEnemys[i].gameObject.SetActive(true);
-                        _bossPhaseEnemys[i].SettingSplineIndex(3);
+                        _enemyPhaseList.EnemyList[(int)PhaseState.Boss][i].gameObject.SetActive(true);
                     }
                 }
                 break;
 			case PhaseState.Boss:
-                if (_enemyCount <= 0)
+                if (_enemyPhaseList.EnemyList[(int)PhaseState.Boss].Count <= 0)
                 {
                     _phaseState = PhaseState.End;
                 }
@@ -188,9 +93,9 @@ public class EnemyManager : MonoBehaviour
 		}
 	}
 
-    public void DownEnemyCount()
+    public void DownEnemyCount(GameObject enemy)
     {
-        _enemyCount--;
+        _enemyPhaseList.RemoveEnemy((int)_phaseState, enemy);
     }
 	#endregion
 }

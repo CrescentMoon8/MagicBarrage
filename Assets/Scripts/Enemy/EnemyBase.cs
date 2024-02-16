@@ -39,7 +39,7 @@ public abstract class EnemyBase : MonoBehaviour
 	protected EnemyShot _puttingEnemyBullet = default;
 	protected EnemyMove _enemyMove = default;
 
-	private delegate void DownEnemyCount();
+	private delegate void DownEnemyCount(GameObject enemy);
 	private DownEnemyCount _downEnemyCountCallBack = default;
 
 	#endregion
@@ -57,15 +57,8 @@ public abstract class EnemyBase : MonoBehaviour
         _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
 		_puttingEnemyBullet = new EnemyShot(_bulletPool, this.transform.localScale.x / 2);
 		_enemyMove = new EnemyMove();
-		_enemyMove.SetSplineContainer();
-		_enemyMove.DifferencePosInitialize(this.transform.position);
 
 		_downEnemyCountCallBack = GameObject.FindWithTag("Scripts").GetComponentInChildren<EnemyManager>().DownEnemyCount;
-    }
-
-	public void SettingSplineIndex(int splineIndex)
-    {
-		_enemyMove.SplineIndex = splineIndex;
     }
 
     /*public Vector2 BezierCalculation(Vector2 start, Vector2 relay, Vector2 goal, float time)
@@ -106,7 +99,7 @@ public abstract class EnemyBase : MonoBehaviour
 
 	private void EnemyDead()
 	{
-		_downEnemyCountCallBack();
+		_downEnemyCountCallBack(this.gameObject);
 		_hpSlider.gameObject.SetActive(false);
 		this.gameObject.SetActive(false);
 	}

@@ -47,7 +47,6 @@ public class EnemyShot
     /// <param name="centerAngle">撃ちたい角度</param>
     /// <param name="angleSplit">角度を何分割するか</param>
     /// <param name="angleWidth">撃ちたい角度からの角度幅</param>
-	/// <param name="radius">配置したい円の半径</param>
     /// <param name="bulletNumber">弾の種類</param>
     /// <param name="moveType">弾の軌道</param>
     public void FanShot(Vector3 shooterPos, int centerAngle, int angleSplit, int angleWidth, int bulletNumber, Bullet.MoveType moveType)

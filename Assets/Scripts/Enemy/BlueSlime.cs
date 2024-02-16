@@ -11,7 +11,9 @@ using System.Collections.Generic;
 public class BlueSlime : EnemyBase
 {
 	#region 変数
-    private const string PLAYER_BULLET_TAG = "PlayerBullet";
+	private const int MOVE_PATTERN_INDEX = 1;
+
+	private const string PLAYER_BULLET_TAG = "PlayerBullet";
 
     private const int ENEMY_HP = 20;
 
@@ -21,16 +23,12 @@ public class BlueSlime : EnemyBase
 	private int _angleSplit = 10;
 	// 撃ちたい角度の±いくらか
 	private int _angleWidth = 45;
-    // 自分のオブジェクトの半径
-    private float _radius = 0f;
+
 	private GameObject _playerObject = default;
 	private Vector3 _playerPos = Vector3.zero;
 
     private float _shotTime = 0f;
 	private const float SHOT_INTERVAL = 2f;
-
-	[SerializeField]
-	private GameObject _test;
 	#endregion
 
 	#region プロパティ
@@ -47,33 +45,17 @@ public class BlueSlime : EnemyBase
 		base._hpSlider.value = ENEMY_HP;
 		base._hpValue = ENEMY_HP;
 
-		_radius = this.transform.localScale.x / 2;
+		_enemyMove.SetSplineContainer(MOVE_PATTERN_INDEX);
+		_enemyMove.DifferencePosInitialize(this.transform.position);
 
-        // _splineContainer.Splines[0].EvaluatePosition(0) → Spline0の始点の座標
-        // _splineContainer.Splines[1].EvaluatePosition(0) → Spline1の始点の座標
-        // Debug.Log(_splineContainer.Splines[0].EvaluatePosition(0).y);
+		// _splineContainer.Splines[0].EvaluatePosition(0) → Spline0の始点の座標
+		// _splineContainer.Splines[1].EvaluatePosition(0) → Spline1の始点の座標
+		// Debug.Log(_splineContainer.Splines[0].EvaluatePosition(0).y);
 
-        _playerObject = GameObject.FindWithTag("Player");
+		_playerObject = GameObject.FindWithTag("Player");
         _playerPos = _playerObject.transform.position;
 
         
-    }
-
-    /// <summary>
-    /// 配置位置の確認用メソッド
-    /// </summary>
-    /// <param name="shooterPos"></param>
-    /// <param name="angle"></param>
-    /// <param name="radius"></param>
-    /// <returns></returns>
-    private Vector3 CirclePosCalculate(Vector3 shooterPos, float angle, float radius)
-    {
-        Vector3 circlePos = shooterPos;
-
-        circlePos.x += Mathf.Cos(angle * Mathf.Deg2Rad) * radius;
-        circlePos.y += Mathf.Sin(angle * Mathf.Deg2Rad) * radius;
-
-        return circlePos;
     }
 
     /// <summary>
@@ -97,21 +79,10 @@ public class BlueSlime : EnemyBase
 				base.RoundShot(this.transform.position, _maxAngle, _angleSplit, _direction, 0, Bullet.MoveType.Line);
 				_direction -= 90;
 			}*/
+
             base._puttingEnemyBullet.FanShot(this.transform.position, _centerAngle, _angleSplit, _angleWidth, 2, Bullet.MoveType.Line);
 			
-			/*int minAngle = base._puttingEnemyBullet.AngleFromEnemyCalculate(_playerPos, this.transform.position) - _angleWidth;
-			int maxAngle = 2 * _angleWidth;
-
-			// テスト用
-			for (int i = 0; i <= _angleSplit; i++)
-			{
-				Vector3 bulletPos = CirclePosCalculate(this.transform.position, (maxAngle / _angleSplit) * i + minAngle + 90, this.transform.localScale.x / 2);
-				Instantiate(_test, bulletPos, Quaternion.identity);
-			}
-			Debug.Log(this.name + base._puttingEnemyBullet.AngleFromEnemyCalculate(_playerPos, this.transform.position));*/
-            /*base.LineShot()*/
             _shotTime = 0f;
-			//_direction = 315;
 		}
 	}
 
