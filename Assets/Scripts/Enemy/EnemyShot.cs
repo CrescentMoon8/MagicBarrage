@@ -60,7 +60,7 @@ public class EnemyShot
         {
 			// 0の位置がUnity上の-90にあたるため、ADJUST_ANGLEを足すことでUnityに合わせる
             // そのうえで、開始位置をずらすためにminAngleを足す
-            Vector3 bulletPos = CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i + minAngle + ADJUST_ANGLE, _radius);
+            Vector3 bulletPos = Calculation.CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i + minAngle + ADJUST_ANGLE, _radius);
 
 			Bullet bullet = _bulletPool.LendEnemyBullet(bulletPos, bulletNumber);
 
@@ -80,7 +80,7 @@ public class EnemyShot
         {
             // 0の位置がUnity上の-90にあたるため、ADJUST_ANGLEを足すことでUnityに合わせる
             // そのうえで、開始位置をずらすためにminAngleを足す
-            Vector3 bulletPos = CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i, _radius);
+            Vector3 bulletPos = Calculation.CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i, _radius);
 
             Bullet bullet = _bulletPool.LendEnemyBullet(bulletPos, bulletNumber);
 
@@ -89,44 +89,5 @@ public class EnemyShot
             bullet.transform.rotation = Quaternion.Euler(Vector3.forward * ((maxAngle / angleSplit) * i));
         }
     }
-
-    /// <summary>
-    /// エネミーからプレイヤーへの角度を計算する
-    /// </summary>
-    /// <returns></returns>
-    public int AngleFromEnemyCalculate(Vector3 playerPos, Vector3 shooterPos)
-    {
-        Vector3 direction = playerPos - shooterPos;
-        // Atan2はY軸を中心として、右が0～180、左が-180～0の範囲となる
-        float toPlayerAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
-
-        if(toPlayerAngle < 0)
-        {
-            return Mathf.RoundToInt(Mathf.Abs(toPlayerAngle));
-        }
-        else
-        {
-            return 360 - Mathf.RoundToInt(toPlayerAngle);
-        }
-    }
-
-    /// <summary>
-    /// 与えられた角度を使って、半径radiusの円の円周上の座標を返す
-    /// </summary>
-    /// <param name="ShooterPos">射手の座標</param>
-    /// <param name="angle">中心角</param>
-    /// <returns>円周上の座標</returns>
-    private Vector3 CirclePosCalculate(Vector3 shooterPos, float angle, float radius)
-	{
-		Vector3 circlePos = shooterPos;
-
-		circlePos.x += Mathf.Cos(angle * Mathf.Deg2Rad) * radius;
-		circlePos.y += Mathf.Sin(angle * Mathf.Deg2Rad) * radius;
-
-		// ラジアンに変換しなかったら、よくわからん挙動した（参考：スクリーンショットフォルダ）
-        /*circlePosition.x = Mathf.Cos(angle) * radius;
-        circlePosition.y = Mathf.Sin(angle) * radius;*/
-        return circlePos;
-	}
     #endregion
 }

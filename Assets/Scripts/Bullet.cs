@@ -64,10 +64,18 @@ public class Bullet : MonoBehaviour
         _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
 	}
 
-	/// <summary>
-	/// 更新処理
-	/// </summary>
-	private void FixedUpdate ()
+/*    private void OnEnable()
+    {
+        switch (_shooterType)
+        {
+
+        }
+    }*/
+
+    /// <summary>
+    /// 更新処理
+    /// </summary>
+    private void FixedUpdate ()
 	{
         switch (_shooterType)
         {
@@ -78,18 +86,12 @@ public class Bullet : MonoBehaviour
                         transform.Translate(Vector3.up / 3);
                         break;
                     case MoveType.Tracking:
-                        Vector3 nearEnemyPos = Vector3.zero;
-                        for (int i = 0; i < CurrentPhaseEnemyPosition._currentEnemyPos.Count; i++)
-                        {
-                            if()
-                        }
-                        // 座標計算、相対的にどれぐらい離れているか
-                        Vector3 direction = nearEnemyPos - this.transform.position;
-                        // LookRotationではうまく回転できなかった
-                        Quaternion targetRotation = Quaternion.FromToRotation(Vector3.up, direction);
-                        //（現在角度、目標方向、どれぐらい曲がるか）
-                        transform.rotation = Quaternion.RotateTowards(this.transform.rotation, targetRotation, 0f);
-                        transform.Translate(Vector3.up / 15);
+                        int angle = GetNearEnemyAngle();
+
+                        Quaternion targetRotation = Quaternion.Euler(Vector3.forward * angle);
+                        transform.rotation = targetRotation;
+
+                        transform.Translate(Vector3.up / 3);
                         break;
                     case MoveType.Curve:
                         break;
@@ -106,12 +108,12 @@ public class Bullet : MonoBehaviour
                         break;
                     case MoveType.Tracking:
                         _playerPos = _playerObject.transform.position;
-                        // 座標計算、相対的にどれぐらい離れているか
-                        Vector3 direction = _playerPos - this.transform.position;
-                        // LookRotationではうまく回転できなかった
-                        Quaternion targetRotation = Quaternion.FromToRotation(Vector3.up, direction);
+
+                        float direction = Calculation.TargetDirectionAngle(_playerPos, this.transform.position);
+                        Quaternion targetRotation = Quaternion.Euler(Vector3.forward * direction);
                         //（現在角度、目標方向、どれぐらい曲がるか）
                         transform.rotation = Quaternion.RotateTowards(this.transform.rotation, targetRotation, 1f);
+
                         transform.Translate(Vector3.up / 15);
                         break;
                     case MoveType.Curve:
@@ -120,10 +122,25 @@ public class Bullet : MonoBehaviour
                         break;
                 }
                 break;
+
             default:
                 break;
         }
 	}
+
+    private int GetNearEnemyAngle()
+    {
+        float nearEnemyPos = Calculation.TargetDistance(CurrentPhaseEnemyPosition._currentEnemyPos[0], this.transform.position);
+        for (int i = 1; i < CurrentPhaseEnemyPosition._currentEnemyPos.Count; i++)
+        {
+            if (Calculation.TargetDistance(CurrentPhaseEnemyPosition._currentEnemyPos[i], this.transform.position) < nearEnemyPos)
+            {
+                nearEnemyPos = Calculation.TargetDistance(CurrentPhaseEnemyPosition._currentEnemyPos[i], this.transform.position);
+            }
+        }
+
+        return Calculation.AngleFromEnemyCalculate(nearEnemyPos);
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

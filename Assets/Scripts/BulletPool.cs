@@ -13,7 +13,7 @@ using System.Collections.Generic;
 public class BulletPool : MonoBehaviour
 {
 	#region 変数
-	private const int MAX_GENERATE_PLAYER_BULLET = 15;
+	private const int MAX_GENERATE_PLAYER_BULLET = 45;
 	private const int MAX_GENERATE_ENEMY_BULLET = 150;
 	private const int ALL_ENEMY_BULLET = 10;
 

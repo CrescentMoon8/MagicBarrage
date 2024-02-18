@@ -91,7 +91,7 @@ public class RedSlime : EnemyBase
 
 			if(_bulletTime >= BULLET_INTERVAL && _bulletCount < BULLET_AMOUNT)
             {
-				base._puttingEnemyBullet.LineShot(this.transform.position, base._puttingEnemyBullet.AngleFromEnemyCalculate(_playerPos, this.transform.position), 1, Bullet.MoveType.Line);
+				base._puttingEnemyBullet.LineShot(this.transform.position, Calculation.TargetDirectionAngle(_playerPos, this.transform.position), 1, Bullet.MoveType.Line);
 
 				_bulletCount++;
 				_bulletTime = 0;
