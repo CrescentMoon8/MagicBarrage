@@ -31,8 +31,12 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private MoveType _moveType = MoveType.Line;
 
-    private UnityEngine.GameObject _playerObject;
+    private GameObject _playerObject;
     private Vector3 _playerPos = Vector3.zero;
+
+    private Vector3 _distanceVector = Vector3.zero;
+    private const float BULLET_ALIVE_TIME = 1f;
+    private float _aliveTime = 0f;
 
     private int _bulletNumber = 0;
 
@@ -64,13 +68,30 @@ public class Bullet : MonoBehaviour
         _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
 	}
 
-/*    private void OnEnable()
+    private void OnEnable()
     {
         switch (_shooterType)
         {
+            case ShooterType.Player:
+                switch (_moveType)
+                {
+                    case MoveType.Line:
+                        this.transform.rotation = Quaternion.identity;
+                        break;
+                    case MoveType.Tracking:
+                        _distanceVector = GetNearEnemyDistance();
+                        break;
+                    case MoveType.Curve:
+                        break;
+                    default:
+                        break;
+                }
+                break;
 
+            default:
+                break;
         }
-    }*/
+    }
 
     /// <summary>
     /// 更新処理
@@ -85,16 +106,31 @@ public class Bullet : MonoBehaviour
                     case MoveType.Line:
                         transform.Translate(Vector3.up / 3);
                         break;
+
                     case MoveType.Tracking:
-                        int angle = GetNearEnemyAngle();
+                        //Debug.LogWarning("追尾");
+                        int angle = Calculation.TargetDirectionAngle(_distanceVector, this.transform.position);
 
                         Quaternion targetRotation = Quaternion.Euler(Vector3.forward * angle);
                         transform.rotation = targetRotation;
 
                         transform.Translate(Vector3.up / 3);
+
+                        _aliveTime += Time.deltaTime;
+
+                        if(_aliveTime > BULLET_ALIVE_TIME)
+                        {
+                            _bulletPool.ReturnBullet(this, _bulletNumber, _shooterType);
+
+                            _shooterType = ShooterType.None;
+
+                            _aliveTime = 0;
+                        }
                         break;
+
                     case MoveType.Curve:
                         break;
+
                     default:
                         break;
                 }
@@ -128,18 +164,22 @@ public class Bullet : MonoBehaviour
         }
 	}
 
-    private int GetNearEnemyAngle()
+    private Vector3 GetNearEnemyDistance()
     {
-        float nearEnemyPos = Calculation.TargetDistance(CurrentPhaseEnemyPosition._currentEnemyPos[0], this.transform.position);
+        int nearEnemyIndex = 0;
+        float nearEnemyDistance = Calculation.TargetDistance(CurrentPhaseEnemyPosition._currentEnemyPos[0], this.transform.position);
+
         for (int i = 1; i < CurrentPhaseEnemyPosition._currentEnemyPos.Count; i++)
         {
-            if (Calculation.TargetDistance(CurrentPhaseEnemyPosition._currentEnemyPos[i], this.transform.position) < nearEnemyPos)
+            if (Calculation.TargetDistance(CurrentPhaseEnemyPosition._currentEnemyPos[i], this.transform.position) < nearEnemyDistance)
             {
-                nearEnemyPos = Calculation.TargetDistance(CurrentPhaseEnemyPosition._currentEnemyPos[i], this.transform.position);
+                nearEnemyDistance = Calculation.TargetDistance(CurrentPhaseEnemyPosition._currentEnemyPos[i], this.transform.position);
+                nearEnemyIndex = i;
             }
         }
 
-        return Calculation.AngleFromEnemyCalculate(nearEnemyPos);
+        Vector3 nearEnemyVector = CurrentPhaseEnemyPosition._currentEnemyPos[nearEnemyIndex];
+        return nearEnemyVector;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

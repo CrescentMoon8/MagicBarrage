@@ -843,6 +843,7 @@ GameObject:
   m_Component:
   - component: {fileID: 155683933}
   - component: {fileID: 155683934}
+  - component: {fileID: 155683935}
   m_Layer: 0
   m_Name: EnemyManager
   m_TagString: Untagged
@@ -878,10 +879,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _phaseState: 0
-  _firstPhaseEnemys: []
-  _secondPhaseEnemys: []
-  _thirdPhaseEnemys: []
-  _bossPhaseEnemys: []
+--- !u!114 &155683935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155683932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e43cd70c626bd2c4e990ea2c0f9d891d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &183459610
 GameObject:
   m_ObjectHideFlags: 0
@@ -1618,7 +1627,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7661511288895436283, guid: 4bd3671d5c3a8334ca8dd0bf9db5990e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.72
+      value: 8.3
       objectReference: {fileID: 0}
     - target: {fileID: 7661511288895436283, guid: 4bd3671d5c3a8334ca8dd0bf9db5990e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3140,7 +3149,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7661511288895436283, guid: 4bd3671d5c3a8334ca8dd0bf9db5990e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.07
+      value: 7.65
       objectReference: {fileID: 0}
     - target: {fileID: 7661511288895436283, guid: 4bd3671d5c3a8334ca8dd0bf9db5990e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3601,7 +3610,7 @@ MonoBehaviour:
     m_Knots:
     - Position:
         x: -2.66
-        y: 4.01
+        y: 5.59
         z: 0
       TangentIn:
         x: 0
@@ -3613,9 +3622,9 @@ MonoBehaviour:
         z: 3.0438142
       Rotation:
         value:
-          x: 0.7057224
+          x: 0.70572233
           y: 0.044225212
-          z: 0.044225592
+          z: 0.0442256
           w: 0.70572245
     - Position:
         x: 0
@@ -3641,63 +3650,63 @@ MonoBehaviour:
       m_DistanceToInterpolation:
       - Distance: 0
         T: 0
-      - Distance: 0.30864966
+      - Distance: 0.3140962
         T: 0.03448276
-      - Distance: 0.60544884
+      - Distance: 0.62659943
         T: 0.06896552
-      - Distance: 0.8911592
+      - Distance: 0.93730974
         T: 0.10344828
-      - Distance: 1.1664666
+      - Distance: 1.245931
         T: 0.13793103
-      - Distance: 1.4319761
+      - Distance: 1.5520786
         T: 0.1724138
-      - Distance: 1.6882075
+      - Distance: 1.8552903
         T: 0.20689656
-      - Distance: 1.9355946
+      - Distance: 2.155034
         T: 0.2413793
-      - Distance: 2.1744823
+      - Distance: 2.4507165
         T: 0.27586207
-      - Distance: 2.4051247
+      - Distance: 2.741687
         T: 0.31034482
-      - Distance: 2.6276894
+      - Distance: 3.027248
         T: 0.3448276
-      - Distance: 2.842256
+      - Distance: 3.306656
         T: 0.37931034
-      - Distance: 3.0488217
+      - Distance: 3.5791295
         T: 0.41379312
-      - Distance: 3.2473018
+      - Distance: 3.8438528
         T: 0.44827586
-      - Distance: 3.437536
+      - Distance: 4.099978
         T: 0.4827586
-      - Distance: 3.619292
+      - Distance: 4.346631
         T: 0.51724136
-      - Distance: 3.7922697
+      - Distance: 4.5829124
         T: 0.55172414
-      - Distance: 3.956106
+      - Distance: 4.807901
         T: 0.5862069
-      - Distance: 4.110379
+      - Distance: 5.020655
         T: 0.62068963
-      - Distance: 4.2546153
+      - Distance: 5.220217
         T: 0.6551724
-      - Distance: 4.3882895
+      - Distance: 5.405612
         T: 0.6896552
-      - Distance: 4.510832
+      - Distance: 5.5758505
         T: 0.7241379
-      - Distance: 4.621632
+      - Distance: 5.729932
         T: 0.7586207
-      - Distance: 4.7200413
+      - Distance: 5.866842
         T: 0.79310346
-      - Distance: 4.805377
+      - Distance: 5.985557
         T: 0.82758623
-      - Distance: 4.8769245
+      - Distance: 6.0850434
         T: 0.86206895
-      - Distance: 4.9339423
+      - Distance: 6.16426
         T: 0.8965517
-      - Distance: 4.9756618
+      - Distance: 6.2221556
         T: 0.9310345
-      - Distance: 5.0012918
+      - Distance: 6.2576737
         T: 0.9655172
-      - Distance: 5.010019
+      - Distance: 6.2697506
         T: 1
     - Mode: 2
       Tension: 0.5
@@ -6261,7 +6270,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hpSlider: {fileID: 1985949729}
-  _test: {fileID: 0}
 --- !u!50 &1765811806
 Rigidbody2D:
   serializedVersion: 4
@@ -7238,12 +7246,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c61f5a9ed0f75544887fecdb8f973ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startObjectPosition: {x: 0, y: 0}
-  _cursorPositionDistance: {x: 0, y: 0}
+  _startObjectPos: {x: 0, y: 0}
+  _cursorPosDistance: {x: 0, y: 0}
   _isMove: 0
   _radius: {x: 0, y: 0, z: 0}
-  _maxMovePosition: {x: 0, y: 0}
-  _minMovePosition: {x: 0, y: 0}
+  _maxMovePos: {x: 0, y: 0}
+  _minMovePos: {x: 0, y: 0}
   _header: {fileID: 1544721159}
   _footer: {fileID: 1261525822}
 --- !u!50 &2064983176

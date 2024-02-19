@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// YellowSlime.cs
+// PurpleSlime.cs
 //
 // 作成日:2024/02/06
 // 作成者:小林慎
@@ -8,10 +8,10 @@ using UnityEngine;
 using UnityEngine.Splines;
 using System.Collections.Generic;
 
-public class YellowSlime : EnemyBase
+public class PurpleSlime : EnemyBase
 {
 	#region 変数
-	private const int MOVE_PATTERN_INDEX = 3;
+	private const int MOVE_PATTERN_INDEX = 2;
 
 	private const string PLAYER_BULLET_TAG = "PlayerBullet";
 
@@ -20,7 +20,7 @@ public class YellowSlime : EnemyBase
 	// 撃ちたい角度 (Unity基準)
 	private int _centerAngle = 180;
 	// 角度を何分割するか
-	private int _angleSplit = 12;
+	private int _angleSplit = 72;
 	// 撃ちたい角度の±いくらか
 	private int _angleWidth = 180;
 
@@ -70,7 +70,7 @@ public class YellowSlime : EnemyBase
 				base.RoundShot(this.transform.position, _maxAngle, _angleSplit, _direction, 0, Bullet.MoveType.Line);
 				_direction -= 90;
 			}*/
-            base._puttingEnemyBullet.FanShot(this.transform.position, _centerAngle, _angleSplit, _angleWidth, 8, Bullet.MoveType.Line);
+            base._puttingEnemyBullet.RoundShot(this.transform.position, _angleSplit, 8, Bullet.MoveType.Line);
 
             _shotTime = 0f;
 		}

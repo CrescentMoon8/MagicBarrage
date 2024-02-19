@@ -5,21 +5,20 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
-using UnityEngine.Splines;
 
 public class BossSlime : EnemyBase
 {
 	#region 変数
-	private const int MOVE_PATTERN_INDEX = 4;
+	private const int MOVE_PATTERN_INDEX = 3;
 
 	private const string PLAYER_BULLET_TAG = "PlayerBullet";
 
     private const int BOSS_HP = 120;
 
 	// 撃ちたい角度
-	private int _centerAngle = 270;
+	private int _centerAngle = 180;
 	// 角度を何分割するか
-	private int _angleSplit = 9;
+	private int _angleSplit = 18;
 	// 撃ちたい角度の±いくらか
 	private int _angleWidth = 45;
 

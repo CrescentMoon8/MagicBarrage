@@ -27,8 +27,8 @@ public class Player : MonoBehaviour
     private bool _isShot = false;
     private float _shotTime = 0f;
     private const float SHOT_INTERVAL = 0.1f;
-    private const float SHOT_POS_DIFFERENCE_Y = 0.75f;
-    private const float SHOT_POS_DIFFERENCE_X = 0.5f;
+    private const float SHOT_POS_DIFFERENCE_Y = 0.7f;
+    private const float SHOT_POS_DIFFERENCE_X = 0.2f;
 
     [SerializeField]
     private Vector3 _radius = Vector3.zero;

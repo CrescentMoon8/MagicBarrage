@@ -29,44 +29,26 @@ public static class Calculation
     /// <returns>対象への角度</returns>
     public static int TargetDirectionAngle(Vector3 targetPos, Vector3 shooterPos)
     {
-        float distance = TargetDistance(targetPos, shooterPos);
-        // Atan2はY軸を中心として、右が0～180、左が-180～0の範囲となる
-        float toTargetAngle = Mathf.Atan(distance) * Mathf.Rad2Deg;
+        Vector3 distanceVector = targetPos - shooterPos;
+        // Atan2はX軸を中心として、下が-180～0、上が0～180の範囲となる
+        // Unity基準の角度にするために90を引く
+        float toTargetAngle = Mathf.Atan2(distanceVector.y, distanceVector.x) * Mathf.Rad2Deg - 90;
 
-        if (toTargetAngle < 0)
+        if (toTargetAngle > 0)
         {
-            return Mathf.RoundToInt(Mathf.Abs(toTargetAngle));
+            return Mathf.RoundToInt(toTargetAngle);
         }
         else
         {
-            return 360 - Mathf.RoundToInt(toTargetAngle);
-        }
-    }
-
-    /// <summary>
-    /// 自身から対象への角度を計算する
-    /// </summary>
-    /// <param name="distance">自身と対象の距離</param>
-    /// <returns>対象への角度</returns>
-    public static int AngleFromEnemyCalculate(float distance)
-    {
-        // Atan2はY軸を中心として、右が0～180、左が-180～0の範囲となる
-        float toTargetAngle = Mathf.Atan(distance) * Mathf.Rad2Deg;
-
-        if (toTargetAngle < 0)
-        {
-            return Mathf.RoundToInt(Mathf.Abs(toTargetAngle));
-        }
-        else
-        {
-            return 360 - Mathf.RoundToInt(toTargetAngle);
+            return 360 - Mathf.RoundToInt(Mathf.Abs(toTargetAngle));
         }
     }
 
     /// <summary>
     /// 与えられた角度を使って、半径radiusの円の円周上の座標を返す
     /// </summary>
-    /// <param name="ShooterPos">射手の座標</param>
+    /// <param name="shooterPos">射手の座標</param>
+    /// <param name="radius">配置したい円の半径</param>
     /// <param name="angle">中心角</param>
     /// <returns>円周上の座標</returns>
     public static Vector3 CirclePosCalculate(Vector3 shooterPos, float angle, float radius)

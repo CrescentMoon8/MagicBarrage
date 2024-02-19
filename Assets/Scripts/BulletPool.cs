@@ -15,10 +15,21 @@ public class BulletPool : MonoBehaviour
 	#region 変数
 	private const int MAX_GENERATE_PLAYER_BULLET = 45;
 	private const int MAX_GENERATE_ENEMY_BULLET = 150;
+	
 	private const int ALL_ENEMY_BULLET = 10;
+	private const int RED_NOMAL_BULLET = 0;
+	private const int RED_NEEDLE_BULLET = 1;
+	private const int BLUE_NOMAL_BULLET = 2;
+	private const int BLUE_NEEDLE_BULLET = 3;
+	private const int YERROW_NOMAL_BULLET = 4;
+	private const int YERROW_NEEDLE_BULLET = 5;
+	private const int GREEN_NOMAL_BULLET = 6;
+	private const int GREEN_NEEDLE_BULLET = 7;
+	private const int PURPLE_NOMAL_BULLET = 8;
+	private const int PURPLE_NEEDLE_BULLET = 9;
 
-    // Addressableを用いるときに使う、使うか未定
-    /*private const int ALL_BULLET = 9;
+	// Addressableを用いるときに使う、使うか未定
+	/*private const int ALL_BULLET = 9;
 	private const int PLAYER_BULLET = 0;
 	private const int RED_NOMAL_BULLET = 1;
 	private const int RED_NEEDLE_BULLET = 2;
@@ -41,7 +52,7 @@ public class BulletPool : MonoBehaviour
 
 	private GameObject[] _bulletPrefabs = new GameObject[ALL_BULLET];*/
 
-    [SerializeField]
+	[SerializeField]
     private Bullet _playerBulletPrefab = default;
 	[SerializeField]
 	private Bullet[] _enemyBulletPrefabs = new Bullet[ALL_ENEMY_BULLET];
@@ -116,6 +127,15 @@ public class BulletPool : MonoBehaviour
         }
     }
 
+	private void AddEnemyBulletPool(int bulletNumber)
+    {
+		Bullet bullet = Instantiate(_enemyBulletPrefabs[bulletNumber], _enemyBulletParent);
+
+		bullet.gameObject.SetActive(false);
+
+		_enemyBulletsPool[bulletNumber].Enqueue(bullet);
+	}
+
 	/// <summary>
 	/// 弾をプレイヤーに貸し出す
 	/// </summary>
@@ -129,27 +149,25 @@ public class BulletPool : MonoBehaviour
 
 		Bullet bullet = _playerBulletsPool.Dequeue();
 
-		bullet.gameObject.SetActive(true);
-
 		bullet.transform.position = shotPosition;
 
 		bullet.SettingShooterType = Bullet.ShooterType.Player;
+
 		bullet.SettingMoveType = moveType;
+
+		bullet.gameObject.SetActive(true);
 
 		return bullet;
 	}
 
 	public Bullet LendEnemyBullet(Vector3 shotPosition, int bulletNumber)
 	{
-		Debug.LogError(bulletNumber);
 		if (_enemyBulletsPool[bulletNumber].Count <= 0)
 		{
-			return null;
+			AddEnemyBulletPool(bulletNumber);
 		}
 
 		Bullet bullet = _enemyBulletsPool[bulletNumber].Dequeue();
-
-		bullet.gameObject.SetActive(true);
 
 		bullet.transform.position = shotPosition;
 
@@ -157,7 +175,9 @@ public class BulletPool : MonoBehaviour
 
         bullet.SettingBulletNumber = bulletNumber;
 
-        return bullet;
+		bullet.gameObject.SetActive(true);
+
+		return bullet;
 	}
 
 	public void ReturnBullet(Bullet bullet, int bulletNumber, Bullet.ShooterType type)
@@ -167,9 +187,7 @@ public class BulletPool : MonoBehaviour
         switch (type)
 		{
 			case Bullet.ShooterType.Player:
-				Debug.Log("Playerの弾を回収");
                 _playerBulletsPool.Enqueue(bullet);
-                Debug.Log("Playerの弾を回収");
                 break;
 
 			case Bullet.ShooterType.Enemy:
@@ -180,5 +198,6 @@ public class BulletPool : MonoBehaviour
 				break;
 		}
     }
+
 	#endregion
 }
