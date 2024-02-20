@@ -13,7 +13,7 @@ using System.Collections.Generic;
 public class EnemyManager : MonoBehaviour
 {
 	#region 変数
-	private enum PhaseState
+	public enum PhaseState
 	{
 		First = 0,
 		Second = 1,
@@ -25,22 +25,24 @@ public class EnemyManager : MonoBehaviour
 	[SerializeField]
 	private PhaseState _phaseState = PhaseState.First;
 
-    private EnemyPhaseList _enemyPhaseList = default;
-	#endregion
+    private GameObject _enemysObject = default;
+    [SerializeField]
+    private List<List<GameObject>> _enemyPhaseList = new List<List<GameObject>>();
+    #endregion
 
-	#region プロパティ
+    #region プロパティ
+    public List<List<GameObject>> EnemyPhaseList { get { return _enemyPhaseList; } }
+    public PhaseState NowPhaseState { get { return _phaseState; } }
+    #endregion
 
-	#endregion
-
-	#region メソッド
-	/// <summary>
-	/// 初期化処理
-	/// </summary>
-	private void Awake()
+    #region メソッド
+    /// <summary>
+    /// 初期化処理
+    /// </summary>
+    private void Awake()
     {
-        _enemyPhaseList = GetComponent<EnemyPhaseList>();
-        _enemyPhaseList.Initialize();
-        CurrentPhaseEnemyPosition.AddEnemyPos(_enemyPhaseList.EnemyList[(int)PhaseState.First]);
+        GenerateEnemyList();
+        Debug.LogWarning("生成");
     }
 
 	/// <summary>
@@ -51,54 +53,42 @@ public class EnemyManager : MonoBehaviour
 		switch (_phaseState)
 		{
 			case PhaseState.First:
-                CurrentPhaseEnemyPosition.UpdateEnemyPos(_enemyPhaseList.EnemyList[(int)PhaseState.First]);
-                if (_enemyPhaseList.EnemyList[(int)PhaseState.First].Count <= 0)
+                if (_enemyPhaseList[(int)PhaseState.First].Count <= 0)
                 {
                     _phaseState = PhaseState.Second;
 
-                    CurrentPhaseEnemyPosition.RemoveEnemyPos(_enemyPhaseList.EnemyList[(int)PhaseState.First]);
-                    
-                    for (int i = 0; i < _enemyPhaseList.EnemyList[(int)PhaseState.Second].Count; i++)
+                    for (int i = 0; i < _enemyPhaseList[(int)PhaseState.Second].Count; i++)
                     {
-                        _enemyPhaseList.EnemyList[(int)PhaseState.Second][i].gameObject.SetActive(true);
+                        _enemyPhaseList[(int)PhaseState.Second][i].gameObject.SetActive(true);
                     }
                 }
 				break;
 			case PhaseState.Second:
-                CurrentPhaseEnemyPosition.UpdateEnemyPos(_enemyPhaseList.EnemyList[(int)PhaseState.Second]);
-                if (_enemyPhaseList.EnemyList[(int)PhaseState.Second].Count <= 0)
+                if (_enemyPhaseList[(int)PhaseState.Second].Count <= 0)
                 {
                     _phaseState = PhaseState.Third;
 
-                    CurrentPhaseEnemyPosition.RemoveEnemyPos(_enemyPhaseList.EnemyList[(int)PhaseState.Second]);
-                    
-                    for (int i = 0; i < _enemyPhaseList.EnemyList[(int)PhaseState.Third].Count; i++)
+                    for (int i = 0; i < _enemyPhaseList[(int)PhaseState.Third].Count; i++)
                     {
-                        _enemyPhaseList.EnemyList[(int)PhaseState.Third][i].gameObject.SetActive(true);
+                        _enemyPhaseList[(int)PhaseState.Third][i].gameObject.SetActive(true);
                     }
                 }
                 break;
 			case PhaseState.Third:
-                CurrentPhaseEnemyPosition.UpdateEnemyPos(_enemyPhaseList.EnemyList[(int)PhaseState.Third]);
-                if (_enemyPhaseList.EnemyList[(int)PhaseState.Third].Count <= 0)
+                if (_enemyPhaseList[(int)PhaseState.Third].Count <= 0)
                 {
                     _phaseState = PhaseState.Boss;
 
-                    CurrentPhaseEnemyPosition.RemoveEnemyPos(_enemyPhaseList.EnemyList[(int)PhaseState.Third]);
-                    
-                    for (int i = 0; i < _enemyPhaseList.EnemyList[(int)PhaseState.Boss].Count; i++)
+                    for (int i = 0; i < _enemyPhaseList[(int)PhaseState.Boss].Count; i++)
                     {
-                        _enemyPhaseList.EnemyList[(int)PhaseState.Boss][i].gameObject.SetActive(true);
+                        _enemyPhaseList[(int)PhaseState.Boss][i].gameObject.SetActive(true);
                     }
                 }
                 break;
 			case PhaseState.Boss:
-                CurrentPhaseEnemyPosition.UpdateEnemyPos(_enemyPhaseList.EnemyList[(int)PhaseState.Boss]);
-                if (_enemyPhaseList.EnemyList[(int)PhaseState.Boss].Count <= 0)
+                if (_enemyPhaseList[(int)PhaseState.Boss].Count <= 0)
                 {
                     _phaseState = PhaseState.End;
-
-                    CurrentPhaseEnemyPosition.RemoveEnemyPos(_enemyPhaseList.EnemyList[(int)PhaseState.Boss]);
                 }
                 break;
 			case PhaseState.End:
@@ -109,9 +99,27 @@ public class EnemyManager : MonoBehaviour
 		}
 	}
 
+    /// <summary>
+    /// リストにそれぞれのエネミーを追加する
+    /// </summary>
+    private void GenerateEnemyList()
+    {
+        _enemysObject = GameObject.FindWithTag("Enemys");
+
+        for (int phaseCount = 1; phaseCount <= _enemysObject.transform.childCount; phaseCount++)
+        {
+            List<GameObject> enemyList = new List<GameObject>();
+            for (int enemyCount = 1; enemyCount <= _enemysObject.transform.GetChild(phaseCount - 1).childCount; enemyCount++)
+            {
+                enemyList.Add(_enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1).gameObject);
+            }
+            _enemyPhaseList.Add(enemyList);
+        }
+    }
+
     public void DownEnemyCount(GameObject enemy)
     {
-        _enemyPhaseList.RemoveEnemy((int)_phaseState, enemy);
+        _enemyPhaseList[(int)_phaseState].Remove(enemy);
     }
 	#endregion
 }

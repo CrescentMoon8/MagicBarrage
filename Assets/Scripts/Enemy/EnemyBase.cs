@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CircleCollider2D))]
-public abstract class EnemyBase : MonoBehaviour
+public class EnemyBase : MonoBehaviour
 {
 	#region 変数
 	public enum EnemyType
@@ -28,8 +28,6 @@ public abstract class EnemyBase : MonoBehaviour
 
 	// Splinesパッケージで代用
 	//protected Vector3[,] _movePattern = new Vector3[10,3];
-
-	protected abstract void OnTriggerEnter2D(Collider2D collision);
 
 	private BulletPool _bulletPool = default;
 	protected EnemyShot _puttingEnemyBullet = default;

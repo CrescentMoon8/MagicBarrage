@@ -34,13 +34,13 @@ public class Bullet : MonoBehaviour
     private GameObject _playerObject;
     private Vector3 _playerPos = Vector3.zero;
 
+    [SerializeField]
     private Vector3 _distanceVector = Vector3.zero;
-    private const float BULLET_ALIVE_TIME = 1f;
-    private float _aliveTime = 0f;
 
     private int _bulletNumber = 0;
 
-    BulletPool _bulletPool = default;
+    private EnemyManager _enemyManager = default;
+    private BulletPool _bulletPool = default;
     #endregion
 
     #region プロパティ
@@ -56,19 +56,12 @@ public class Bullet : MonoBehaviour
     /// </summary>
     private void Awake()
 	{
-		
-	}
-
-	/// <summary>
-	/// 更新前処理
-	/// </summary>
-	private void Start ()
-	{
         _playerObject = GameObject.FindWithTag("Player");
         _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
-	}
+        _enemyManager = GameObject.FindWithTag("Scripts").GetComponentInChildren<EnemyManager>();
+    }
 
-    private void OnEnable()
+    public void Initialize()
     {
         switch (_shooterType)
         {
@@ -116,15 +109,9 @@ public class Bullet : MonoBehaviour
 
                         transform.Translate(Vector3.up / 3);
 
-                        _aliveTime += Time.deltaTime;
-
-                        if(_aliveTime > BULLET_ALIVE_TIME)
+                        if(ExistsEnemyPosList(_distanceVector))
                         {
-                            _bulletPool.ReturnBullet(this, _bulletNumber, _shooterType);
-
-                            _shooterType = ShooterType.None;
-
-                            _aliveTime = 0;
+                            _moveType = MoveType.Line;
                         }
                         break;
 
@@ -148,7 +135,7 @@ public class Bullet : MonoBehaviour
                         float direction = Calculation.TargetDirectionAngle(_playerPos, this.transform.position);
                         Quaternion targetRotation = Quaternion.Euler(Vector3.forward * direction);
                         //（現在角度、目標方向、どれぐらい曲がるか）
-                        transform.rotation = Quaternion.RotateTowards(this.transform.rotation, targetRotation, 1f);
+                        transform.rotation = Quaternion.RotateTowards(this.transform.rotation, targetRotation, 0.25f);
 
                         transform.Translate(Vector3.up / 15);
                         break;
@@ -163,22 +150,34 @@ public class Bullet : MonoBehaviour
                 break;
         }
 	}
+    private bool ExistsEnemyPosList(Vector3 targetPos)
+    {
+        _playerPos = _playerObject.transform.position;
+
+        if (Calculation.TargetDistance(targetPos, _playerPos) <= Calculation.TargetDistance(this.transform.position, _playerPos))
+        {
+            return true;
+        }
+
+        return false;
+    }
 
     private Vector3 GetNearEnemyDistance()
     {
         int nearEnemyIndex = 0;
-        float nearEnemyDistance = Calculation.TargetDistance(CurrentPhaseEnemyPosition._currentEnemyPos[0], this.transform.position);
+        float nearEnemyDistance = Calculation.TargetDistance(_enemyManager.EnemyPhaseList[(int)_enemyManager.NowPhaseState][0].transform.position, this.transform.position);
 
-        for (int i = 1; i < CurrentPhaseEnemyPosition._currentEnemyPos.Count; i++)
+        for (int i = 1; i < _enemyManager.EnemyPhaseList[(int)_enemyManager.NowPhaseState].Count; i++)
         {
-            if (Calculation.TargetDistance(CurrentPhaseEnemyPosition._currentEnemyPos[i], this.transform.position) < nearEnemyDistance)
+            float enemyDistance = Calculation.TargetDistance(_enemyManager.EnemyPhaseList[(int)_enemyManager.NowPhaseState][i].transform.position, this.transform.position);
+            if (enemyDistance < nearEnemyDistance)
             {
-                nearEnemyDistance = Calculation.TargetDistance(CurrentPhaseEnemyPosition._currentEnemyPos[i], this.transform.position);
+                nearEnemyDistance = enemyDistance;
                 nearEnemyIndex = i;
             }
         }
 
-        Vector3 nearEnemyVector = CurrentPhaseEnemyPosition._currentEnemyPos[nearEnemyIndex];
+        Vector3 nearEnemyVector = _enemyManager.EnemyPhaseList[(int)_enemyManager.NowPhaseState][nearEnemyIndex].transform.position;
         return nearEnemyVector;
     }
 

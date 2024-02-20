@@ -100,18 +100,19 @@ public class RedSlime : EnemyBase
             {
 				_bulletCount = 0;
 				_shotTime = 0f;
+				base._puttingEnemyBullet.FanShot(this.transform.position, Calculation.TargetDirectionAngle(_playerPos, this.transform.position), _angleSplit, _angleWidth, 0, Bullet.MoveType.Line);
 			}
 
-			//base._puttingEnemyBullet.FanShot(this.transform.position, base._puttingEnemyBullet.AngleFromEnemyCalculate(_playerPos, this.transform.position), _angleSplit, _angleWidth, 1, Bullet.MoveType.Line);
+			
 		}
 	}
 
-	protected override void OnTriggerEnter2D(Collider2D collision)
-	{
-		if (collision.CompareTag(PLAYER_BULLET_TAG))
-		{
-			base.EnemyDamage();
-		}
-	}
-	#endregion
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag(PLAYER_BULLET_TAG))
+        {
+            base.EnemyDamage();
+        }
+    }
+    #endregion
 }

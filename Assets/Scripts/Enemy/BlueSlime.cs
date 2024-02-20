@@ -86,12 +86,12 @@ public class BlueSlime : EnemyBase
 		}
 	}
 
-	protected override void OnTriggerEnter2D(Collider2D collision)
-	{
-		if (collision.CompareTag(PLAYER_BULLET_TAG))
-		{
-			base.EnemyDamage();
-		}
-	}
-	#endregion
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag(PLAYER_BULLET_TAG))
+        {
+            base.EnemyDamage();
+        }
+    }
+    #endregion
 }

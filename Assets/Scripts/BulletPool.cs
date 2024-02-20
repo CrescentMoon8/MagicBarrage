@@ -17,6 +17,10 @@ public class BulletPool : MonoBehaviour
 	private const int MAX_GENERATE_ENEMY_BULLET = 150;
 	
 	private const int ALL_ENEMY_BULLET = 10;
+
+
+	// Addressableを用いるときに使う、使うか未定
+	/*private const int ALL_BULLET = 10;
 	private const int RED_NOMAL_BULLET = 0;
 	private const int RED_NEEDLE_BULLET = 1;
 	private const int BLUE_NOMAL_BULLET = 2;
@@ -28,18 +32,6 @@ public class BulletPool : MonoBehaviour
 	private const int PURPLE_NOMAL_BULLET = 8;
 	private const int PURPLE_NEEDLE_BULLET = 9;
 
-	// Addressableを用いるときに使う、使うか未定
-	/*private const int ALL_BULLET = 9;
-	private const int PLAYER_BULLET = 0;
-	private const int RED_NOMAL_BULLET = 1;
-	private const int RED_NEEDLE_BULLET = 2;
-	private const int BLUE_NOMAL_BULLET = 3;
-	private const int BLUE_NEEDLE_BULLET = 4;
-	private const int YERROW_NOMAL_BULLET = 5;
-	private const int YERROW_NEEDLE_BULLET = 6;
-	private const int GREEN_NOMAL_BULLET = 7;
-	private const int GREEN_NEEDLE_BULLET = 8;
-
 	private const string PLAYER_BULLET_PASS = "PlayerBullet";
 	private const string RED_NOMAL_BULLET_PASS = "RedNomalBullet";
 	private const string RED_NEEDLE_BULLET_PASS = "RedNeedleBullet";
@@ -48,7 +40,9 @@ public class BulletPool : MonoBehaviour
 	private const string YERROW_NOMAL_BULLET_PASS = "YerrowNomalBullet";
 	private const string YERROW_NEEDLE_BULLET_PASS = "YerrowNeedleBullet";
 	private const string GREEN_NOMAL_BULLET_PASS = "GreenNomalBullet";
-	private const string GREEN_NEEDLE_BULLET_PASS = "GreenNeedleNomalBullet";
+	private const string GREEN_NEEDLE_BULLET_PASS = "GreenNeedleBullet";
+	private const string GREEN_NEEDLE_BULLET_PASS = "PurpleNomalBullet";
+	private const string GREEN_NEEDLE_BULLET_PASS = "PurpleNeedleBullet";
 
 	private GameObject[] _bulletPrefabs = new GameObject[ALL_BULLET];*/
 
@@ -126,6 +120,15 @@ public class BulletPool : MonoBehaviour
 			_enemyBulletsPool.Add(bulletPool);
         }
     }
+	
+	private void AddPlayerBulletPool()
+    {
+		Bullet bullet = Instantiate(_playerBulletPrefab, _playerBulletParent);
+
+		bullet.gameObject.SetActive(false);
+
+		_playerBulletsPool.Enqueue(bullet);
+    }
 
 	private void AddEnemyBulletPool(int bulletNumber)
     {
@@ -144,7 +147,7 @@ public class BulletPool : MonoBehaviour
 	{
 		if(_playerBulletsPool.Count <= 0)
 		{
-			return null;
+			AddPlayerBulletPool();
 		}
 
 		Bullet bullet = _playerBulletsPool.Dequeue();
@@ -156,6 +159,8 @@ public class BulletPool : MonoBehaviour
 		bullet.SettingMoveType = moveType;
 
 		bullet.gameObject.SetActive(true);
+
+		bullet.Initialize();
 
 		return bullet;
 	}
@@ -176,6 +181,8 @@ public class BulletPool : MonoBehaviour
         bullet.SettingBulletNumber = bulletNumber;
 
 		bullet.gameObject.SetActive(true);
+
+		bullet.Initialize();
 
 		return bullet;
 	}

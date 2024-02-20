@@ -14,29 +14,26 @@ using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 public class Player : MonoBehaviour
 {
     #region 変数
-    private const int LINE_BULLET_AMOUNT = 1;
-    private const int TRACKING_BULLET_AMOUNT = 2;
     private Vector3 _startMousePos = Vector3.zero;
-    [SerializeField]
     private Vector2 _startObjectPos = Vector2.zero;
-    [SerializeField]
     private Vector2 _cursorPosDistance = Vector2.zero;
     [SerializeField]
     private bool _isMove = false;
 
+    [SerializeField]
     private bool _isShot = false;
-    private float _shotTime = 0f;
+    [SerializeField]
+    private float _shotTime = 0.1f;
     private const float SHOT_INTERVAL = 0.1f;
     private const float SHOT_POS_DIFFERENCE_Y = 0.7f;
     private const float SHOT_POS_DIFFERENCE_X = 0.2f;
+    private const int LINE_BULLET_AMOUNT = 1;
+    private const int TRACKING_BULLET_AMOUNT = 2;
 
-    [SerializeField]
     private Vector3 _radius = Vector3.zero;
     private const int MAX_MOVE_POS_INDEX = 3;
     private const int MIN_MOVE_POS_INDEX = 1;
-    [SerializeField]
     private Vector2 _maxMovePos = Vector2.zero;
-    [SerializeField]
     private Vector2 _minMovePos = Vector2.zero;
 
     [SerializeField]
@@ -67,7 +64,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Awake()
 	{
-        _bulletPool = UnityEngine.GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
+        _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
         _playerAnimator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _circleCollider2D = GetComponent<CircleCollider2D>();
@@ -131,6 +128,7 @@ public class Player : MonoBehaviour
 
             for (int bulletCount = 1; bulletCount <= LINE_BULLET_AMOUNT; bulletCount++)
             {
+                Debug.Log(bulletCount);
                 _bulletPool.LendPlayerBullet(shotPos, Bullet.MoveType.Line);
             }
 
@@ -239,18 +237,23 @@ public class Player : MonoBehaviour
     {
         if (collision.CompareTag("EnemyBullet"))
         {
-            _playerAnimator.SetTrigger("IsDamage");
-            _spriteRenderer.enabled = false;
-            _circleCollider2D.enabled = false;
-            _isDamage = true;
-
-            _damageCount++;
-
-            if(_damageCount > GAMEOVER_MOVE_COUNT)
-            {
-                SceneManager.LoadScene("GameOver");
-            }
+            Damage();
         }
     }
-#endregion
+
+    public void Damage()
+    {
+        _playerAnimator.SetTrigger("IsDamage");
+        _spriteRenderer.enabled = false;
+        _circleCollider2D.enabled = false;
+        _isDamage = true;
+
+        _damageCount++;
+
+        if (_damageCount > GAMEOVER_MOVE_COUNT)
+        {
+            SceneManager.LoadScene("GameOver");
+        }
+    }
+    #endregion
 }
