@@ -1,28 +1,22 @@
 // ---------------------------------------------------------
-// MainMove.cs
+// TitleButton.cs
 //
-// 作成日:2024/02/13
+// 作成日:2024/02/21
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System;
-using System.Collections;
 
-public class MainMove : MonoBehaviour
+public class TitleButton : MonoBehaviour
 {
 	#region 変数
 
 	#endregion
 
-	#region プロパティ
-
-	#endregion
-
 	#region メソッド
-	public void MoveMain()
+	public void MoveTitle()
     {
-		SceneManager.LoadScene("Main");
+		SceneManager.LoadScene("Title");
     }
 	#endregion
 }

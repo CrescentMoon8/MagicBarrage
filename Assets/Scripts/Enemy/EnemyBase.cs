@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CircleCollider2D))]
-public class EnemyBase : MonoBehaviour
+public class EnemyBase : MonoBehaviour, IDamageable
 {
 	#region 変数
 	public enum EnemyType
@@ -71,7 +71,7 @@ public class EnemyBase : MonoBehaviour
         _hpSlider.transform.position = hpBarPos;
     }
 
-	protected void EnemyDamage()
+	/*protected void EnemyDamage()
 	{
 		// 初めてダメージを受けたときにHpバーを表示させる
         if (_hpSlider.maxValue == _hpValue)
@@ -86,6 +86,26 @@ public class EnemyBase : MonoBehaviour
 		}
 
 		if(_hpValue <= 0)
+		{
+			EnemyDead();
+		}
+	}*/
+
+	public void Damage()
+	{
+		// 初めてダメージを受けたときにHpバーを表示させる
+		if (_hpSlider.maxValue == _hpValue)
+		{
+			_hpSlider.gameObject.SetActive(true);
+		}
+
+		if (_hpValue > 0)
+		{
+			_hpValue -= 1;
+			_hpSlider.value = _hpValue;
+		}
+
+		if (_hpValue <= 0)
 		{
 			EnemyDead();
 		}

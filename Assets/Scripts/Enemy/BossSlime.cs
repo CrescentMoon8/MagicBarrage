@@ -5,15 +5,16 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class BossSlime : EnemyBase
 {
 	#region 変数
-	private const int MOVE_PATTERN_INDEX = 3;
+	private const int MOVE_PATTERN_INDEX = 4;
 
 	private const string PLAYER_BULLET_TAG = "PlayerBullet";
 
-    private const int BOSS_HP = 120;
+    private const int BOSS_HP = 360;
 
 	// 撃ちたい角度
 	private int _centerAngle = 180;
@@ -26,21 +27,29 @@ public class BossSlime : EnemyBase
 	private const float SHOT_INTERVAL = 2f;
 
 	private Event _bossShot;
+
+	private BulletInfo _bulletInfo = default;
+	private EnemyDataBase _enemyDataBase = default;
 	#endregion
 
 	#region プロパティ
-	
+
 	#endregion
 
 	#region メソッド
-    private void OnEnable ()
+	private void OnEnable ()
     {
-		base._hpSlider.maxValue = BOSS_HP;
-		base._hpSlider.value = BOSS_HP;
-		base._hpValue = BOSS_HP;
+		_bulletInfo = Addressables.LoadAssetAsync<BulletInfo>("BulletInfo").WaitForCompletion();
+		_enemyDataBase = Addressables.LoadAssetAsync<EnemyDataBase>("EnemyDataBase").WaitForCompletion();
 
-		_enemyMove.SetSplineContainer(MOVE_PATTERN_INDEX);
+		base._hpValue = _enemyDataBase._enemyDataList[_enemyDataBase.BOSS_SLIME]._maxHp;
+		base._hpSlider.maxValue = base._hpValue;
+		base._hpSlider.value = base._hpValue;
+
+		_enemyMove.SetSplineContainer(_enemyDataBase._enemyDataList[_enemyDataBase.BOSS_SLIME]._splineIndex);
 		_enemyMove.DifferencePosInitialize(this.transform.position);
+
+		Addressables.Release(_enemyDataBase);
 	}
 
     /// <summary>
@@ -62,18 +71,10 @@ public class BossSlime : EnemyBase
 				base.RoundShot(this.transform.position, _maxAngle, _angleSplit, _direction, 0, Bullet.MoveType.Line);
 				_direction -= 90;
 			}*/
-            base._puttingEnemyBullet.FanShot(this.transform.position, _centerAngle, _angleSplit, _angleWidth, 0, Bullet.MoveType.Line);
+            base._puttingEnemyBullet.FanShot(this.transform.position, _centerAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
 
             _shotTime = 0f;
 		}
 	}
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag(PLAYER_BULLET_TAG))
-        {
-            base.EnemyDamage();
-        }
-    }
     #endregion
 }

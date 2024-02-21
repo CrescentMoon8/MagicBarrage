@@ -5,13 +5,14 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
     #region 変数
     private Vector3 _startMousePos = Vector3.zero;
@@ -41,21 +42,32 @@ public class Player : MonoBehaviour
     [SerializeField]
     private RectTransform _footer = default;
 
+    [SerializeField]
+    private ParticleSystem _touchParticle = default;
+
     private bool _isDamage = false;
-    private int _damageCount = 0;
-    private const int GAMEOVER_MOVE_COUNT = 3;
+    private int _lifeCount = 3;
     private float _damageAnimationTime = 0;
     private const float DAMAGE_ANIMATION = 3f;
+    [SerializeField]
+    private Image[] _lifeUi = new Image[3];
+    [SerializeField]
+    private Sprite _brokenHeart = default;
+
+    [SerializeField]
+    private AudioClip _damageSe = default;
+    [SerializeField]
+    private AudioClip _deadSe = default;
 
     private SpriteRenderer _spriteRenderer = default;
     private CircleCollider2D _circleCollider2D = default;
     private Animator _playerAnimator = default;
+    private AudioSource _audioSource = default;
     private BulletPool _bulletPool = default;
-
     #endregion
 
     #region プロパティ
-    public Vector3 PlayerPos { get { return this.transform.position; } }
+
     #endregion
 
     #region メソッド
@@ -65,11 +77,12 @@ public class Player : MonoBehaviour
     private void Awake()
 	{
         _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
+        _audioSource = GetComponent<AudioSource>();
         _playerAnimator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _circleCollider2D = GetComponent<CircleCollider2D>();
 
-        // 半径を取得する
+        // プレイヤースプライトの半径を取得する
         _radius = transform.GetChild(0).localScale / 2;
 
         // UIオブジェクトの頂点の座標を取得し、移動制限の大きさを調整する
@@ -153,9 +166,12 @@ public class Player : MonoBehaviour
     private void PlayerInput()
 	{
 #if UNITY_IOS || UNITY_EDITOR
+        // 指が一本以上触れているか
         if (Touch.activeTouches.Count >= 1)
         {
+            // タッチの入力を取得する
             Touch active = Touch.activeTouches[0];
+            Vector3 particlePos = Vector3.zero;
 
             _isShot = true;
 
@@ -163,6 +179,14 @@ public class Player : MonoBehaviour
             if (active.phase == TouchPhase.Began)
             {
                 _startObjectPos = this.transform.position;
+
+                _touchParticle.gameObject.SetActive(true);
+                _touchParticle.Play();
+
+                particlePos = Camera.main.ScreenToWorldPoint(active.startScreenPosition);
+                // カメラのZ座標が入るため０にする
+                particlePos.z = 0;
+                _touchParticle.gameObject.transform.position = particlePos;
             }
 
             // 指が動いてるとき
@@ -170,12 +194,19 @@ public class Player : MonoBehaviour
             {
                 _isMove = true;
                 _cursorPosDistance = Camera.main.ScreenToWorldPoint(active.screenPosition) - Camera.main.ScreenToWorldPoint(active.startScreenPosition);
+
+                particlePos = Camera.main.ScreenToWorldPoint(active.screenPosition);
+                // カメラのZ座標が入るため０にする
+                particlePos.z = 0;
+                _touchParticle.gameObject.transform.position = particlePos;
             }
         }
         else
         {
             _isMove = false;
             _isShot = false;
+
+            _touchParticle.gameObject.SetActive(false);
         }
 
 #elif UNITY_STANDALONE_WIN
@@ -233,27 +264,43 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    /*private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("EnemyBullet"))
         {
+            _circleCollider2D.enabled = false;
             Damage();
         }
-    }
+    }*/
 
     public void Damage()
     {
-        _playerAnimator.SetTrigger("IsDamage");
-        _spriteRenderer.enabled = false;
+        /* 
+         * コライダーに複数のオブジェクトが同時に接触すると複数回呼び出されるため、
+         * コライダーがOFFならば二回目以降の処理をスキップする
+         */
+        if(!_circleCollider2D.enabled)
+        {
+            return;
+        }
+
         _circleCollider2D.enabled = false;
+        _spriteRenderer.enabled = false;
+        _playerAnimator.SetTrigger("IsDamage");
+
         _isDamage = true;
 
-        _damageCount++;
+        _lifeCount--;
+        Debug.Log(_lifeCount);
+        _lifeUi[_lifeCount].sprite = _brokenHeart;
 
-        if (_damageCount > GAMEOVER_MOVE_COUNT)
+        if (_lifeCount <= 0)
         {
+            _audioSource.PlayOneShot(_deadSe);
             SceneManager.LoadScene("GameOver");
         }
+
+        _audioSource.PlayOneShot(_damageSe);
     }
     #endregion
 }

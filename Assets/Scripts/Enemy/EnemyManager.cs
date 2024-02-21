@@ -28,10 +28,12 @@ public class EnemyManager : MonoBehaviour
     private GameObject _enemysObject = default;
     [SerializeField]
     private List<List<GameObject>> _enemyPhaseList = new List<List<GameObject>>();
+    private List<List<IDamageable>> _enemyIDamageableList = new List<List<IDamageable>>();
     #endregion
 
     #region プロパティ
     public List<List<GameObject>> EnemyPhaseList { get { return _enemyPhaseList; } }
+    public List<List<IDamageable>> EnemyIDamageableList { get { return _enemyIDamageableList; } }
     public PhaseState NowPhaseState { get { return _phaseState; } }
     #endregion
 
@@ -42,6 +44,10 @@ public class EnemyManager : MonoBehaviour
     private void Awake()
     {
         GenerateEnemyList();
+        for (int i = 0; i < _enemyPhaseList[(int)PhaseState.First].Count; i++)
+        {
+            _enemyPhaseList[(int)PhaseState.First][i].gameObject.SetActive(true);
+        }
         Debug.LogWarning("生成");
     }
 
@@ -109,11 +115,17 @@ public class EnemyManager : MonoBehaviour
         for (int phaseCount = 1; phaseCount <= _enemysObject.transform.childCount; phaseCount++)
         {
             List<GameObject> enemyList = new List<GameObject>();
+            List<IDamageable> interfaceList = new List<IDamageable>();
+
             for (int enemyCount = 1; enemyCount <= _enemysObject.transform.GetChild(phaseCount - 1).childCount; enemyCount++)
             {
                 enemyList.Add(_enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1).gameObject);
+                interfaceList.Add(_enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1).GetComponent<IDamageable>());
+
             }
+
             _enemyPhaseList.Add(enemyList);
+            _enemyIDamageableList.Add(interfaceList);
         }
     }
 

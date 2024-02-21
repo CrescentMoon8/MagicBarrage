@@ -33,6 +33,7 @@ public class Bullet : MonoBehaviour
 
     private GameObject _playerObject;
     private Vector3 _playerPos = Vector3.zero;
+    private IDamageable _playerIDamageable = default;
 
     [SerializeField]
     private Vector3 _distanceVector = Vector3.zero;
@@ -57,6 +58,7 @@ public class Bullet : MonoBehaviour
     private void Awake()
 	{
         _playerObject = GameObject.FindWithTag("Player");
+        _playerIDamageable = _playerObject.GetComponent<IDamageable>();
         _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
         _enemyManager = GameObject.FindWithTag("Scripts").GetComponentInChildren<EnemyManager>();
     }
@@ -183,12 +185,30 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if((collision.CompareTag("Player") && _shooterType == ShooterType.Enemy) ||
-           (collision.CompareTag("Enemy") && _shooterType == ShooterType.Player) ||
-           (collision.CompareTag("Boss") && _shooterType == ShooterType.Player) ||
-            collision.CompareTag("ReturnPool"))
+        if(collision.CompareTag("ReturnPool"))
 		{
 			_bulletPool.ReturnBullet(this, _bulletNumber, _shooterType);
+
+            _shooterType = ShooterType.None;
+        }
+
+        if (collision.CompareTag("Player") && _shooterType == ShooterType.Enemy)
+        {
+            _playerIDamageable.Damage();
+
+            _bulletPool.ReturnBullet(this, _bulletNumber, _shooterType);
+
+            _shooterType = ShooterType.None;
+        }
+
+        if((collision.CompareTag("Enemy") || collision.CompareTag("Boss")) &&
+            _shooterType == ShooterType.Player)
+        {
+            // GetSiblingIndexで当たったオブジェクトが同じ階層で上から何番目かを取得する
+            // Enemyの情報をヒエラルキーの上から順に取得しているためちゃんと動いている
+            _enemyManager.EnemyIDamageableList[(int)_enemyManager.NowPhaseState][collision.transform.GetSiblingIndex()].Damage();
+
+            _bulletPool.ReturnBullet(this, _bulletNumber, _shooterType);
 
             _shooterType = ShooterType.None;
         }
