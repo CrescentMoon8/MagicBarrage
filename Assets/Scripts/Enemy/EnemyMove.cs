@@ -26,6 +26,7 @@ public class EnemyMove
     private const float EXIT_MOVE_TIME = 15f;
     private const float MOVE_STOP_RATIO = 1.0f;
     private float _moveTime = 0f;*/
+
     // Splineの長さに対する現在位置の割合（始点：０　終点：１）
     private float _moveRatio = 0f;
 	private Vector3 differencePos = Vector3.zero;
@@ -40,6 +41,10 @@ public class EnemyMove
 	#endregion
 
 	#region メソッド
+    /// <summary>
+    /// スプラインコンテナの取得と軌道の選択に使用する値を代入する
+    /// </summary>
+    /// <param name="splineIndex"></param>
 	public void SetSplineContainer(int splineIndex)
     {
 		_enterSplineContainer = GameObject.Find("EnterSpline").GetComponent<SplineContainer>();
@@ -47,11 +52,14 @@ public class EnemyMove
         _splineIndex = splineIndex;
 	}
 
-	/// <summary>
-	/// 初期化処理
-	/// </summary>
-	public void DifferencePosInitialize(Vector3 enemyPos)
+    /// <summary>
+    /// 移動開始点から自分の座標の差を記録する
+    /// </summary>
+    public void DifferencePosInitialize(Vector3 enemyPos)
 	{
+        // _splineContainer.Splines[0].EvaluatePosition(0) → Spline0の始点の座標
+        // _splineContainer.Splines[1].EvaluatePosition(0) → Spline1の始点の座標
+
         float nowEnemyPosX = enemyPos.x;
         float nowEnemyPosY = enemyPos.y;
 
@@ -61,7 +69,11 @@ public class EnemyMove
         differencePos = new Vector3(nowEnemyPosX - firstSplinePosX, nowEnemyPosY - firstSplinePosY, 0);
     }
 
-    public Vector3 MovePosCalculate()
+    /// <summary>
+    /// 移動先の座標を取得する
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 NextMovePos()
     {
         _moveRatio += Time.deltaTime / 4;
 

@@ -63,7 +63,7 @@ public class BlueSlime : EnemyBase
 	{
 		_shotTime += Time.deltaTime;
 
-		this.transform.position = base._enemyMove.MovePosCalculate();
+		this.transform.position = base._enemyMove.NextMovePos();
 
 		base.FollowHpBar(this.transform.position);
 

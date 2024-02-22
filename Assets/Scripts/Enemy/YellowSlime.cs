@@ -63,7 +63,7 @@ public class YellowSlime : EnemyBase
 		_shotTime += Time.deltaTime;
 		_bulletTime += Time.deltaTime;
 
-		this.transform.position = base._enemyMove.MovePosCalculate();
+		this.transform.position = base._enemyMove.NextMovePos();
 
 		base.FollowHpBar(this.transform.position);
 
@@ -85,7 +85,7 @@ public class YellowSlime : EnemyBase
 
 				_bulletCount++;
 				_bulletTime = 0;
-				_targetAngle += 10;
+				_targetAngle -= 10;
 			}
 			else
             {

@@ -8,6 +8,10 @@ using UnityEngine;
 
 public static class Calculation
 {
+    #region 定数
+    // 角度をUnity基準に合わせるための定数
+    private const int ADJUST_ANGLE = 90;
+    #endregion
     #region メソッド
     /// <summary>
     /// 自身と対象の距離を計算する
@@ -30,17 +34,18 @@ public static class Calculation
     public static int TargetDirectionAngle(Vector3 targetPos, Vector3 shooterPos)
     {
         Vector3 distanceVector = targetPos - shooterPos;
-        // Atan2はX軸を中心として、下が-180～0、上が0～180の範囲となる
-        // Unity基準の角度にするために90を引く
-        float toTargetAngle = Mathf.Atan2(distanceVector.y, distanceVector.x) * Mathf.Rad2Deg - 90;
+
+        // 三角関数ではAtan2はX軸を中心として、下が-180～0、上が0～180の範囲となる
+        // Unity基準の角度にするために90度足す
+        float toTargetAngle = Mathf.Atan2(distanceVector.y, distanceVector.x) * Mathf.Rad2Deg + ADJUST_ANGLE;
 
         if (toTargetAngle > 0)
         {
-            return Mathf.RoundToInt(toTargetAngle);
+            return 180 + Mathf.RoundToInt(Mathf.Abs(toTargetAngle));
         }
         else
         {
-            return 360 - Mathf.RoundToInt(Mathf.Abs(toTargetAngle));
+            return 180 - Mathf.RoundToInt(Mathf.Abs(toTargetAngle));
         }
     }
 
@@ -55,8 +60,9 @@ public static class Calculation
     {
         Vector3 circlePos = shooterPos;
 
-        circlePos.x += Mathf.Cos(angle * Mathf.Deg2Rad) * radius;
-        circlePos.y += Mathf.Sin(angle * Mathf.Deg2Rad) * radius;
+        // Unity基準の角度にするために90度足す
+        circlePos.x += Mathf.Cos((angle + ADJUST_ANGLE) * Mathf.Deg2Rad) * radius;
+        circlePos.y += Mathf.Sin((angle + ADJUST_ANGLE) * Mathf.Deg2Rad) * radius;
 
         // ラジアンに変換しなかったら、よくわからん挙動した（参考：スクリーンショットフォルダ）
         /*circlePosition.x = Mathf.Cos(angle) * radius;

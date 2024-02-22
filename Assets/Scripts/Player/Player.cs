@@ -128,11 +128,11 @@ public class Player : MonoBehaviour, IDamageable
 
         if(_isShot)
         {
-            PlayerShot();
+            PlayerShot(true);
         }
     }
 
-    private void PlayerShot()
+    private void PlayerShot(bool isHard)
     {
         if (_shotTime >= SHOT_INTERVAL)
         {
@@ -141,7 +141,6 @@ public class Player : MonoBehaviour, IDamageable
 
             for (int bulletCount = 1; bulletCount <= LINE_BULLET_AMOUNT; bulletCount++)
             {
-                Debug.Log(bulletCount);
                 _bulletPool.LendPlayerBullet(shotPos, Bullet.MoveType.Line);
             }
 
@@ -156,7 +155,15 @@ public class Player : MonoBehaviour, IDamageable
                     shotPos.x += SHOT_POS_DIFFERENCE_X * bulletCount;
                 }
 
-                _bulletPool.LendPlayerBullet(shotPos, Bullet.MoveType.Tracking);
+                if(isHard)
+                {
+                    _bulletPool.LendPlayerBullet(shotPos, Bullet.MoveType.Line);
+                }
+                else
+                {
+                    _bulletPool.LendPlayerBullet(shotPos, Bullet.MoveType.Tracking);
+                }
+                
             }
 
             _shotTime = 0;
@@ -212,7 +219,7 @@ public class Player : MonoBehaviour, IDamageable
 #elif UNITY_STANDALONE_WIN
         if(Input.GetMouseButtonDown(0))
         {
-            _startObjectPosition = this.transform.position;
+            _startObjectPos = this.transform.position;
             _startMousePos = Input.mousePosition;
         }
         if (Input.GetMouseButton(0))
@@ -220,13 +227,13 @@ public class Player : MonoBehaviour, IDamageable
             _isMove = true;
             _isShot = true;
             
-            _cursorPositionDistance = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Camera.main.ScreenToWorldPoint(_startMousePos);
+            _cursorPosDistance = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Camera.main.ScreenToWorldPoint(_startMousePos);
         }
         else
         {
             _isMove = false;
             _isShot = false;
-            _cursorPositionDistance = Vector2.zero;
+            _cursorPosDistance = Vector2.zero;
         }
 #endif
     }
@@ -291,7 +298,6 @@ public class Player : MonoBehaviour, IDamageable
         _isDamage = true;
 
         _lifeCount--;
-        Debug.Log(_lifeCount);
         _lifeUi[_lifeCount].sprite = _brokenHeart;
 
         if (_lifeCount <= 0)

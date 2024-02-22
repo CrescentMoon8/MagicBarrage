@@ -10,21 +10,21 @@ using UnityEngine.AddressableAssets;
 public class BossSlime : EnemyBase
 {
 	#region 変数
-	private const int MOVE_PATTERN_INDEX = 4;
-
-	private const string PLAYER_BULLET_TAG = "PlayerBullet";
-
-    private const int BOSS_HP = 360;
 
 	// 撃ちたい角度
-	private int _centerAngle = 180;
+	private int _targetAngle = 180;
 	// 角度を何分割するか
-	private int _angleSplit = 18;
+	private int _angleSplit = 9;
 	// 撃ちたい角度の±いくらか
-	private int _angleWidth = 45;
+	private int _angleWidth = 15;
+
+	private const float BULLET_INTERVAL = 0.15f;
+	private float _bulletTime = 0f;
+	private const int BULLET_AMOUNT = 36;
+	private int _bulletCount = 0;
 
 	private float _shotTime = 0f;
-	private const float SHOT_INTERVAL = 2f;
+	private const float SHOT_INTERVAL = 1f;
 
 	private Event _bossShot;
 
@@ -56,25 +56,57 @@ public class BossSlime : EnemyBase
     /// 更新処理
     /// </summary>
     private void Update ()
-	{
-		_shotTime += Time.deltaTime;
+    {
+        _shotTime += Time.deltaTime;
 
-		this.transform.position = base._enemyMove.MovePosCalculate();
+        this.transform.position = base._enemyMove.NextMovePos();
 
 		//base._playerPos = base._player.transform.position;
 
-		if ( _shotTime > SHOT_INTERVAL )
-		{
-            /*// 三方向に扇形の弾を撃つ
+		ShootWindmillBullet();
+
+
+        if (_shotTime > SHOT_INTERVAL)
+        {
+			/*// 三方向に扇形の弾を撃つ
 			for (int i = 0; i < 3; i++)
 			{
 				base.RoundShot(this.transform.position, _maxAngle, _angleSplit, _direction, 0, Bullet.MoveType.Line);
 				_direction -= 90;
 			}*/
-            base._puttingEnemyBullet.FanShot(this.transform.position, _centerAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
+
+			//_targetAngle = 180;
+			base._puttingEnemyBullet.FanShot(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
+			base._puttingEnemyBullet.FanShot(this.transform.position, _targetAngle + 180, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
 
             _shotTime = 0f;
+        }
+    }
+
+    private void ShootWindmillBullet()
+    {
+		_bulletTime += Time.deltaTime;
+
+		/* 
+		 * 指定した秒数間隔で指定した回数撃つ
+		 */
+		if (_bulletTime < BULLET_INTERVAL)
+		{
+			return;
 		}
-	}
+
+		if (_bulletTime >= BULLET_INTERVAL && _bulletCount < BULLET_AMOUNT)
+		{
+			base._puttingEnemyBullet.RoundShot(this.transform.position, _angleSplit, _targetAngle, _bulletInfo.PURPLE_NEEDLE_BULLET, Bullet.MoveType.Line);
+			_bulletCount++;
+			_bulletTime = 0;
+			_targetAngle += 360 / BULLET_AMOUNT;
+		}
+		else
+		{
+			_targetAngle = 180;
+			_bulletCount = 0;
+		}
+    }
     #endregion
 }

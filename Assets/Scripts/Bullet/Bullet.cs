@@ -11,6 +11,12 @@ using System.Collections;
 public class Bullet : MonoBehaviour
 {
     #region 変数
+    /// <summary>
+    /// 射手は誰か
+    /// ０：撃たれていない
+    /// １：プレイヤー
+    /// ２：エネミー
+    /// </summary>
     public enum ShooterType
     {
         None,
@@ -21,6 +27,12 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private ShooterType _shooterType = ShooterType.None;
 
+    /// <summary>
+    /// 弾の動き方
+    /// Line：直線
+    /// Tracking：追尾
+    /// Curve：曲線
+    /// </summary>
     public enum MoveType
     {
         Line,
@@ -33,12 +45,16 @@ public class Bullet : MonoBehaviour
 
     private GameObject _playerObject;
     private Vector3 _playerPos = Vector3.zero;
+    // プレイヤーが持つダメージ用インターフェース
     private IDamageable _playerIDamageable = default;
 
     [SerializeField]
     private Vector3 _distanceVector = Vector3.zero;
 
     private int _bulletNumber = 0;
+
+    [SerializeField]
+    private ParticleSystem _hitParticle = default;
 
     private EnemyManager _enemyManager = default;
     private BulletPool _bulletPool = default;
@@ -59,6 +75,7 @@ public class Bullet : MonoBehaviour
 	{
         _playerObject = GameObject.FindWithTag("Player");
         _playerIDamageable = _playerObject.GetComponent<IDamageable>();
+        _hitParticle = GetComponentInChildren<ParticleSystem>();
         _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
         _enemyManager = GameObject.FindWithTag("Scripts").GetComponentInChildren<EnemyManager>();
     }
@@ -186,28 +203,35 @@ public class Bullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag("ReturnPool"))
-		{
-			_bulletPool.ReturnBullet(this, _bulletNumber, _shooterType);
-
-            _shooterType = ShooterType.None;
-        }
-
-        if (collision.CompareTag("Player") && _shooterType == ShooterType.Enemy)
         {
-            _playerIDamageable.Damage();
-
             _bulletPool.ReturnBullet(this, _bulletNumber, _shooterType);
 
             _shooterType = ShooterType.None;
         }
 
-        if((collision.CompareTag("Enemy") || collision.CompareTag("Boss")) &&
-            _shooterType == ShooterType.Player)
-        {
-            // GetSiblingIndexで当たったオブジェクトが同じ階層で上から何番目かを取得する
-            // Enemyの情報をヒエラルキーの上から順に取得しているためちゃんと動いている
-            _enemyManager.EnemyIDamageableList[(int)_enemyManager.NowPhaseState][collision.transform.GetSiblingIndex()].Damage();
+        if((collision.CompareTag("Player") && _shooterType == ShooterType.Enemy) ||
+           (collision.CompareTag("Enemy") && _shooterType == ShooterType.Player) || 
+           (collision.CompareTag("Boss") && _shooterType == ShooterType.Player))
+		{
+            // 誰が撃った弾か判断する
+            switch (_shooterType)
+            {
+                case ShooterType.Player:
+                    // GetSiblingIndexで当たったオブジェクトが同じ階層で上から何番目かを取得する
+                    // Enemyの情報をヒエラルキーの上から順に取得しているためちゃんと動いている
+                    _enemyManager.EnemyIDamageableList[(int)_enemyManager.NowPhaseState][collision.transform.GetSiblingIndex()].Damage();
+                    break;
 
+                case ShooterType.Enemy:
+                    _playerIDamageable.Damage();
+                    break;
+
+                default:
+                    break;
+            }
+
+            _hitParticle.Play();
+            
             _bulletPool.ReturnBullet(this, _bulletNumber, _shooterType);
 
             _shooterType = ShooterType.None;

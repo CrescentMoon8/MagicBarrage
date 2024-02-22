@@ -10,14 +10,8 @@ using UnityEngine.AddressableAssets;
 public class PurpleSlime : EnemyBase
 {
 	#region 変数
-	private const int MOVE_PATTERN_INDEX = 4;
-
-	private const string PLAYER_BULLET_TAG = "PlayerBullet";
-
-    private const int ENEMY_HP = 40;
-
 	// 角度を何分割するか
-	private int _angleSplit = 54;
+	private int _angleSplit = 45;
 
     private float _shotTime = 0f;
 	private const float SHOT_INTERVAL = 2f;
@@ -59,7 +53,7 @@ public class PurpleSlime : EnemyBase
 	{
 		_shotTime += Time.deltaTime;
 
-		this.transform.position = base._enemyMove.MovePosCalculate();
+		this.transform.position = base._enemyMove.NextMovePos();
 
 		base.FollowHpBar(this.transform.position);
 

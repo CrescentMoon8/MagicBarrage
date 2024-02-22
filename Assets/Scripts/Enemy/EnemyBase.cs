@@ -22,13 +22,6 @@ public class EnemyBase : MonoBehaviour, IDamageable
 	protected Slider _hpSlider = default;
 	protected int _hpValue = 0;
 
-	// 子クラスで作るべき？
-	/*protected GameObject _player = default;
-	protected Vector3 _playerPos = Vector3.zero;*/
-
-	// Splinesパッケージで代用
-	//protected Vector3[,] _movePattern = new Vector3[10,3];
-
 	private BulletPool _bulletPool = default;
 	protected EnemyShot _puttingEnemyBullet = default;
 	protected EnemyMove _enemyMove = default;

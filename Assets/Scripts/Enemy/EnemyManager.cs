@@ -69,6 +69,7 @@ public class EnemyManager : MonoBehaviour
                     }
                 }
 				break;
+
 			case PhaseState.Second:
                 if (_enemyPhaseList[(int)PhaseState.Second].Count <= 0)
                 {
@@ -80,6 +81,7 @@ public class EnemyManager : MonoBehaviour
                     }
                 }
                 break;
+
 			case PhaseState.Third:
                 if (_enemyPhaseList[(int)PhaseState.Third].Count <= 0)
                 {
@@ -91,15 +93,18 @@ public class EnemyManager : MonoBehaviour
                     }
                 }
                 break;
+
 			case PhaseState.Boss:
                 if (_enemyPhaseList[(int)PhaseState.Boss].Count <= 0)
                 {
                     _phaseState = PhaseState.End;
                 }
                 break;
+
 			case PhaseState.End:
                 SceneManager.LoadScene("Result");
 				break;
+
 			default:
 				break;
 		}

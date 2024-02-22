@@ -10,11 +10,6 @@ using UnityEngine.AddressableAssets;
 public class RedSlime : EnemyBase
 {
 	#region 変数
-	private const int MOVE_PATTERN_INDEX = 0;
-    private const string PLAYER_BULLET_TAG = "PlayerBullet";
-
-    private const int ENEMY_HP = 40;
-
 	// 撃ちたい角度
 	private int _centerAngle = 180;
 	// 角度を何分割するか
@@ -54,12 +49,17 @@ public class RedSlime : EnemyBase
 		_enemyMove.DifferencePosInitialize(this.transform.position);
 
 		Addressables.Release(_enemyDataBase);
-		// _splineContainer.Splines[0].EvaluatePosition(0) → Spline0の始点の座標
-		// _splineContainer.Splines[1].EvaluatePosition(0) → Spline1の始点の座標
-		// Debug.Log(_splineContainer.Splines[0].EvaluatePosition(0).y);
 
 		_playerObject = GameObject.FindWithTag("Player");
         _playerPos = _playerObject.transform.position;
+    }
+
+	/// <summary>
+	/// 非アクティブになったときにBulletInfoをアンロードする
+	/// </summary>
+    private void OnDisable()
+    {
+		Addressables.Release(_bulletInfo);
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ public class RedSlime : EnemyBase
 		_shotTime += Time.deltaTime;
 		_bulletTime += Time.deltaTime;
 
-		this.transform.position = base._enemyMove.MovePosCalculate();
+		this.transform.position = base._enemyMove.NextMovePos();
 
 		base.FollowHpBar(this.transform.position);
 
@@ -104,8 +104,6 @@ public class RedSlime : EnemyBase
 				_bulletCount = 0;
 				_shotTime = 0f;
 			}
-
-			
 		}
 	}
     #endregion
