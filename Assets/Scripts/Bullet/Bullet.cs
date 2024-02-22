@@ -48,6 +48,7 @@ public class Bullet : MonoBehaviour
     // プレイヤーが持つダメージ用インターフェース
     private IDamageable _playerIDamageable = default;
 
+    // エネミーとプレイヤーのベクトル差分
     [SerializeField]
     private Vector3 _distanceVector = Vector3.zero;
 
@@ -80,6 +81,9 @@ public class Bullet : MonoBehaviour
         _enemyManager = GameObject.FindWithTag("Scripts").GetComponentInChildren<EnemyManager>();
     }
 
+    /// <summary>
+    /// 弾の初期化処理
+    /// </summary>
     public void Initialize()
     {
         switch (_shooterType)
@@ -106,7 +110,7 @@ public class Bullet : MonoBehaviour
     }
 
     /// <summary>
-    /// 更新処理
+    /// 物理挙動の更新処理
     /// </summary>
     private void FixedUpdate ()
 	{
@@ -169,6 +173,12 @@ public class Bullet : MonoBehaviour
                 break;
         }
 	}
+
+    /// <summary>
+    /// プレイヤーと弾の距離、プレイヤーとエネミーの距離を比べる
+    /// </summary>
+    /// <param name="targetPos"></param>
+    /// <returns></returns>
     private bool ExistsEnemyPosList(Vector3 targetPos)
     {
         _playerPos = _playerObject.transform.position;

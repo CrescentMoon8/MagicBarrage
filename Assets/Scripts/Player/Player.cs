@@ -128,7 +128,7 @@ public class Player : MonoBehaviour, IDamageable
 
         if(_isShot)
         {
-            PlayerShot(true);
+            PlayerShot(false);
         }
     }
 

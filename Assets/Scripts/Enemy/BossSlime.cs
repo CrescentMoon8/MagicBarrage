@@ -97,7 +97,7 @@ public class BossSlime : EnemyBase
 
 		if (_bulletTime >= BULLET_INTERVAL && _bulletCount < BULLET_AMOUNT)
 		{
-			base._puttingEnemyBullet.RoundShot(this.transform.position, _angleSplit, _targetAngle, _bulletInfo.PURPLE_NEEDLE_BULLET, Bullet.MoveType.Line);
+			base._puttingEnemyBullet.RoundShot(this.transform.position, _angleSplit, _targetAngle, _bulletInfo.PURPLE_NOMAL_BULLET, Bullet.MoveType.Line);
 			_bulletCount++;
 			_bulletTime = 0;
 			_targetAngle += 360 / BULLET_AMOUNT;

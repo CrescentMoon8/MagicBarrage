@@ -5,8 +5,7 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
-using System;
-using System.Collections;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,6 +20,13 @@ public class GameManager : MonoBehaviour
     }
 
 	private GameState _gameState = GameState.Start;
+
+	[SerializeField]
+	private Image _posePanel = default;
+	[SerializeField]
+	private Image _poseText = default;
+	[SerializeField]
+	private Button _retryButton = default;
 
 	#endregion
 
@@ -54,6 +60,11 @@ public class GameManager : MonoBehaviour
         {
 			// ゲーム開始前処理
             case GameState.Start:
+				// ポーズからリトライするとタイムスケールが０のままのため、１に変更する
+				if(Time.timeScale <= 0)
+				{
+					Time.timeScale = 1;
+				}
                 break;
 
             case GameState.Pose:
@@ -72,5 +83,25 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
-	#endregion
+
+    public void OnPose()
+    {
+        if (Time.timeScale >= 1.0f)
+        {
+            Time.timeScale = 0f;
+			_posePanel.gameObject.SetActive(true);
+			_poseText.gameObject.SetActive(true);
+			_retryButton.gameObject.SetActive(true);
+			_gameState = GameState.Pose;
+        }
+        else
+        {
+            Time.timeScale = 1.0f;
+            _posePanel.gameObject.SetActive(false);
+            _poseText.gameObject.SetActive(false);
+            _retryButton.gameObject.SetActive(false);
+            _gameState = GameState.Play;
+        }
+    }
+    #endregion
 }

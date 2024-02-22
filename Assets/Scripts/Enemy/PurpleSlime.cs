@@ -11,7 +11,7 @@ public class PurpleSlime : EnemyBase
 {
 	#region 変数
 	// 角度を何分割するか
-	private int _angleSplit = 45;
+	private int _angleSplit = 36;
 
     private float _shotTime = 0f;
 	private const float SHOT_INTERVAL = 2f;
