@@ -1,0 +1,5 @@
+@startuml
+class YellowSlime {
+}
+EnemyBase <|-- YellowSlime
+@enduml

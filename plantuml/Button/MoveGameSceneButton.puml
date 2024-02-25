@@ -1,0 +1,6 @@
+@startuml
+class MoveGameSceneButton {
+    + MoveGameScene() : void
+}
+MonoBehaviour <|-- MoveGameSceneButton
+@enduml

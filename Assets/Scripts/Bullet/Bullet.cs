@@ -29,9 +29,9 @@ public class Bullet : MonoBehaviour
 
     /// <summary>
     /// 弾の動き方
-    /// Line：直線
-    /// Tracking：追尾
-    /// Curve：曲線
+    /// ０：直線
+    /// １：追尾
+    /// ２：曲線
     /// </summary>
     public enum MoveType
     {
@@ -59,6 +59,7 @@ public class Bullet : MonoBehaviour
 
     private EnemyManager _enemyManager = default;
     private BulletPool _bulletPool = default;
+    private ParticlePool _particlePool = default;
     #endregion
 
     #region プロパティ
@@ -78,6 +79,7 @@ public class Bullet : MonoBehaviour
         _playerIDamageable = _playerObject.GetComponent<IDamageable>();
         _hitParticle = GetComponentInChildren<ParticleSystem>();
         _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
+        _particlePool = GameObject.FindWithTag("Scripts").GetComponentInChildren<ParticlePool>();
         _enemyManager = GameObject.FindWithTag("Scripts").GetComponentInChildren<EnemyManager>();
     }
 

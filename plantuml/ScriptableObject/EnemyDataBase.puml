@@ -1,0 +1,14 @@
+@startuml
+class EnemyDataBase {
+    + <<readonly>> RED_SLIME : int = 0
+    + <<readonly>> BLUE_SLIME : int = 1
+    + <<readonly>> YELLOW_SLIME : int = 2
+    + <<readonly>> GREEN_SLIME : int = 3
+    + <<readonly>> PURPLE_SLIME : int = 4
+    + <<readonly>> BOSS_SLIME : int = 5
+}
+class "List`1"<T> {
+}
+ScriptableObject <|-- EnemyDataBase
+EnemyDataBase o-> "_enemyDataList<EnemyData>" "List`1"
+@enduml

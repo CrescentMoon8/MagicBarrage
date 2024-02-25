@@ -167,6 +167,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 636305843}
     m_Modifications:
+    - target: {fileID: -3226192414357698090, guid: 94b0414f64036134487f2cd3dafaab09, type: 3}
+      propertyPath: _hpSlider
+      value: 
+      objectReference: {fileID: 1750645394}
     - target: {fileID: 2177878900581032375, guid: 94b0414f64036134487f2cd3dafaab09, type: 3}
       propertyPath: m_Name
       value: YellowSlime1
@@ -784,8 +788,9 @@ GameObject:
   m_Component:
   - component: {fileID: 230712457}
   - component: {fileID: 230712458}
+  - component: {fileID: 230712459}
   m_Layer: 0
-  m_Name: BulletPool
+  m_Name: ObjectPool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -830,6 +835,25 @@ MonoBehaviour:
   - {fileID: -8442912504709136168, guid: 3b2b99293d7431c47a8a1e91d1bb004a, type: 3}
   - {fileID: 4003098924792100421, guid: 12ab3d7c7392a674b827904593da5fed, type: 3}
   - {fileID: 2142986314175163578, guid: 0a3d2262a318dd74c96f88bfdf0bd3d6, type: 3}
+--- !u!114 &230712459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 230712456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 551316f64a1a89841af155a1c90b5273, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerBulletParticlePrefab: {fileID: 5475683709383495548, guid: 8be610e61dd69c04fa3189f6c28e3c67, type: 3}
+  _enemyBulletParticlePrefabList:
+  - {fileID: 7730794569386914614, guid: 14d8b357d1bdbbc4b88f88017f25c5f8, type: 3}
+  - {fileID: 966372433260327267, guid: 63df22357f631f849a67add777f6baf0, type: 3}
+  - {fileID: 6714436571476130479, guid: db9742253e0d3f44ca0c6165e803dfb1, type: 3}
+  - {fileID: 1705588169859327063, guid: 006118a88e12b064ab01db9114ec9238, type: 3}
+  - {fileID: 3066654705793092626, guid: fe012ccfae013d34bad69ce133a6725b, type: 3}
 --- !u!1 &248669881
 GameObject:
   m_ObjectHideFlags: 0
@@ -2045,6 +2069,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 636305843}
     m_Modifications:
+    - target: {fileID: -3226192414357698090, guid: 94b0414f64036134487f2cd3dafaab09, type: 3}
+      propertyPath: _hpSlider
+      value: 
+      objectReference: {fileID: 2032453464}
     - target: {fileID: 2177878900581032375, guid: 94b0414f64036134487f2cd3dafaab09, type: 3}
       propertyPath: m_Name
       value: YellowSlime4
@@ -4763,8 +4791,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1423545832041050477, guid: 7611f63501451e942aba8e4a86513821, type: 3}
-      propertyPath: playOnAwake
+      propertyPath: looping
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1423545832041050477, guid: 7611f63501451e942aba8e4a86513821, type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1423545832041050477, guid: 7611f63501451e942aba8e4a86513821, type: 3}
       propertyPath: ShapeModule.radius.value
@@ -4872,7 +4904,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9151390133726757296, guid: 7611f63501451e942aba8e4a86513821, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5431,6 +5463,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1175610721}
   m_CullTransparentMesh: 1
+--- !u!1 &1180283225
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1180283226}
+  m_Layer: 0
+  m_Name: EnemyParticles
+  m_TagString: EnemyParticlePool
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1180283226
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180283225}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.039000984, y: 0.5134548, z: -0.19988522}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1230846393 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7661511288895436283, guid: 4bd3671d5c3a8334ca8dd0bf9db5990e, type: 3}
@@ -5730,6 +5793,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 636305843}
     m_Modifications:
+    - target: {fileID: -3226192414357698090, guid: 94b0414f64036134487f2cd3dafaab09, type: 3}
+      propertyPath: _hpSlider
+      value: 
+      objectReference: {fileID: 1763547263}
     - target: {fileID: 2177878900581032375, guid: 94b0414f64036134487f2cd3dafaab09, type: 3}
       propertyPath: m_Name
       value: YellowSlime2
@@ -5804,6 +5871,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 636305843}
     m_Modifications:
+    - target: {fileID: -3226192414357698090, guid: 94b0414f64036134487f2cd3dafaab09, type: 3}
+      propertyPath: _hpSlider
+      value: 
+      objectReference: {fileID: 1626928100}
     - target: {fileID: 2177878900581032375, guid: 94b0414f64036134487f2cd3dafaab09, type: 3}
       propertyPath: m_Name
       value: YellowSlime3
@@ -6491,7 +6562,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.15, y: 1.15, z: 1.15}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2064983174}
@@ -7281,6 +7352,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 636305843}
     m_Modifications:
+    - target: {fileID: -3226192414357698090, guid: 94b0414f64036134487f2cd3dafaab09, type: 3}
+      propertyPath: _hpSlider
+      value: 
+      objectReference: {fileID: 248669882}
     - target: {fileID: 2177878900581032375, guid: 94b0414f64036134487f2cd3dafaab09, type: 3}
       propertyPath: m_Name
       value: YellowSlime5
@@ -7969,7 +8044,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -3.75, z: 0}
-  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1649068372}
@@ -8144,6 +8219,37 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &2066235703
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2066235704}
+  m_Layer: 0
+  m_Name: PlayerParticles
+  m_TagString: PlayerParticlePool
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2066235704
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066235703}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2089701719
 GameObject:
   m_ObjectHideFlags: 0
@@ -8369,3 +8475,5 @@ SceneRoots:
   - {fileID: 568523612}
   - {fileID: 1148448504}
   - {fileID: 1164172724}
+  - {fileID: 2066235704}
+  - {fileID: 1180283226}

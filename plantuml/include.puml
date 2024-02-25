@@ -1,0 +1,139 @@
+@startuml
+class Calculation <<static>> {
+    + {static} TargetDistance(targetPos:Vector3, myPos:Vector3) : float
+    + {static} TargetDirectionAngle(targetPos:Vector3, shooterPos:Vector3) : int
+    + {static} CirclePosCalculate(shooterPos:Vector3, angle:float, radius:float) : Vector3
+}
+class GameManager {
+    + OnPose() : void
+}
+enum GameState {
+    Start,
+    Pose,
+    Play,
+    Score,
+    End,
+}
+MonoBehaviour <|-- GameManager
+GameManager +-- GameState
+interface IDamageable {
+}
+class Bullet {
+    + SettingBulletNumber : int <<set>>
+    + Initialize() : void
+}
+enum ShooterType {
+    None,
+    Player,
+    Enemy,
+}
+enum MoveType {
+    Line,
+    Tracking,
+    Curve,
+}
+MonoBehaviour <|-- Bullet
+Bullet --> "SettingShooterType" ShooterType
+Bullet --> "SettingMoveType" MoveType
+Bullet --> "SettingPlayerPos" Vector3
+Bullet +-- ShooterType
+Bullet +-- MoveType
+class BulletPool {
+    + LendPlayerBullet(shotPosition:Vector3, moveType:Bullet.MoveType) : Bullet
+    + LendEnemyBullet(shotPosition:Vector3, bulletNumber:int) : Bullet
+    + ReturnBullet(bullet:Bullet, bulletNumber:int, type:Bullet.ShooterType) : void
+}
+MonoBehaviour <|-- BulletPool
+class BlueSlime {
+}
+EnemyBase <|-- BlueSlime
+class BossSlime {
+}
+EnemyBase <|-- BossSlime
+class EnemyBase {
+    + Damage() : void
+}
+enum EnemyType {
+    Nomal,
+    Boss,
+}
+MonoBehaviour <|-- EnemyBase
+IDamageable <|-- EnemyBase
+EnemyBase +-- EnemyType
+class EnemyManager {
+    + DownEnemyCount(enemy:GameObject) : void
+}
+enum PhaseState {
+    First= 0,
+    Second= 1,
+    Third= 2,
+    Boss= 3,
+    End= 4,
+}
+class "List`1"<T> {
+}
+MonoBehaviour <|-- EnemyManager
+EnemyManager --> "EnemyPhaseList<List<GameObject>>" "List`1"
+EnemyManager --> "EnemyIDamageableList<List<IDamageable>>" "List`1"
+EnemyManager --> "NowPhaseState" PhaseState
+EnemyManager +-- PhaseState
+class EnemyMove {
+    + SetSplineContainer(splineIndex:int) : void
+    + DifferencePosInitialize(enemyPos:Vector3) : void
+    + NextMovePos() : Vector3
+}
+class EnemyShot {
+    + EnemyShot(bulletPool:BulletPool, radius:float)
+    + LineShot(shooterPos:Vector3, angle:int, bulletNumber:int, moveType:Bullet.MoveType) : void
+    + FanShot(shooterPos:Vector3, centerAngle:int, angleSplit:int, angleWidth:int, bulletNumber:int, moveType:Bullet.MoveType) : void
+    + RoundShot(shooterPos:Vector3, angleSplit:float, shiftAngle:int, bulletNumber:int, moveType:Bullet.MoveType) : void
+}
+class PurpleSlime {
+}
+EnemyBase <|-- PurpleSlime
+class RedSlime {
+}
+EnemyBase <|-- RedSlime
+class YellowSlime {
+}
+EnemyBase <|-- YellowSlime
+class Player {
+    + Damage() : void
+}
+MonoBehaviour <|-- Player
+IDamageable <|-- Player
+class PlayerShot {
+}
+MonoBehaviour <|-- PlayerShot
+class BulletInfo {
+    + <<readonly>> RED_NOMAL_BULLET : int = 0
+    + <<readonly>> RED_NEEDLE_BULLET : int = 1
+    + <<readonly>> BLUE_NOMAL_BULLET : int = 2
+    + <<readonly>> BLUE_NEEDLE_BULLET : int = 3
+    + <<readonly>> YERROW_NOMAL_BULLET : int = 4
+    + <<readonly>> YERROW_NEEDLE_BULLET : int = 5
+    + <<readonly>> GREEN_NOMAL_BULLET : int = 6
+    + <<readonly>> GREEN_NEEDLE_BULLET : int = 7
+    + <<readonly>> PURPLE_NOMAL_BULLET : int = 8
+    + <<readonly>> PURPLE_NEEDLE_BULLET : int = 9
+}
+ScriptableObject <|-- BulletInfo
+class EnemyData {
+    + _enemyName : string = default
+    + _maxHp : int = 0
+    + _splineIndex : int = 0
+}
+ScriptableObject <|-- EnemyData
+class EnemyDataBase {
+    + <<readonly>> RED_SLIME : int = 0
+    + <<readonly>> BLUE_SLIME : int = 1
+    + <<readonly>> YELLOW_SLIME : int = 2
+    + <<readonly>> GREEN_SLIME : int = 3
+    + <<readonly>> PURPLE_SLIME : int = 4
+    + <<readonly>> BOSS_SLIME : int = 5
+}
+class "List`1"<T> {
+}
+ScriptableObject <|-- EnemyDataBase
+EnemyDataBase o-> "_enemyDataList<EnemyData>" "List`1"
+@enduml

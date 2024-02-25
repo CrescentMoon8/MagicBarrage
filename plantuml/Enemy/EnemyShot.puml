@@ -1,0 +1,8 @@
+@startuml
+class EnemyShot {
+    + EnemyShot(bulletPool:BulletPool, radius:float)
+    + LineShot(shooterPos:Vector3, angle:int, bulletNumber:int, moveType:Bullet.MoveType) : void
+    + FanShot(shooterPos:Vector3, centerAngle:int, angleSplit:int, angleWidth:int, bulletNumber:int, moveType:Bullet.MoveType) : void
+    + RoundShot(shooterPos:Vector3, angleSplit:float, shiftAngle:int, bulletNumber:int, moveType:Bullet.MoveType) : void
+}
+@enduml

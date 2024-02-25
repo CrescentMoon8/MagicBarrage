@@ -1,0 +1,8 @@
+@startuml
+class BulletPool {
+    + LendPlayerBullet(shotPosition:Vector3, moveType:Bullet.MoveType) : Bullet
+    + LendEnemyBullet(shotPosition:Vector3, bulletNumber:int) : Bullet
+    + ReturnBullet(bullet:Bullet, bulletNumber:int, type:Bullet.ShooterType) : void
+}
+MonoBehaviour <|-- BulletPool
+@enduml

@@ -1,0 +1,6 @@
+@startuml
+class EndButton {
+    + EndGame() : void
+}
+MonoBehaviour <|-- EndButton
+@enduml

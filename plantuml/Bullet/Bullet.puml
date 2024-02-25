@@ -1,0 +1,22 @@
+@startuml
+class Bullet {
+    + SettingBulletNumber : int <<set>>
+    + Initialize() : void
+}
+enum ShooterType {
+    None,
+    Player,
+    Enemy,
+}
+enum MoveType {
+    Line,
+    Tracking,
+    Curve,
+}
+MonoBehaviour <|-- Bullet
+Bullet --> "SettingShooterType" ShooterType
+Bullet --> "SettingMoveType" MoveType
+Bullet --> "SettingPlayerPos" Vector3
+Bullet +-- ShooterType
+Bullet +-- MoveType
+@enduml

@@ -83,7 +83,7 @@ public class Player : MonoBehaviour, IDamageable
         _circleCollider2D = GetComponent<CircleCollider2D>();
 
         // プレイヤースプライトの半径を取得する
-        _radius = transform.GetChild(0).localScale / 2;
+        _radius = transform.localScale;
 
         // UIオブジェクトの頂点の座標を取得し、移動制限の大きさを調整する
         // 座標の取得順は左下、左上、右上、右下

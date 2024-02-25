@@ -1,0 +1,6 @@
+{
+    "csharp2plantuml.allInOne": true,
+    "csharp2plantuml.inputPath": "./Assets/Scripts",
+    "plantuml.render": "PlantUMLServer",
+    "plantuml.server": "https://www.plantuml.com/plantuml"
+}

@@ -1,0 +1,19 @@
+@startuml
+class EnemyManager {
+    + DownEnemyCount(enemy:GameObject) : void
+}
+enum PhaseState {
+    First= 0,
+    Second= 1,
+    Third= 2,
+    Boss= 3,
+    End= 4,
+}
+class "List`1"<T> {
+}
+MonoBehaviour <|-- EnemyManager
+EnemyManager --> "EnemyPhaseList<List<GameObject>>" "List`1"
+EnemyManager --> "EnemyIDamageableList<List<IDamageable>>" "List`1"
+EnemyManager --> "NowPhaseState" PhaseState
+EnemyManager +-- PhaseState
+@enduml

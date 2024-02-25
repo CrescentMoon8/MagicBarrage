@@ -1,0 +1,5 @@
+@startuml
+class BossSlime {
+}
+EnemyBase <|-- BossSlime
+@enduml

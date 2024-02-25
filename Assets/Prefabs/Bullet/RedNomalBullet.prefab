@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5755239893130998140}
   m_Layer: 6
   m_Name: RedNomalBullet
-  m_TagString: EnemyBullet
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -102,6 +102,7 @@ MonoBehaviour:
   _shooterType: 0
   _moveType: 0
   _distanceVector: {x: 0, y: 0, z: 0}
+  _hitParticle: {fileID: 0}
 --- !u!58 &5755239893130998140
 CircleCollider2D:
   m_ObjectHideFlags: 0

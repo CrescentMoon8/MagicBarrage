@@ -1,0 +1,7 @@
+@startuml
+class Player {
+    + Damage() : void
+}
+MonoBehaviour <|-- Player
+IDamageable <|-- Player
+@enduml

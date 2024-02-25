@@ -1,0 +1,7 @@
+@startuml
+class EnemyMove {
+    + SetSplineContainer(splineIndex:int) : void
+    + DifferencePosInitialize(enemyPos:Vector3) : void
+    + NextMovePos() : Vector3
+}
+@enduml

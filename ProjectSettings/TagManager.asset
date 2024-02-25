@@ -6,13 +6,13 @@ TagManager:
   tags:
   - PlayerBulletPool
   - EnemyBulletPool
-  - PlayerBullet
-  - EnemyBullet
   - Scripts
   - ReturnPool
   - Enemy
   - Boss
   - Enemys
+  - PlayerParticlePool
+  - EnemyParticlePool
   layers:
   - Default
   - TransparentFX

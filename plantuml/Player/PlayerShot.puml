@@ -1,0 +1,5 @@
+@startuml
+class PlayerShot {
+}
+MonoBehaviour <|-- PlayerShot
+@enduml

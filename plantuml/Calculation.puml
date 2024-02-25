@@ -1,0 +1,7 @@
+@startuml
+class Calculation <<static>> {
+    + {static} TargetDistance(targetPos:Vector3, myPos:Vector3) : float
+    + {static} TargetDirectionAngle(targetPos:Vector3, shooterPos:Vector3) : int
+    + {static} CirclePosCalculate(shooterPos:Vector3, angle:float, radius:float) : Vector3
+}
+@enduml

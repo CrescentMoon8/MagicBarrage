@@ -1,0 +1,8 @@
+@startuml
+class EnemyData {
+    + _enemyName : string = default
+    + _maxHp : int = 0
+    + _splineIndex : int = 0
+}
+ScriptableObject <|-- EnemyData
+@enduml

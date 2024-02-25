@@ -1,0 +1,6 @@
+@startuml
+class TitleButton {
+    + MoveTitle() : void
+}
+MonoBehaviour <|-- TitleButton
+@enduml

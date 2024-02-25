@@ -1,0 +1,15 @@
+@startuml
+class BulletInfo {
+    + <<readonly>> RED_NOMAL_BULLET : int = 0
+    + <<readonly>> RED_NEEDLE_BULLET : int = 1
+    + <<readonly>> BLUE_NOMAL_BULLET : int = 2
+    + <<readonly>> BLUE_NEEDLE_BULLET : int = 3
+    + <<readonly>> YERROW_NOMAL_BULLET : int = 4
+    + <<readonly>> YERROW_NEEDLE_BULLET : int = 5
+    + <<readonly>> GREEN_NOMAL_BULLET : int = 6
+    + <<readonly>> GREEN_NEEDLE_BULLET : int = 7
+    + <<readonly>> PURPLE_NOMAL_BULLET : int = 8
+    + <<readonly>> PURPLE_NEEDLE_BULLET : int = 9
+}
+ScriptableObject <|-- BulletInfo
+@enduml

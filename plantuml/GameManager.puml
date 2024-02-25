@@ -1,0 +1,14 @@
+@startuml
+class GameManager {
+    + OnPose() : void
+}
+enum GameState {
+    Start,
+    Pose,
+    Play,
+    Score,
+    End,
+}
+MonoBehaviour <|-- GameManager
+GameManager +-- GameState
+@enduml
