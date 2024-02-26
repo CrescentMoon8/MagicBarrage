@@ -22,20 +22,20 @@ public class RedSlime : EnemyBase
 	private const int BULLET_AMOUNT = 5;
 	private int _bulletCount = 0;
 
-	private IPlayerPos _iPlayerPos = default;
-
     private float _shotTime = 0f;
 	private const float SHOT_INTERVAL = 2f;
 
 	private BulletInfo _bulletInfo = default;
 	private EnemyDataBase _enemyDataBase = default;
-	#endregion
+    [SerializeField]
+    private BarrageTemplate _barrageTemplate = default;
+    #endregion
 
-	#region メソッド
-	/// <summary>
-	/// 更新前処理
-	/// </summary>
-	private void OnEnable ()
+    #region メソッド
+    /// <summary>
+    /// 更新前処理
+    /// </summary>
+    private void OnEnable ()
 	{
 		_bulletInfo = Addressables.LoadAssetAsync<BulletInfo>("BulletInfo").WaitForCompletion();
 		_enemyDataBase = Addressables.LoadAssetAsync<EnemyDataBase>("EnemyDataBase").WaitForCompletion();
@@ -44,12 +44,14 @@ public class RedSlime : EnemyBase
 		base._hpSlider.maxValue = base._hpValue;
 		base._hpSlider.value = base._hpValue;
 
-		_enemyMove.SetSplineContainer(_enemyDataBase._enemyDataList[_enemyDataBase.RED_SLIME]._splineIndex);
+        _centerAngle = _barrageTemplate._centerAngle;
+        _angleWidth = _barrageTemplate._angleWidth;
+        _angleSplit = _barrageTemplate._angleSplit;
+
+        _enemyMove.SetSplineContainer(_enemyDataBase._enemyDataList[_enemyDataBase.RED_SLIME]._splineIndex);
 		_enemyMove.DifferencePosInitialize(this.transform.position);
 
 		Addressables.Release(_enemyDataBase);
-
-		_iPlayerPos = GameObject.FindWithTag("Player").GetComponent<IPlayerPos>();
     }
 
 	/// <summary>
@@ -81,16 +83,19 @@ public class RedSlime : EnemyBase
             {
 				return;
             }
-			int angle = Calculation.TargetDirectionAngle(_iPlayerPos.PlayerPos, this.transform.position);
+			if(base._isPlayerTarget)
+			{
+                _centerAngle = Calculation.TargetDirectionAngle(base._iPlayerPos.PlayerPos, this.transform.position);
+            }
 
 			if (_bulletTime >= BULLET_INTERVAL && _bulletCount < BULLET_AMOUNT)
             {
 				// 追尾弾の初弾と同時に扇形の通常弾を打つ
 				if(_bulletCount == 0)
                 {
-					base._puttingEnemyBullet.FanShot(this.transform.position, angle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
+					base._puttingEnemyBullet.FanShot(this.transform.position, _centerAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
 				}
-				base._puttingEnemyBullet.LineShot(this.transform.position, angle, _bulletInfo.RED_NEEDLE_BULLET, Bullet.MoveType.Tracking);
+				base._puttingEnemyBullet.LineShot(this.transform.position, _centerAngle, _bulletInfo.RED_NEEDLE_BULLET, Bullet.MoveType.Tracking);
 
 				_bulletCount++;
 				_bulletTime = 0;

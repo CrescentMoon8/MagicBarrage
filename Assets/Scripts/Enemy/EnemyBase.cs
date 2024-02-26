@@ -22,9 +22,11 @@ public class EnemyBase : MonoBehaviour, IDamageable
 	protected Slider _hpSlider = default;
 	protected int _hpValue = 0;
 
-	private IPlayerPos _iPlayerPos = default;
+	protected IPlayerPos _iPlayerPos = default;
+	[SerializeField]
+	protected bool _isPlayerTarget = false;
 
-	private BulletPool _bulletPool = default;
+    private BulletPool _bulletPool = default;
 	protected EnemyShot _puttingEnemyBullet = default;
 	protected EnemyMove _enemyMove = default;
 

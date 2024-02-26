@@ -11,11 +11,11 @@ public class BlueSlime : EnemyBase
 {
 	#region 変数
 	// 撃ちたい角度
-	private int _centerAngle = 180;
+	private int _centerAngle = 0;
 	// 撃ちたい角度の±いくらか
-	private int _angleWidth = 45;
+	private int _angleWidth = 0;
 	// 角度を何分割するか
-	private int _angleSplit = 10;
+	private int _angleSplit = 0;
 
     private float _shotTime = 0f;
 	private const float SHOT_INTERVAL = 2f;
@@ -43,14 +43,11 @@ public class BlueSlime : EnemyBase
 		base._hpSlider.maxValue = base._hpValue;
 		base._hpSlider.value = base._hpValue;
 
-		if(_barrageTemplate != null)
-        {
-			_centerAngle = _barrageTemplate._centerAngle;
-			_angleWidth = _barrageTemplate._angleWidth;
-			_angleSplit = _barrageTemplate._angleSplit;
-		}
-		
-		_enemyMove.SetSplineContainer(_enemyDataBase._enemyDataList[_enemyDataBase.BLUE_SLIME]._splineIndex);
+        _centerAngle = _barrageTemplate._centerAngle;
+        _angleWidth = _barrageTemplate._angleWidth;
+        _angleSplit = _barrageTemplate._angleSplit;
+
+        _enemyMove.SetSplineContainer(_enemyDataBase._enemyDataList[_enemyDataBase.BLUE_SLIME]._splineIndex);
 		_enemyMove.DifferencePosInitialize(this.transform.position);
 
 		Addressables.Release(_enemyDataBase);

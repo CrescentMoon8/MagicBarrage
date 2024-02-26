@@ -30,14 +30,16 @@ public class BossSlime : EnemyBase
 
 	private BulletInfo _bulletInfo = default;
 	private EnemyDataBase _enemyDataBase = default;
-	#endregion
+    [SerializeField]
+    private BarrageTemplate _barrageTemplate = default;
+    #endregion
 
-	#region プロパティ
+    #region プロパティ
 
-	#endregion
+    #endregion
 
-	#region メソッド
-	private void OnEnable ()
+    #region メソッド
+    private void OnEnable ()
     {
 		_bulletInfo = Addressables.LoadAssetAsync<BulletInfo>("BulletInfo").WaitForCompletion();
 		_enemyDataBase = Addressables.LoadAssetAsync<EnemyDataBase>("EnemyDataBase").WaitForCompletion();

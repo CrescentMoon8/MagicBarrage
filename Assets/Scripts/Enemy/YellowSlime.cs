@@ -10,8 +10,6 @@ using UnityEngine.AddressableAssets;
 public class YellowSlime : EnemyBase
 {
     #region 変数
-    private const string PLAYER_BULLET_TAG = "PlayerBullet";
-
     // 撃ちたい角度
     private int _targetAngle = 180;
     // 角度を何分割するか
@@ -27,6 +25,8 @@ public class YellowSlime : EnemyBase
 
     private BulletInfo _bulletInfo = default;
     private EnemyDataBase _enemyDataBase = default;
+    [SerializeField]
+    private BarrageTemplate _barrageTemplate = default;
     #endregion
 
     #region プロパティ
