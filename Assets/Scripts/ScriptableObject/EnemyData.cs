@@ -13,6 +13,6 @@ public class EnemyData : ScriptableObject
     public string _enemyName = default;
     [Header("最大HP")]
     public int _maxHp = 0;
-    [Header("移動する経路の番号（SplineIndex）")]
+    [Header("移動する軌道の番号（EneterSplineの番号）")]
     public int _splineIndex = 0;
 }

@@ -64,26 +64,6 @@ public class EnemyBase : MonoBehaviour, IDamageable
         _hpSlider.transform.position = hpBarPos;
     }
 
-	/*protected void EnemyDamage()
-	{
-		// 初めてダメージを受けたときにHpバーを表示させる
-        if (_hpSlider.maxValue == _hpValue)
-        {
-			_hpSlider.gameObject.SetActive(true);
-        }
-
-        if (_hpValue > 0)
-		{
-			_hpValue -= 1;
-			_hpSlider.value = _hpValue;
-		}
-
-		if(_hpValue <= 0)
-		{
-			EnemyDead();
-		}
-	}*/
-
 	public void Damage()
 	{
 		// 初めてダメージを受けたときにHpバーを表示させる

@@ -10,7 +10,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public class EnemyManager : MonoBehaviour
+public class EnemyManager : MonoBehaviour, IEnemyList
 {
 	#region 変数
 	public enum PhaseState

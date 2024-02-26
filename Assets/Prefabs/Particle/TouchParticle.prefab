@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8198231532055995548}
   - component: {fileID: 1423545832041050477}
   - component: {fileID: 473342608648981650}
+  - component: {fileID: 1370228364519577823}
   m_Layer: 0
   m_Name: TouchParticle
   m_TagString: Untagged
@@ -4895,3 +4896,16 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &1370228364519577823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9151390133726757296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 292df314d08d45b4faede5ea463fd1cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _particleType: 0

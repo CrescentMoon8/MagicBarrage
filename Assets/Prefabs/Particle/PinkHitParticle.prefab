@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4076772466155109419}
   - component: {fileID: 5475683709383495548}
   - component: {fileID: 2653229023576026344}
+  - component: {fileID: -3784065481097796306}
   m_Layer: 0
   m_Name: PinkHitParticle
   m_TagString: Untagged
@@ -4895,3 +4896,16 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &-3784065481097796306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4005360945669348250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 292df314d08d45b4faede5ea463fd1cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _particleType: 0

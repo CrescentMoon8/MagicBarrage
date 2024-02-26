@@ -11,7 +11,7 @@ using System.Collections.Generic;
 public class ParticlePool : MonoBehaviour
 {
 	#region 変数
-	private const int PLAYER_PARTICLE_AMOUNT = 6;
+	private const int PLAYER_PARTICLE_AMOUNT = 15;
 	private const int ENEMY_PARTICLE_AMOUNT = 4;
 
     private Transform _playerParticleParent = default;
@@ -69,21 +69,47 @@ public class ParticlePool : MonoBehaviour
 
         particle.ReturnParticleCallBack = ReturnParticle;
 
+        particle.SettingParticleType = BulletParticle.ParticleType.Player;
+
+        particle.ParticleNumber = -1;
+
         particle.Play();
     }
 
     public void LendEnemyParticle(Vector3 startPos, int bulletNumber)
     {
-        BulletParticle particle = _enemyBulletParticlePool[bulletNumber / 2].Dequeue();
+        int particleNumber = bulletNumber / 2;
+
+        BulletParticle particle = _enemyBulletParticlePool[particleNumber].Dequeue();
 
         particle.transform.position = startPos;
+
+        particle.ReturnParticleCallBack = ReturnParticle;
+
+        particle.SettingParticleType = BulletParticle.ParticleType.Enemy;
+
+        particle.ParticleNumber = particleNumber;
 
         particle.Play();
     }
 
-    public void ReturnParticle(BulletParticle bulletParticle)
+    public void ReturnParticle(BulletParticle bulletParticle, int particleNumber, BulletParticle.ParticleType particleType)
     {
+        switch (particleType)
+        {
+            case BulletParticle.ParticleType.Player:
+                _playerBulletParticlePool.Enqueue(bulletParticle);
+                break;
+            
+            case BulletParticle.ParticleType.Enemy:
+                _enemyBulletParticlePool[particleNumber].Enqueue(bulletParticle);
+                break;
+            
+            default:
+                break;
+        }
 
+        bulletParticle.SettingParticleType = BulletParticle.ParticleType.None;
     }
 	#endregion
 }

@@ -22,8 +22,7 @@ public class RedSlime : EnemyBase
 	private const int BULLET_AMOUNT = 5;
 	private int _bulletCount = 0;
 
-	private GameObject _playerObject = default;
-	private Vector3 _playerPos = Vector3.zero;
+	private IPlayerPos _iPlayerPos = default;
 
     private float _shotTime = 0f;
 	private const float SHOT_INTERVAL = 2f;
@@ -50,8 +49,7 @@ public class RedSlime : EnemyBase
 
 		Addressables.Release(_enemyDataBase);
 
-		_playerObject = GameObject.FindWithTag("Player");
-        _playerPos = _playerObject.transform.position;
+		_iPlayerPos = GameObject.FindWithTag("Player").GetComponent<IPlayerPos>();
     }
 
 	/// <summary>
@@ -74,8 +72,6 @@ public class RedSlime : EnemyBase
 
 		base.FollowHpBar(this.transform.position);
 
-		_playerPos = _playerObject.transform.position;
-
 		if ( _shotTime >= SHOT_INTERVAL )
 		{
 			/* 
@@ -85,7 +81,7 @@ public class RedSlime : EnemyBase
             {
 				return;
             }
-			int angle = Calculation.TargetDirectionAngle(_playerPos, this.transform.position);
+			int angle = Calculation.TargetDirectionAngle(_iPlayerPos.PlayerPos, this.transform.position);
 
 			if (_bulletTime >= BULLET_INTERVAL && _bulletCount < BULLET_AMOUNT)
             {

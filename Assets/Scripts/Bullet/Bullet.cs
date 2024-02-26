@@ -43,8 +43,8 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private MoveType _moveType = MoveType.Line;
 
-    private GameObject _playerObject;
-    private Vector3 _playerPos = Vector3.zero;
+    private GameObject _playerObject = default;
+    private IPlayerPos _iPlayerPos = default;
     // プレイヤーが持つダメージ用インターフェース
     private IDamageable _playerIDamageable = default;
 
@@ -57,7 +57,7 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private ParticleSystem _hitParticle = default;
 
-    private EnemyManager _enemyManager = default;
+    private IEnemyList _iEnemyList = default;
     private BulletPool _bulletPool = default;
     private ParticlePool _particlePool = default;
     #endregion
@@ -66,7 +66,6 @@ public class Bullet : MonoBehaviour
     public ShooterType SettingShooterType { set { _shooterType = value; } }
     public MoveType SettingMoveType {  set { _moveType = value; } }
     public int SettingBulletNumber {  set { _bulletNumber = value; } }
-    public Vector3 SettingPlayerPos {  set { _playerPos = value; } }
     #endregion
 
     #region メソッド
@@ -76,11 +75,12 @@ public class Bullet : MonoBehaviour
     private void Awake()
 	{
         _playerObject = GameObject.FindWithTag("Player");
+        _iPlayerPos = _playerObject.GetComponent<IPlayerPos>();
         _playerIDamageable = _playerObject.GetComponent<IDamageable>();
         _hitParticle = GetComponentInChildren<ParticleSystem>();
         _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
         _particlePool = GameObject.FindWithTag("Scripts").GetComponentInChildren<ParticlePool>();
-        _enemyManager = GameObject.FindWithTag("Scripts").GetComponentInChildren<EnemyManager>();
+        _iEnemyList = GameObject.FindWithTag("Scripts").GetComponentInChildren<IEnemyList>();
     }
 
     /// <summary>
@@ -155,9 +155,7 @@ public class Bullet : MonoBehaviour
                         transform.Translate(Vector3.up / 15);
                         break;
                     case MoveType.Tracking:
-                        _playerPos = _playerObject.transform.position;
-
-                        float direction = Calculation.TargetDirectionAngle(_playerPos, this.transform.position);
+                        float direction = Calculation.TargetDirectionAngle(_iPlayerPos.PlayerPos, this.transform.position);
                         Quaternion targetRotation = Quaternion.Euler(Vector3.forward * direction);
                         //（現在角度、目標方向、どれぐらい曲がるか）
                         transform.rotation = Quaternion.RotateTowards(this.transform.rotation, targetRotation, 0.25f);
@@ -183,9 +181,7 @@ public class Bullet : MonoBehaviour
     /// <returns></returns>
     private bool ExistsEnemyPosList(Vector3 targetPos)
     {
-        _playerPos = _playerObject.transform.position;
-
-        if (Calculation.TargetDistance(targetPos, _playerPos) <= Calculation.TargetDistance(this.transform.position, _playerPos))
+        if (Calculation.TargetDistance(targetPos, _iPlayerPos.PlayerPos) <= Calculation.TargetDistance(this.transform.position, _iPlayerPos.PlayerPos))
         {
             return true;
         }
@@ -196,11 +192,11 @@ public class Bullet : MonoBehaviour
     private Vector3 GetNearEnemyDistance()
     {
         int nearEnemyIndex = 0;
-        float nearEnemyDistance = Calculation.TargetDistance(_enemyManager.EnemyPhaseList[(int)_enemyManager.NowPhaseState][0].transform.position, this.transform.position);
+        float nearEnemyDistance = Calculation.TargetDistance(_iEnemyList.EnemyPhaseList[(int)_iEnemyList.NowPhaseState][0].transform.position, this.transform.position);
 
-        for (int i = 1; i < _enemyManager.EnemyPhaseList[(int)_enemyManager.NowPhaseState].Count; i++)
+        for (int i = 1; i < _iEnemyList.EnemyPhaseList[(int)_iEnemyList.NowPhaseState].Count; i++)
         {
-            float enemyDistance = Calculation.TargetDistance(_enemyManager.EnemyPhaseList[(int)_enemyManager.NowPhaseState][i].transform.position, this.transform.position);
+            float enemyDistance = Calculation.TargetDistance(_iEnemyList.EnemyPhaseList[(int)_iEnemyList.NowPhaseState][i].transform.position, this.transform.position);
             if (enemyDistance < nearEnemyDistance)
             {
                 nearEnemyDistance = enemyDistance;
@@ -208,7 +204,7 @@ public class Bullet : MonoBehaviour
             }
         }
 
-        Vector3 nearEnemyVector = _enemyManager.EnemyPhaseList[(int)_enemyManager.NowPhaseState][nearEnemyIndex].transform.position;
+        Vector3 nearEnemyVector = _iEnemyList.EnemyPhaseList[(int)_iEnemyList.NowPhaseState][nearEnemyIndex].transform.position;
         return nearEnemyVector;
     }
 
@@ -231,18 +227,18 @@ public class Bullet : MonoBehaviour
                 case ShooterType.Player:
                     // GetSiblingIndexで当たったオブジェクトが同じ階層で上から何番目かを取得する
                     // Enemyの情報をヒエラルキーの上から順に取得しているためちゃんと動いている
-                    _enemyManager.EnemyIDamageableList[(int)_enemyManager.NowPhaseState][collision.transform.GetSiblingIndex()].Damage();
+                    _iEnemyList.EnemyIDamageableList[(int)_iEnemyList.NowPhaseState][collision.transform.GetSiblingIndex()].Damage();
+                    _particlePool.LendPlayerParticle(this.transform.position);
                     break;
 
                 case ShooterType.Enemy:
                     _playerIDamageable.Damage();
+                    _particlePool.LendEnemyParticle(this.transform.position, _bulletNumber);
                     break;
 
                 default:
                     break;
             }
-
-            _hitParticle.Play();
             
             _bulletPool.ReturnBullet(this, _bulletNumber, _shooterType);
 

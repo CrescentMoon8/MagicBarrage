@@ -12,7 +12,7 @@ using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 
-public class Player : MonoBehaviour, IDamageable
+public class Player : MonoBehaviour, IDamageable, IPlayerPos
 {
     #region 変数
     private Vector3 _startMousePos = Vector3.zero;
@@ -67,7 +67,7 @@ public class Player : MonoBehaviour, IDamageable
     #endregion
 
     #region プロパティ
-
+    public Vector3 PlayerPos { get { return this.transform.position; } }
     #endregion
 
     #region メソッド
