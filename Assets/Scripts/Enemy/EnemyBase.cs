@@ -22,6 +22,8 @@ public class EnemyBase : MonoBehaviour, IDamageable
 	protected Slider _hpSlider = default;
 	protected int _hpValue = 0;
 
+	private IPlayerPos _iPlayerPos = default;
+
 	private BulletPool _bulletPool = default;
 	protected EnemyShot _puttingEnemyBullet = default;
 	protected EnemyMove _enemyMove = default;
@@ -41,6 +43,7 @@ public class EnemyBase : MonoBehaviour, IDamageable
 	/// </summary>
 	private void Awake()
 	{
+		_iPlayerPos = GameObject.FindWithTag("Player").GetComponent<IPlayerPos>();
         _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
 		_puttingEnemyBullet = new EnemyShot(_bulletPool, this.transform.localScale.x / 2);
 		_enemyMove = new EnemyMove();

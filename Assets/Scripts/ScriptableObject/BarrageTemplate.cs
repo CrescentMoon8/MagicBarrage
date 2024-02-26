@@ -5,9 +5,8 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
-using System;
-using System.Collections;
 
+[CreateAssetMenu(menuName = "ScriptableObject/BarrageTemplate", fileName = "BarrageTemplate")]
 public class BarrageTemplate : ScriptableObject
 {
 	[Header("撃ちたい角度")]

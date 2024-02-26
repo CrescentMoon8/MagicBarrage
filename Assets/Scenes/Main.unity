@@ -1315,6 +1315,10 @@ PrefabInstance:
       propertyPath: _hpSlider
       value: 
       objectReference: {fileID: 1763547263}
+    - target: {fileID: 7465576227593845765, guid: 4bd3671d5c3a8334ca8dd0bf9db5990e, type: 3}
+      propertyPath: _barrageTemplate
+      value: 
+      objectReference: {fileID: 11400000, guid: e9da9c1460085ed4eb41f1c7b839ff36, type: 2}
     - target: {fileID: 7661511288895436283, guid: 4bd3671d5c3a8334ca8dd0bf9db5990e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.56
@@ -2959,6 +2963,10 @@ PrefabInstance:
       propertyPath: _hpSlider
       value: 
       objectReference: {fileID: 1626928100}
+    - target: {fileID: 7465576227593845765, guid: 4bd3671d5c3a8334ca8dd0bf9db5990e, type: 3}
+      propertyPath: _barrageTemplate
+      value: 
+      objectReference: {fileID: 11400000, guid: a8c77cde54ee73346b1bca4a170ad2e6, type: 2}
     - target: {fileID: 7661511288895436283, guid: 4bd3671d5c3a8334ca8dd0bf9db5990e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.62

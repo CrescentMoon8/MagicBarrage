@@ -40,7 +40,7 @@ public class EnemyShot
     /// <summary>
     /// 弾を扇形に撃ち出す
     /// 撃つ範囲を引数で設定する
-	/// 例：maxAngle = 90, angleSplit = 9, direction = 180の場合は下向きの中心角が90度の扇形の弧を9分割する
+	/// 例：centerAngle = 180, angleSplit = 9, angleWidth = 45の場合は下向きの中心角が90度の扇形の弧を9分割する
     /// </summary>
     /// <param name="shooterPos">射手の座標</param>
     /// <param name="centerAngle">撃ちたい角度</param>

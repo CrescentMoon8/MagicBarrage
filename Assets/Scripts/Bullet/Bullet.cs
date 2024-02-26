@@ -70,7 +70,7 @@ public class Bullet : MonoBehaviour
 
     #region メソッド
     /// <summary>
-    /// 初期化処理
+    /// 変数の初期化処理
     /// </summary>
     private void Awake()
 	{
@@ -97,7 +97,7 @@ public class Bullet : MonoBehaviour
                         this.transform.rotation = Quaternion.identity;
                         break;
                     case MoveType.Tracking:
-                        _distanceVector = GetNearEnemyDistance();
+                        _distanceVector = GetNearEnemyPos();
                         break;
                     case MoveType.Curve:
                         break;
@@ -158,7 +158,7 @@ public class Bullet : MonoBehaviour
                         float direction = Calculation.TargetDirectionAngle(_iPlayerPos.PlayerPos, this.transform.position);
                         Quaternion targetRotation = Quaternion.Euler(Vector3.forward * direction);
                         //（現在角度、目標方向、どれぐらい曲がるか）
-                        transform.rotation = Quaternion.RotateTowards(this.transform.rotation, targetRotation, 0.25f);
+                        transform.rotation = Quaternion.RotateTowards(this.transform.rotation, targetRotation, 0.5f);
 
                         transform.Translate(Vector3.up / 15);
                         break;
@@ -177,7 +177,7 @@ public class Bullet : MonoBehaviour
     /// <summary>
     /// プレイヤーと弾の距離、プレイヤーとエネミーの距離を比べる
     /// </summary>
-    /// <param name="targetPos"></param>
+    /// <param name="targetPos">追尾対象の</param>
     /// <returns></returns>
     private bool ExistsEnemyPosList(Vector3 targetPos)
     {
@@ -189,10 +189,15 @@ public class Bullet : MonoBehaviour
         return false;
     }
 
-    private Vector3 GetNearEnemyDistance()
+    /// <summary>
+    /// 一番近いエネミーの座標を取得する
+    /// </summary>
+    /// <returns></returns>
+    private Vector3 GetNearEnemyPos()
     {
         int nearEnemyIndex = 0;
         float nearEnemyDistance = Calculation.TargetDistance(_iEnemyList.EnemyPhaseList[(int)_iEnemyList.NowPhaseState][0].transform.position, this.transform.position);
+
 
         for (int i = 1; i < _iEnemyList.EnemyPhaseList[(int)_iEnemyList.NowPhaseState].Count; i++)
         {
