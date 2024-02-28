@@ -11,12 +11,6 @@ using UnityEngine.UI;
 public class EnemyBase : MonoBehaviour, IDamageable
 {
 	#region 変数
-	public enum EnemyType
-    {
-		Nomal,
-		Boss
-    }
-
 	private const float HPBAR_ADJUST_POS_Y = 0.44f;
     [SerializeField]
 	protected Slider _hpSlider = default;

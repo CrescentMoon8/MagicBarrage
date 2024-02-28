@@ -13,6 +13,8 @@ TagManager:
   - Enemys
   - PlayerParticlePool
   - EnemyParticlePool
+  - Header
+  - Footer
   layers:
   - Default
   - TransparentFX

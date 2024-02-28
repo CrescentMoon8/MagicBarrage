@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemyName: BossSlime
   _maxHp: 360
-  _splineIndex: 5
+  _splineIndex: 6

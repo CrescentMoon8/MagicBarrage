@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc8e7c232d18b0f49a00a83c3e1ad48e, type: 3}
-  m_Name: UnderFan120
+  m_Name: Circle36
   m_EditorClassIdentifier: 
   _targetAngle: 180
-  _angleWidth: 60
-  _angleSplit: 13
+  _angleWidth: 0
+  _angleSplit: 36

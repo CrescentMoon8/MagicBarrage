@@ -12,15 +12,19 @@ public class BossSlime : EnemyBase
 	#region 変数
 
 	// 撃ちたい角度
-	private int _targetAngle = 180;
+	private float _targetAngle = 180;
 	// 角度を何分割するか
 	private int _angleSplit = 9;
 	// 撃ちたい角度の±いくらか
-	private int _angleWidth = 15;
+	private int _angleWidth = 30;
+
+	// 角度を何分割するか
+	private int _windmillAngleSplit = 9;
 
 	private const float BULLET_INTERVAL = 0.15f;
 	private float _bulletTime = 0f;
-	private const int BULLET_AMOUNT = 36;
+	// 開始点を何度ずつずらすかを(360 / BULLET_AMOUNT)で決める
+	private const float BULLET_AMOUNT = 108;
 	private int _bulletCount = 0;
 
 	private float _shotTime = 0f;
@@ -99,7 +103,7 @@ public class BossSlime : EnemyBase
 
 		if (_bulletTime >= BULLET_INTERVAL && _bulletCount < BULLET_AMOUNT)
 		{
-			base._puttingEnemyBullet.RoundShot(this.transform.position, _angleSplit, _targetAngle, _bulletInfo.PURPLE_NOMAL_BULLET, Bullet.MoveType.Line);
+			base._puttingEnemyBullet.RoundShot(this.transform.position, _windmillAngleSplit, _targetAngle, _bulletInfo.PURPLE_NOMAL_BULLET, Bullet.MoveType.Line);
 			_bulletCount++;
 			_bulletTime = 0;
 			_targetAngle += 360 / BULLET_AMOUNT;

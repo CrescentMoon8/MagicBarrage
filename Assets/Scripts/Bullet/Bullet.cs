@@ -54,9 +54,6 @@ public class Bullet : MonoBehaviour
 
     private int _bulletNumber = 0;
 
-    [SerializeField]
-    private ParticleSystem _hitParticle = default;
-
     private IEnemyList _iEnemyList = default;
     private BulletPool _bulletPool = default;
     private ParticlePool _particlePool = default;
@@ -77,7 +74,6 @@ public class Bullet : MonoBehaviour
         _playerObject = GameObject.FindWithTag("Player");
         _iPlayerPos = _playerObject.GetComponent<IPlayerPos>();
         _playerIDamageable = _playerObject.GetComponent<IDamageable>();
-        _hitParticle = GetComponentInChildren<ParticleSystem>();
         _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
         _particlePool = GameObject.FindWithTag("Scripts").GetComponentInChildren<ParticlePool>();
         _iEnemyList = GameObject.FindWithTag("Scripts").GetComponentInChildren<IEnemyList>();

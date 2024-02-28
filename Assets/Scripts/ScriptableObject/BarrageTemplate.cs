@@ -9,10 +9,18 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObject/BarrageTemplate", fileName = "BarrageTemplate")]
 public class BarrageTemplate : ScriptableObject
 {
-	[Header("撃ちたい角度")]
-	public int _centerAngle = 180;
-	[Header("撃ちたい角度の幅")]
-	public int _angleWidth = 45;
-	[Header("角度を何分割するか")]
-	public int _angleSplit = 10;
+	enum BarrageType
+    {
+
+    }
+	[Header("撃ちたい角度")][SerializeField]
+	private float _targetAngle = 0;
+	[Header("撃ちたい角度の幅")][SerializeField]
+	private int _angleWidth = 0;
+	[Header("角度を何分割するか")][SerializeField]
+	private int _angleSplit = 0;
+
+	public float TargetAngle { get { return _targetAngle; } }
+	public int AngleWidth { get { return _angleWidth; } }
+	public int AngleSplit { get { return _angleSplit; } }
 }

@@ -11,7 +11,7 @@ public class RedSlime : EnemyBase
 {
 	#region 変数
 	// 撃ちたい角度
-	private int _centerAngle = 180;
+	private float _targetAngle = 180;
 	// 角度を何分割するか
 	private int _angleSplit = 10;
 	// 撃ちたい角度の±いくらか
@@ -44,9 +44,9 @@ public class RedSlime : EnemyBase
 		base._hpSlider.maxValue = base._hpValue;
 		base._hpSlider.value = base._hpValue;
 
-        _centerAngle = _barrageTemplate._centerAngle;
-        _angleWidth = _barrageTemplate._angleWidth;
-        _angleSplit = _barrageTemplate._angleSplit;
+        _targetAngle = _barrageTemplate.TargetAngle;
+        _angleWidth = _barrageTemplate.AngleWidth;
+        _angleSplit = _barrageTemplate.AngleSplit;
 
         _enemyMove.SetSplineContainer(_enemyDataBase._enemyDataList[_enemyDataBase.RED_SLIME]._splineIndex);
 		_enemyMove.DifferencePosInitialize(this.transform.position);
@@ -85,7 +85,7 @@ public class RedSlime : EnemyBase
             }
 			if(base._isPlayerTarget)
 			{
-                _centerAngle = Calculation.TargetDirectionAngle(base._iPlayerPos.PlayerPos, this.transform.position);
+                _targetAngle = Calculation.TargetDirectionAngle(base._iPlayerPos.PlayerPos, this.transform.position);
             }
 
 			if (_bulletTime >= BULLET_INTERVAL && _bulletCount < BULLET_AMOUNT)
@@ -93,9 +93,9 @@ public class RedSlime : EnemyBase
 				// 追尾弾の初弾と同時に扇形の通常弾を打つ
 				if(_bulletCount == 0)
                 {
-					base._puttingEnemyBullet.FanShot(this.transform.position, _centerAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
+					base._puttingEnemyBullet.FanShot(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
 				}
-				base._puttingEnemyBullet.LineShot(this.transform.position, _centerAngle, _bulletInfo.RED_NEEDLE_BULLET, Bullet.MoveType.Tracking);
+				base._puttingEnemyBullet.LineShot(this.transform.position, _targetAngle, _bulletInfo.RED_NEEDLE_BULLET, Bullet.MoveType.Tracking);
 
 				_bulletCount++;
 				_bulletTime = 0;

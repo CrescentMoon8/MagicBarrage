@@ -1170,7 +1170,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 100, y: -1214}
+  m_AnchoredPosition: {x: 100, y: -1164}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &277163960
@@ -5430,7 +5430,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -1214}
+  m_AnchoredPosition: {x: 0, y: -1164}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1175610723
@@ -5541,8 +5541,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -1216}
-  m_SizeDelta: {x: 1172, y: 100}
+  m_AnchoredPosition: {x: 0, y: -1190}
+  m_SizeDelta: {x: 1172, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1261525823
 MonoBehaviour:
@@ -5609,7 +5609,7 @@ Transform:
   m_GameObject: {fileID: 1309041776}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.75, z: 0}
+  m_LocalPosition: {x: 0, y: 4.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5973,6 +5973,10 @@ PrefabInstance:
       propertyPath: _enemyDataBase
       value: 
       objectReference: {fileID: 11400000, guid: 3b167f4b273aceb4184fd29a753f29db, type: 2}
+    - target: {fileID: 3859387715947339051, guid: cded95ed6bec694498f922f20dedb625, type: 3}
+      propertyPath: _barrageTemplate
+      value: 
+      objectReference: {fileID: 11400000, guid: ccf1fe7b93ad52a46a94ef59e1da4240, type: 2}
     - target: {fileID: 7072386371451081302, guid: cded95ed6bec694498f922f20dedb625, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.13
@@ -6163,7 +6167,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -100, y: -1214}
+  m_AnchoredPosition: {x: -100, y: -1164}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1509951378
@@ -7089,6 +7093,14 @@ PrefabInstance:
       propertyPath: _enemyDataBase
       value: 
       objectReference: {fileID: 11400000, guid: 3b167f4b273aceb4184fd29a753f29db, type: 2}
+    - target: {fileID: 3859387715947339051, guid: cded95ed6bec694498f922f20dedb625, type: 3}
+      propertyPath: _isPlayerTarget
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3859387715947339051, guid: cded95ed6bec694498f922f20dedb625, type: 3}
+      propertyPath: _barrageTemplate
+      value: 
+      objectReference: {fileID: 11400000, guid: ccf1fe7b93ad52a46a94ef59e1da4240, type: 2}
     - target: {fileID: 7072386371451081302, guid: cded95ed6bec694498f922f20dedb625, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.51
@@ -7161,7 +7173,7 @@ Transform:
   m_GameObject: {fileID: 1811394893}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -5, z: 0}
+  m_LocalPosition: {x: 0, y: -4.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7962,7 +7974,7 @@ CircleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2064983171}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -8418,6 +8430,14 @@ PrefabInstance:
       propertyPath: _enemyDataBase
       value: 
       objectReference: {fileID: 11400000, guid: 3b167f4b273aceb4184fd29a753f29db, type: 2}
+    - target: {fileID: 3859387715947339051, guid: cded95ed6bec694498f922f20dedb625, type: 3}
+      propertyPath: _isPlayerTarget
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3859387715947339051, guid: cded95ed6bec694498f922f20dedb625, type: 3}
+      propertyPath: _barrageTemplate
+      value: 
+      objectReference: {fileID: 11400000, guid: ccf1fe7b93ad52a46a94ef59e1da4240, type: 2}
     - target: {fileID: 7072386371451081302, guid: cded95ed6bec694498f922f20dedb625, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

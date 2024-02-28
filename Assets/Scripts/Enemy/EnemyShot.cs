@@ -28,7 +28,7 @@ public class EnemyShot
 	/// <summary>
 	/// 弾を指定された方向に直線で撃ち出す
 	/// </summary>
-    public void LineShot(Vector3 shooterPos, int angle, int bulletNumber, Bullet.MoveType moveType)
+    public void LineShot(Vector3 shooterPos, float angle, int bulletNumber, Bullet.MoveType moveType)
     {
         Bullet bullet = _bulletPool.LendEnemyBullet(shooterPos, bulletNumber);
 
@@ -48,14 +48,14 @@ public class EnemyShot
     /// <param name="angleWidth">撃ちたい角度からの角度幅</param>
     /// <param name="bulletNumber">弾の種類</param>
     /// <param name="moveType">弾の軌道</param>
-    public void FanShot(Vector3 shooterPos, int centerAngle, int angleSplit, int angleWidth, int bulletNumber, Bullet.MoveType moveType)
+    public void FanShot(Vector3 shooterPos, float centerAngle, float angleSplit, int angleWidth, int bulletNumber, Bullet.MoveType moveType)
 	{
         // 座標計算を始める角度
-        int minAngle = centerAngle - angleWidth;
+        float minAngle = centerAngle - angleWidth;
         // 座標計算を行う角度（minAngleからの角度）
-        int maxAngle = 2 * angleWidth;
+        float maxAngle = 2 * angleWidth;
 
-        for (int i = 0; i <= angleSplit; i++)
+        for (int i = 0; i < angleSplit; i++)
         {
 			// 0の位置がUnity上の-90にあたるため、ADJUST_ANGLEを足すことでUnityに合わせる
             // そのうえで、開始位置をずらすためにminAngleを足す
@@ -77,7 +77,7 @@ public class EnemyShot
     /// <param name="shiftAngle">生成開始角度</param>
     /// <param name="bulletNumber">弾の番号</param>
     /// <param name="moveType">弾の軌道</param>
-    public void RoundShot(Vector3 shooterPos, float angleSplit, int shiftAngle, int bulletNumber, Bullet.MoveType moveType)
+    public void RoundShot(Vector3 shooterPos, float angleSplit, float shiftAngle, int bulletNumber, Bullet.MoveType moveType)
     {
         // 中心角の最大
         float maxAngle = 360;

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc8e7c232d18b0f49a00a83c3e1ad48e, type: 3}
   m_Name: UnderFan90
   m_EditorClassIdentifier: 
-  _centerAngle: 180
+  _targetAngle: 180
   _angleWidth: 45
   _angleSplit: 10

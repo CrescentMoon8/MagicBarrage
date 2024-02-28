@@ -11,13 +11,13 @@ public class YellowSlime : EnemyBase
 {
     #region 変数
     // 撃ちたい角度
-    private int _targetAngle = 180;
+    private float _targetAngle = 180;
     // 角度を何分割するか
     private int _angleSplit = 6;
 
     private const float BULLET_INTERVAL = 0.15f;
     private float _bulletTime = 0f;
-    private const int BULLET_AMOUNT = 36;
+    private const float BULLET_AMOUNT = 36;
     private int _bulletCount = 0;
 
     private float _shotTime = 0f;
@@ -85,7 +85,8 @@ public class YellowSlime : EnemyBase
 
                 _bulletCount++;
                 _bulletTime = 0;
-                _targetAngle -= 10;
+                // +=で反時計回り、-=で時計回り
+                _targetAngle -= 360 / BULLET_AMOUNT;
             }
             else
             {

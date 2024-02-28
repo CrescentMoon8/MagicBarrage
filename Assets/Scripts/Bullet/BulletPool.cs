@@ -143,7 +143,7 @@ public class BulletPool : MonoBehaviour
 	/// 弾をプレイヤーに貸し出す
 	/// </summary>
 	/// <returns></returns>
-	public Bullet LendPlayerBullet(Vector3 shotPosition, Bullet.MoveType moveType)
+	public Bullet LendPlayerBullet(Vector3 shotPos, Bullet.MoveType moveType)
 	{
 		if(_playerBulletsPool.Count <= 0)
 		{
@@ -152,7 +152,7 @@ public class BulletPool : MonoBehaviour
 
 		Bullet bullet = _playerBulletsPool.Dequeue();
 
-		bullet.transform.position = shotPosition;
+		bullet.transform.position = shotPos;
 
 		bullet.SettingShooterType = Bullet.ShooterType.Player;
 
@@ -165,7 +165,7 @@ public class BulletPool : MonoBehaviour
 		return bullet;
 	}
 
-	public Bullet LendEnemyBullet(Vector3 shotPosition, int bulletNumber)
+	public Bullet LendEnemyBullet(Vector3 shotPos, int bulletNumber)
 	{
 		if (_enemyBulletsPool[bulletNumber].Count <= 0)
 		{
@@ -174,7 +174,7 @@ public class BulletPool : MonoBehaviour
 
 		Bullet bullet = _enemyBulletsPool[bulletNumber].Dequeue();
 
-		bullet.transform.position = shotPosition;
+		bullet.transform.position = shotPos;
 
 		bullet.SettingShooterType = Bullet.ShooterType.Enemy;
 
@@ -187,11 +187,11 @@ public class BulletPool : MonoBehaviour
 		return bullet;
 	}
 
-	public void ReturnBullet(Bullet bullet, int bulletNumber, Bullet.ShooterType type)
+	public void ReturnBullet(Bullet bullet, int bulletNumber, Bullet.ShooterType shooterType)
 	{
         bullet.gameObject.SetActive(false);
 
-        switch (type)
+        switch (shooterType)
 		{
 			case Bullet.ShooterType.Player:
                 _playerBulletsPool.Enqueue(bullet);

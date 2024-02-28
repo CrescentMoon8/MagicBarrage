@@ -10,6 +10,8 @@ using UnityEngine.AddressableAssets;
 public class PurpleSlime : EnemyBase
 {
 	#region 変数
+	// 撃ちたい角度
+	private float _targetAngle = 180;
 	// 角度を何分割するか
 	private int _angleSplit = 36;
 
@@ -68,7 +70,7 @@ public class PurpleSlime : EnemyBase
 				base.RoundShot(this.transform.position, _maxAngle, _angleSplit, _direction, 0, Bullet.MoveType.Line);
 				_direction -= 90;
 			}*/
-            base._puttingEnemyBullet.RoundShot(this.transform.position, _angleSplit, 180, _bulletInfo.PURPLE_NOMAL_BULLET, Bullet.MoveType.Line);
+            base._puttingEnemyBullet.RoundShot(this.transform.position, _angleSplit, _targetAngle, _bulletInfo.PURPLE_NOMAL_BULLET, Bullet.MoveType.Line);
 
             _shotTime = 0f;
 		}

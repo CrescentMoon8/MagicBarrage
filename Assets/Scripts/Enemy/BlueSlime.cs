@@ -11,7 +11,7 @@ public class BlueSlime : EnemyBase
 {
 	#region 変数
 	// 撃ちたい角度
-	private int _centerAngle = 0;
+	private float _targetAngle = 0;
 	// 撃ちたい角度の±いくらか
 	private int _angleWidth = 0;
 	// 角度を何分割するか
@@ -43,9 +43,9 @@ public class BlueSlime : EnemyBase
 		base._hpSlider.maxValue = base._hpValue;
 		base._hpSlider.value = base._hpValue;
 
-        _centerAngle = _barrageTemplate._centerAngle;
-        _angleWidth = _barrageTemplate._angleWidth;
-        _angleSplit = _barrageTemplate._angleSplit;
+        _targetAngle = _barrageTemplate.TargetAngle;
+        _angleWidth = _barrageTemplate.AngleWidth;
+        _angleSplit = _barrageTemplate.AngleSplit;
 
         _enemyMove.SetSplineContainer(_enemyDataBase._enemyDataList[_enemyDataBase.BLUE_SLIME]._splineIndex);
 		_enemyMove.DifferencePosInitialize(this.transform.position);
@@ -76,7 +76,7 @@ public class BlueSlime : EnemyBase
 				_direction -= 90;
 			}*/
 
-            base._puttingEnemyBullet.FanShot(this.transform.position, _centerAngle, _angleSplit, _angleWidth, _bulletInfo.BLUE_NOMAL_BULLET, Bullet.MoveType.Line);
+            base._puttingEnemyBullet.FanShot(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.BLUE_NOMAL_BULLET, Bullet.MoveType.Line);
 			
             _shotTime = 0f;
 		}

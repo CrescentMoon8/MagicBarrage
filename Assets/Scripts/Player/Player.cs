@@ -31,11 +31,8 @@ public class Player : MonoBehaviour, IDamageable, IPlayerPos
     private const int LINE_BULLET_AMOUNT = 1;
     private const int TRACKING_BULLET_AMOUNT = 2;
 
-    private Vector3 _radius = Vector3.zero;
-    private const int MAX_MOVE_POS_INDEX = 3;
-    private const int MIN_MOVE_POS_INDEX = 1;
-    private Vector2 _maxMovePos = Vector2.zero;
-    private Vector2 _minMovePos = Vector2.zero;
+    private Vector2 _maxMoveLimitPos = Vector2.zero;
+    private Vector2 _minMoveLimitPos = Vector2.zero;
 
     [SerializeField]
     private RectTransform _header = default;
@@ -82,18 +79,24 @@ public class Player : MonoBehaviour, IDamageable, IPlayerPos
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _circleCollider2D = GetComponent<CircleCollider2D>();
 
+
+        Vector3 radius = Vector3.zero;
+        
         // プレイヤースプライトの半径を取得する
-        _radius = transform.localScale;
+        radius = transform.localScale;
+
+        int MAX_MOVE_POS_INDEX = 3;
+        int MIN_MOVE_POS_INDEX = 1;
 
         // UIオブジェクトの頂点の座標を取得し、移動制限の大きさを調整する
         // 座標の取得順は左下、左上、右上、右下
         Vector3[] headerCorners = new Vector3[4];
         _header.GetWorldCorners(headerCorners);
-        _maxMovePos = headerCorners[MAX_MOVE_POS_INDEX] - _radius;
+        _maxMoveLimitPos = headerCorners[MAX_MOVE_POS_INDEX] - radius;
 
         Vector3[] footerCorners = new Vector3[4];
         _footer.GetWorldCorners(footerCorners);
-        _minMovePos = footerCorners[MIN_MOVE_POS_INDEX] + _radius;
+        _minMoveLimitPos = footerCorners[MIN_MOVE_POS_INDEX] + radius;
 
         EnhancedTouchSupport.Enable();
     }
@@ -244,30 +247,30 @@ public class Player : MonoBehaviour, IDamageable, IPlayerPos
     private void InStage()
     {
         // プレイヤーが画面内にいるなら処理を飛ばす
-        if ((this.transform.position.y <= _maxMovePos.y) && (this.transform.position.y >= _minMovePos.y) &&
-            (this.transform.position.x <= _maxMovePos.x) && (this.transform.position.x >= _minMovePos.x))
+        if ((this.transform.position.y <= _maxMoveLimitPos.y) && (this.transform.position.y >= _minMoveLimitPos.y) &&
+            (this.transform.position.x <= _maxMoveLimitPos.x) && (this.transform.position.x >= _minMoveLimitPos.x))
         {
             return;
         }
 
-        if (this.transform.position.y >= _maxMovePos.y)
+        if (this.transform.position.y >= _maxMoveLimitPos.y)
         {
-            this.transform.position = new Vector2(this.transform.position.x, _maxMovePos.y);
+            this.transform.position = new Vector2(this.transform.position.x, _maxMoveLimitPos.y);
         }
 
-        if (this.transform.position.y <= _minMovePos.y)
+        if (this.transform.position.y <= _minMoveLimitPos.y)
         {
-            this.transform.position = new Vector2(this.transform.position.x, _minMovePos.y);
+            this.transform.position = new Vector2(this.transform.position.x, _minMoveLimitPos.y);
         }
 
-        if (this.transform.position.x >= _maxMovePos.x)
+        if (this.transform.position.x >= _maxMoveLimitPos.x)
         {
-            this.transform.position = new Vector2(_maxMovePos.x, this.transform.position.y);
+            this.transform.position = new Vector2(_maxMoveLimitPos.x, this.transform.position.y);
         }
 
-        if (this.transform.position.x <= _minMovePos.x)
+        if (this.transform.position.x <= _minMoveLimitPos.x)
         {
-            this.transform.position = new Vector2(_minMovePos.x, this.transform.position.y);
+            this.transform.position = new Vector2(_minMoveLimitPos.x, this.transform.position.y);
         }
     }
 
