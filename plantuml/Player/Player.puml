@@ -4,4 +4,6 @@ class Player {
 }
 MonoBehaviour <|-- Player
 IDamageable <|-- Player
+IPlayerPos <|-- Player
+Player --> "PlayerPos" Vector3
 @enduml

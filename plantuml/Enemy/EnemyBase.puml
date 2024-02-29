@@ -2,11 +2,6 @@
 class EnemyBase {
     + Damage() : void
 }
-enum EnemyType {
-    Nomal,
-    Boss,
-}
 MonoBehaviour <|-- EnemyBase
 IDamageable <|-- EnemyBase
-EnemyBase +-- EnemyType
 @enduml

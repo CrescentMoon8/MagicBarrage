@@ -20,7 +20,8 @@ public class EnemyBase : MonoBehaviour, IDamageable
 	[SerializeField]
 	protected bool _isPlayerTarget = false;
 
-    private BulletPool _bulletPool = default;
+    private IObjectPool<Bullet> _bulletPool = default;
+	private ItemPool _itemPool = default;
 	protected EnemyShot _puttingEnemyBullet = default;
 	protected EnemyMove _enemyMove = default;
 
@@ -40,7 +41,8 @@ public class EnemyBase : MonoBehaviour, IDamageable
 	private void Awake()
 	{
 		_iPlayerPos = GameObject.FindWithTag("Player").GetComponent<IPlayerPos>();
-        _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
+        _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<IObjectPool<Bullet>>();
+        _itemPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<ItemPool>();
 		_puttingEnemyBullet = new EnemyShot(_bulletPool, this.transform.localScale.x / 2);
 		_enemyMove = new EnemyMove();
 
@@ -87,6 +89,7 @@ public class EnemyBase : MonoBehaviour, IDamageable
 	{
 		_downEnemyCountCallBack(this.gameObject);
 		_hpSlider.gameObject.SetActive(false);
+		_itemPool.LendItem(this.transform.position);
 		this.gameObject.SetActive(false);
 	}
 	#endregion

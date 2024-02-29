@@ -1,0 +1,8 @@
+@startuml
+interface IEnemyList {
+}
+class "List`1"<T> {
+}
+IEnemyList --> "EnemyPhaseList<List<GameObject>>" "List`1"
+IEnemyList --> "EnemyIDamageableList<List<IDamageable>>" "List`1"
+@enduml

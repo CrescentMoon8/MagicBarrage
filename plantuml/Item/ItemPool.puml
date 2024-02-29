@@ -1,0 +1,7 @@
+@startuml
+class ItemPool {
+    + LendItem(startPos:Vector3) : void
+    + ReturnPool(item:Item) : void
+}
+MonoBehaviour <|-- ItemPool
+@enduml

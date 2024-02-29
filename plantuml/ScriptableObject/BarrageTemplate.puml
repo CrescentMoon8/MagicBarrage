@@ -1,0 +1,11 @@
+@startuml
+class BarrageTemplate {
+    + TargetAngle : float <<get>>
+    + AngleWidth : int <<get>>
+    + AngleSplit : int <<get>>
+}
+enum BarrageType {
+}
+ScriptableObject <|-- BarrageTemplate
+BarrageTemplate +-- BarrageType
+@enduml

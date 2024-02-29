@@ -11,6 +11,9 @@ using System.Collections;
 public class Item : MonoBehaviour
 {
 	#region 変数
+	[SerializeField]
+	private int point = 100;
+
 	public delegate void ReturnPool(Item item);
 	private ReturnPool _returnPoolCallBack = default;
 	#endregion
@@ -41,7 +44,7 @@ public class Item : MonoBehaviour
 	/// </summary>
 	private void FixedUpdate ()
 	{
-		this.transform.Translate(Vector3.down / 20);
+		this.transform.Translate(Vector3.down / 45);
 	}
 
     private void OnTriggerEnter2D(Collider2D collision)

@@ -1,0 +1,11 @@
+@startuml
+class ParticlePool {
+    + LendPlayer(startPos:Vector3, particleNumber:int) : BulletParticle
+    + LendEnemy(startPos:Vector3, bulletNumber:int) : BulletParticle
+    + ReturnPool(bulletParticle:BulletParticle, particleNumber:int) : void
+}
+class "IObjectPool`1"<T> {
+}
+MonoBehaviour <|-- ParticlePool
+"IObjectPool`1" "<BulletParticle>" <|-- ParticlePool
+@enduml

@@ -1,0 +1,6 @@
+@startuml
+class Item {
+}
+MonoBehaviour <|-- Item
+Item --> "RturnPoolCallBack" ReturnPool
+@enduml

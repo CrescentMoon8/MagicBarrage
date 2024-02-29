@@ -16,7 +16,6 @@ enum MoveType {
 MonoBehaviour <|-- Bullet
 Bullet --> "SettingShooterType" ShooterType
 Bullet --> "SettingMoveType" MoveType
-Bullet --> "SettingPlayerPos" Vector3
 Bullet +-- ShooterType
 Bullet +-- MoveType
 @enduml

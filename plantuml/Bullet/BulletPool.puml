@@ -1,8 +1,11 @@
 @startuml
 class BulletPool {
-    + LendPlayerBullet(shotPosition:Vector3, moveType:Bullet.MoveType) : Bullet
-    + LendEnemyBullet(shotPosition:Vector3, bulletNumber:int) : Bullet
-    + ReturnBullet(bullet:Bullet, bulletNumber:int, type:Bullet.ShooterType) : void
+    + LendPlayer(shotPos:Vector3, bulletNumber:int) : Bullet
+    + LendEnemy(shotPos:Vector3, bulletNumber:int) : Bullet
+    + ReturnPool(bullet:Bullet, bulletNumber:int) : void
+}
+class "IObjectPool`1"<T> {
 }
 MonoBehaviour <|-- BulletPool
+"IObjectPool`1" "<Bullet>" <|-- BulletPool
 @enduml

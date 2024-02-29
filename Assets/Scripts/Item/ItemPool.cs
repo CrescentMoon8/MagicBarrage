@@ -11,7 +11,9 @@ public class ItemPool : MonoBehaviour
 {
 	#region 変数
 	private const int MAX_GENERATE_ITEM_AMOUNT = 4;
+	[SerializeField]
 	private GameObject _itemPrefab = default;
+	[SerializeField]
 	private Transform _itemParent = default;
 	private Queue<Item> _itemPool = new Queue<Item>();
 	#endregion
@@ -33,14 +35,26 @@ public class ItemPool : MonoBehaviour
     {
         for (int i = 0; i < MAX_GENERATE_ITEM_AMOUNT; i++)
         {
-			_itemPool.Enqueue(Instantiate(_itemPrefab, _itemParent).GetComponent<Item>());
+			Item item = Instantiate(_itemPrefab, _itemParent).GetComponent<Item>();
+
+			item.RturnPoolCallBack = ReturnPool;
+
+			item.gameObject.SetActive(false);
+
+			_itemPool.Enqueue(item);
         }
     }
 
 	private void AddItemPool()
     {
-		_itemPool.Enqueue(Instantiate(_itemPrefab, _itemParent).GetComponent<Item>());
-	}
+        Item item = Instantiate(_itemPrefab, _itemParent).GetComponent<Item>();
+
+        item.RturnPoolCallBack = ReturnPool;
+
+        item.gameObject.SetActive(false);
+
+        _itemPool.Enqueue(item);
+    }
 
 	public void LendItem(Vector3 startPos)
     {
@@ -53,7 +67,7 @@ public class ItemPool : MonoBehaviour
 
 		item.transform.position = startPos;
 
-
+		item.gameObject.SetActive(true);
     }
 
 	public void ReturnPool(Item item)

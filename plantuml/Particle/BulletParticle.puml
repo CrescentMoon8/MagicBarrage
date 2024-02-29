@@ -1,0 +1,15 @@
+@startuml
+class BulletParticle {
+    + ParticleNumber : int <<set>>
+    + Play() : void
+}
+enum ParticleType {
+    None,
+    Player,
+    Enemy,
+}
+MonoBehaviour <|-- BulletParticle
+BulletParticle --> "ReturnParticleCallBack" ReturnParticle
+BulletParticle --> "SettingParticleType" ParticleType
+BulletParticle +-- ParticleType
+@enduml

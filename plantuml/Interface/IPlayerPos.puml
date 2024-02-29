@@ -1,0 +1,5 @@
+@startuml
+interface IPlayerPos {
+}
+IPlayerPos --> "PlayerPos" Vector3
+@enduml
