@@ -54,9 +54,9 @@ public class Bullet : MonoBehaviour
 
     private int _bulletNumber = 0;
 
+    private IObjectPool<Bullet> _bulletPool = default;
+    private IObjectPool<BulletParticle> _particlePool = default;
     private IEnemyList _iEnemyList = default;
-    private BulletPool _bulletPool = default;
-    private ParticlePool _particlePool = default;
     #endregion
 
     #region プロパティ
@@ -74,8 +74,8 @@ public class Bullet : MonoBehaviour
         _playerObject = GameObject.FindWithTag("Player");
         _iPlayerPos = _playerObject.GetComponent<IPlayerPos>();
         _playerIDamageable = _playerObject.GetComponent<IDamageable>();
-        _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
-        _particlePool = GameObject.FindWithTag("Scripts").GetComponentInChildren<ParticlePool>();
+        _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<IObjectPool<Bullet>>();
+        _particlePool = GameObject.FindWithTag("Scripts").GetComponentInChildren<IObjectPool<BulletParticle>>();
         _iEnemyList = GameObject.FindWithTag("Scripts").GetComponentInChildren<IEnemyList>();
     }
 
@@ -213,7 +213,7 @@ public class Bullet : MonoBehaviour
     {
         if(collision.CompareTag("ReturnPool"))
         {
-            _bulletPool.ReturnBullet(this, _bulletNumber, _shooterType);
+            _bulletPool.ReturnPool(this, _bulletNumber);
 
             _shooterType = ShooterType.None;
         }
@@ -229,19 +229,21 @@ public class Bullet : MonoBehaviour
                     // GetSiblingIndexで当たったオブジェクトが同じ階層で上から何番目かを取得する
                     // Enemyの情報をヒエラルキーの上から順に取得しているためちゃんと動いている
                     _iEnemyList.EnemyIDamageableList[(int)_iEnemyList.NowPhaseState][collision.transform.GetSiblingIndex()].Damage();
-                    _particlePool.LendPlayerParticle(this.transform.position);
+                    BulletParticle playerParticle = _particlePool.LendPlayer(this.transform.position, -1);
+                    playerParticle.Play();
                     break;
 
                 case ShooterType.Enemy:
                     _playerIDamageable.Damage();
-                    _particlePool.LendEnemyParticle(this.transform.position, _bulletNumber);
+                    BulletParticle enemyParticle = _particlePool.LendEnemy(this.transform.position, _bulletNumber);
+                    enemyParticle.Play();
                     break;
 
                 default:
                     break;
             }
             
-            _bulletPool.ReturnBullet(this, _bulletNumber, _shooterType);
+            _bulletPool.ReturnPool(this, _bulletNumber);
 
             _shooterType = ShooterType.None;
         }

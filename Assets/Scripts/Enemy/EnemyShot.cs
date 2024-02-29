@@ -11,9 +11,9 @@ public class EnemyShot
     #region 変数
     private float _radius = 0f;
 
-    private BulletPool _bulletPool = default;
+    private IObjectPool<Bullet> _bulletPool = default;
 
-    public EnemyShot(BulletPool bulletPool, float radius)
+    public EnemyShot(IObjectPool<Bullet> bulletPool, float radius)
 	{
         _radius = radius;
 		_bulletPool = bulletPool;
@@ -30,7 +30,7 @@ public class EnemyShot
 	/// </summary>
     public void LineShot(Vector3 shooterPos, float angle, int bulletNumber, Bullet.MoveType moveType)
     {
-        Bullet bullet = _bulletPool.LendEnemyBullet(shooterPos, bulletNumber);
+        Bullet bullet = _bulletPool.LendEnemy(shooterPos, bulletNumber);
 
         bullet.SettingMoveType = moveType;
 
@@ -61,7 +61,7 @@ public class EnemyShot
             // そのうえで、開始位置をずらすためにminAngleを足す
             Vector3 bulletPos = Calculation.CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i + minAngle, _radius);
 
-			Bullet bullet = _bulletPool.LendEnemyBullet(bulletPos, bulletNumber);
+			Bullet bullet = _bulletPool.LendEnemy(bulletPos, bulletNumber);
 
 			bullet.SettingMoveType = moveType;
 
@@ -87,7 +87,7 @@ public class EnemyShot
             // 0の位置がUnity上の-90にあたるため、ADJUST_ANGLEを足すことでUnityに合わせる
             Vector3 bulletPos = Calculation.CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i + shiftAngle, _radius);
 
-            Bullet bullet = _bulletPool.LendEnemyBullet(bulletPos, bulletNumber);
+            Bullet bullet = _bulletPool.LendEnemy(bulletPos, bulletNumber);
 
             bullet.SettingMoveType = moveType;
 

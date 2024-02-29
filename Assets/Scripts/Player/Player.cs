@@ -144,7 +144,9 @@ public class Player : MonoBehaviour, IDamageable, IPlayerPos
 
             for (int bulletCount = 1; bulletCount <= LINE_BULLET_AMOUNT; bulletCount++)
             {
-                _bulletPool.LendPlayerBullet(shotPos, Bullet.MoveType.Line);
+                Bullet bullet = _bulletPool.LendPlayer(shotPos, -1);
+
+                bullet.SettingMoveType = Bullet.MoveType.Line;
             }
 
             for (int bulletCount = 1; bulletCount <= TRACKING_BULLET_AMOUNT; bulletCount++)
@@ -160,11 +162,15 @@ public class Player : MonoBehaviour, IDamageable, IPlayerPos
 
                 if(isHard)
                 {
-                    _bulletPool.LendPlayerBullet(shotPos, Bullet.MoveType.Line);
+                    Bullet bullet = _bulletPool.LendPlayer(shotPos, -1);
+
+                    bullet.SettingMoveType = Bullet.MoveType.Line;
                 }
                 else
                 {
-                    _bulletPool.LendPlayerBullet(shotPos, Bullet.MoveType.Tracking);
+                    Bullet bullet = _bulletPool.LendPlayer(shotPos, -1);
+
+                    bullet.SettingMoveType = Bullet.MoveType.Tracking;
                 }
                 
             }

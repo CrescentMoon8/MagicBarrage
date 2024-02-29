@@ -8,7 +8,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-public class ParticlePool : MonoBehaviour
+public class ParticlePool : MonoBehaviour, IObjectPool<BulletParticle>
 {
 	#region 変数
 	private const int PLAYER_PARTICLE_AMOUNT = 15;
@@ -61,22 +61,22 @@ public class ParticlePool : MonoBehaviour
         }
     }
 
-    public void LendPlayerParticle(Vector3 startPos)
+    public BulletParticle LendPlayer(Vector3 startPos, int particleNumber)
     {
         BulletParticle particle = _playerBulletParticlePool.Dequeue();
 
         particle.transform.position = startPos;
 
-        particle.ReturnParticleCallBack = ReturnParticle;
+        particle.ReturnParticleCallBack = ReturnPool;
 
         particle.SettingParticleType = BulletParticle.ParticleType.Player;
 
-        particle.ParticleNumber = -1;
+        particle.ParticleNumber = particleNumber;
 
-        particle.Play();
+        return particle;
     }
 
-    public void LendEnemyParticle(Vector3 startPos, int bulletNumber)
+    public BulletParticle LendEnemy(Vector3 startPos, int bulletNumber)
     {
         int particleNumber = bulletNumber / 2;
 
@@ -84,29 +84,24 @@ public class ParticlePool : MonoBehaviour
 
         particle.transform.position = startPos;
 
-        particle.ReturnParticleCallBack = ReturnParticle;
+        particle.ReturnParticleCallBack = ReturnPool;
 
         particle.SettingParticleType = BulletParticle.ParticleType.Enemy;
 
         particle.ParticleNumber = particleNumber;
 
-        particle.Play();
+        return particle;
     }
 
-    public void ReturnParticle(BulletParticle bulletParticle, int particleNumber, BulletParticle.ParticleType particleType)
+    public void ReturnPool(BulletParticle bulletParticle, int particleNumber)
     {
-        switch (particleType)
+        if(particleNumber == -1)
         {
-            case BulletParticle.ParticleType.Player:
-                _playerBulletParticlePool.Enqueue(bulletParticle);
-                break;
-            
-            case BulletParticle.ParticleType.Enemy:
-                _enemyBulletParticlePool[particleNumber].Enqueue(bulletParticle);
-                break;
-            
-            default:
-                break;
+            _playerBulletParticlePool.Enqueue(bulletParticle);
+        }
+        else
+        {
+            _enemyBulletParticlePool[particleNumber].Enqueue(bulletParticle);
         }
 
         bulletParticle.SettingParticleType = BulletParticle.ParticleType.None;

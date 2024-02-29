@@ -10,7 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class BulletPool : MonoBehaviour
+public class BulletPool : MonoBehaviour, IObjectPool<Bullet>
 {
 	#region 変数
 	private const int MAX_GENERATE_PLAYER_BULLET = 45;
@@ -143,7 +143,7 @@ public class BulletPool : MonoBehaviour
 	/// 弾をプレイヤーに貸し出す
 	/// </summary>
 	/// <returns></returns>
-	public Bullet LendPlayerBullet(Vector3 shotPos, Bullet.MoveType moveType)
+	public Bullet LendPlayer(Vector3 shotPos, int bulletNumber)
 	{
 		if(_playerBulletsPool.Count <= 0)
 		{
@@ -156,7 +156,7 @@ public class BulletPool : MonoBehaviour
 
 		bullet.SettingShooterType = Bullet.ShooterType.Player;
 
-		bullet.SettingMoveType = moveType;
+		bullet.SettingBulletNumber = bulletNumber;
 
 		bullet.gameObject.SetActive(true);
 
@@ -165,7 +165,7 @@ public class BulletPool : MonoBehaviour
 		return bullet;
 	}
 
-	public Bullet LendEnemyBullet(Vector3 shotPos, int bulletNumber)
+	public Bullet LendEnemy(Vector3 shotPos, int bulletNumber)
 	{
 		if (_enemyBulletsPool[bulletNumber].Count <= 0)
 		{
@@ -187,22 +187,17 @@ public class BulletPool : MonoBehaviour
 		return bullet;
 	}
 
-	public void ReturnBullet(Bullet bullet, int bulletNumber, Bullet.ShooterType shooterType)
+	public void ReturnPool(Bullet bullet, int bulletNumber)
 	{
         bullet.gameObject.SetActive(false);
 
-        switch (shooterType)
-		{
-			case Bullet.ShooterType.Player:
-                _playerBulletsPool.Enqueue(bullet);
-                break;
-
-			case Bullet.ShooterType.Enemy:
-                _enemyBulletsPool[bulletNumber].Enqueue(bullet);
-				break;
-
-            default:
-				break;
+		if(bulletNumber == -1)
+        {
+			_playerBulletsPool.Enqueue(bullet);
+		}
+        else
+        {
+			_enemyBulletsPool[bulletNumber].Enqueue(bullet);
 		}
     }
 

@@ -25,7 +25,7 @@ public class BulletParticle : MonoBehaviour
 
     private int _particleNumber = -1;
 
-    public delegate void ReturnParticle(BulletParticle bulletParticle, int particleNumber, ParticleType particleType);
+    public delegate void ReturnParticle(BulletParticle bulletParticle, int particleNumber);
     private ReturnParticle _returnParticleCallBack;
     #endregion
 
@@ -45,7 +45,7 @@ public class BulletParticle : MonoBehaviour
     {
         if(!_particleSystem.isPlaying && _particleType != ParticleType.None)
         {
-            _returnParticleCallBack(this, _particleNumber, _particleType);
+            _returnParticleCallBack(this, _particleNumber);
         }
     }
 
