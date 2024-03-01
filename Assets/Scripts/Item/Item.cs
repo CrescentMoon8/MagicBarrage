@@ -12,10 +12,12 @@ public class Item : MonoBehaviour
 {
 	#region 変数
 	[SerializeField]
-	private int point = 100;
+	private int scorePoint = 100;
 
 	public delegate void ReturnPool(Item item);
 	private ReturnPool _returnPoolCallBack = default;
+
+	private Score _scoreManager = default;
 	#endregion
 
 	#region プロパティ
@@ -28,15 +30,7 @@ public class Item : MonoBehaviour
 	/// </summary>
 	private void Awake()
 	{
-		
-	}
-
-	/// <summary>
-	/// 更新前処理
-	/// </summary>
-	private void Start ()
-	{
-		
+		_scoreManager = GameObject.FindWithTag("Scripts").GetComponentInChildren<Score>();
 	}
 
 	/// <summary>
@@ -51,8 +45,11 @@ public class Item : MonoBehaviour
     {
         if(collision.CompareTag("Player"))
         {
-
-        }
+			Debug.Log("得点");
+			_scoreManager.AddScore(scorePoint);
+			_scoreManager.ChangeScoreText();
+			_returnPoolCallBack(this);
+		}
 
 		if(collision.CompareTag("ReturnPool"))
         {

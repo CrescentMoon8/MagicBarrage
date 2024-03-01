@@ -61,6 +61,8 @@ public class Player : MonoBehaviour, IDamageable, IPlayerPos
     private Animator _playerAnimator = default;
     private AudioSource _audioSource = default;
     private BulletPool _bulletPool = default;
+
+    Touch a = default;
     #endregion
 
     #region プロパティ
@@ -73,6 +75,7 @@ public class Player : MonoBehaviour, IDamageable, IPlayerPos
     /// </summary>
     private void Awake()
 	{
+        Debug.Log(a);
         _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
         _audioSource = GetComponent<AudioSource>();
         _playerAnimator = GetComponent<Animator>();
@@ -147,6 +150,8 @@ public class Player : MonoBehaviour, IDamageable, IPlayerPos
                 Bullet bullet = _bulletPool.LendPlayer(shotPos, -1);
 
                 bullet.SettingMoveType = Bullet.MoveType.Line;
+
+                bullet.Initialize();
             }
 
             for (int bulletCount = 1; bulletCount <= TRACKING_BULLET_AMOUNT; bulletCount++)
@@ -165,12 +170,16 @@ public class Player : MonoBehaviour, IDamageable, IPlayerPos
                     Bullet bullet = _bulletPool.LendPlayer(shotPos, -1);
 
                     bullet.SettingMoveType = Bullet.MoveType.Line;
+
+                    bullet.Initialize();
                 }
                 else
                 {
                     Bullet bullet = _bulletPool.LendPlayer(shotPos, -1);
 
                     bullet.SettingMoveType = Bullet.MoveType.Tracking;
+
+                    bullet.Initialize();
                 }
                 
             }

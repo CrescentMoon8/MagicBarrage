@@ -26,15 +26,18 @@ public class EnemyManager : MonoBehaviour, IEnemyList
 	private PhaseState _phaseState = PhaseState.First;
 
     private GameObject _enemysObject = default;
-    [SerializeField]
+
     private List<List<GameObject>> _enemyPhaseList = new List<List<GameObject>>();
     private List<List<IDamageable>> _enemyIDamageableList = new List<List<IDamageable>>();
+    [SerializeField]
+    private List<GameObject> _currentPhaseEnemyList = new List<GameObject>();
+    [SerializeField]
+    private List<IDamageable> _currentPhaseIDamageableList = new List<IDamageable>();
     #endregion
 
     #region プロパティ
-    public List<List<GameObject>> EnemyPhaseList { get { return _enemyPhaseList; } }
-    public List<List<IDamageable>> EnemyIDamageableList { get { return _enemyIDamageableList; } }
-    public PhaseState NowPhaseState { get { return _phaseState; } }
+    public List<GameObject> CurrentPhaseEnemyList { get { return _currentPhaseEnemyList; } }
+    public List<IDamageable> CurrentPhaseIDamageableList { get { return _currentPhaseIDamageableList; } }
     #endregion
 
     #region メソッド
@@ -46,9 +49,9 @@ public class EnemyManager : MonoBehaviour, IEnemyList
         GenerateEnemyList();
         for (int i = 0; i < _enemyPhaseList[(int)PhaseState.First].Count; i++)
         {
-            _enemyPhaseList[(int)PhaseState.First][i].gameObject.SetActive(true);
+            _enemyPhaseList[(int)PhaseState.First][i].SetActive(true);
         }
-        Debug.LogWarning("生成");
+        AddCurrentPhaseList((int)PhaseState.First);
     }
 
 	/// <summary>
@@ -63,9 +66,12 @@ public class EnemyManager : MonoBehaviour, IEnemyList
                 {
                     _phaseState = PhaseState.Second;
 
+                    ClearCurrentPhaseList();
+                    AddCurrentPhaseList((int)PhaseState.Second);
+
                     for (int i = 0; i < _enemyPhaseList[(int)PhaseState.Second].Count; i++)
                     {
-                        _enemyPhaseList[(int)PhaseState.Second][i].gameObject.SetActive(true);
+                        _enemyPhaseList[(int)PhaseState.Second][i].SetActive(true);
                     }
                 }
 				break;
@@ -75,9 +81,12 @@ public class EnemyManager : MonoBehaviour, IEnemyList
                 {
                     _phaseState = PhaseState.Third;
 
+                    ClearCurrentPhaseList();
+                    AddCurrentPhaseList((int)PhaseState.Third);
+
                     for (int i = 0; i < _enemyPhaseList[(int)PhaseState.Third].Count; i++)
                     {
-                        _enemyPhaseList[(int)PhaseState.Third][i].gameObject.SetActive(true);
+                        _enemyPhaseList[(int)PhaseState.Third][i].SetActive(true);
                     }
                 }
                 break;
@@ -87,9 +96,12 @@ public class EnemyManager : MonoBehaviour, IEnemyList
                 {
                     _phaseState = PhaseState.Boss;
 
+                    ClearCurrentPhaseList();
+                    AddCurrentPhaseList((int)PhaseState.Boss);
+
                     for (int i = 0; i < _enemyPhaseList[(int)PhaseState.Boss].Count; i++)
                     {
-                        _enemyPhaseList[(int)PhaseState.Boss][i].gameObject.SetActive(true);
+                        _enemyPhaseList[(int)PhaseState.Boss][i].SetActive(true);
                     }
                 }
                 break;
@@ -132,6 +144,18 @@ public class EnemyManager : MonoBehaviour, IEnemyList
             _enemyPhaseList.Add(enemyList);
             _enemyIDamageableList.Add(interfaceList);
         }
+    }
+
+    private void AddCurrentPhaseList(int phaseNumber)
+    {
+        _currentPhaseEnemyList = _enemyPhaseList[phaseNumber];
+        _currentPhaseIDamageableList = _enemyIDamageableList[phaseNumber];
+    }
+
+    private void ClearCurrentPhaseList()
+    {
+        _currentPhaseEnemyList.Clear();
+        _currentPhaseIDamageableList.Clear();
     }
 
     public void DownEnemyCount(GameObject enemy)

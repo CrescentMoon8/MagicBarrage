@@ -90,10 +90,9 @@ public class Bullet : MonoBehaviour
                 switch (_moveType)
                 {
                     case MoveType.Line:
-                        this.transform.rotation = Quaternion.identity;
                         break;
                     case MoveType.Tracking:
-                        _distanceVector = GetNearEnemyPos();
+                        GetNearEnemyPos();
                         break;
                     case MoveType.Curve:
                         break;
@@ -189,15 +188,15 @@ public class Bullet : MonoBehaviour
     /// 一番近いエネミーの座標を取得する
     /// </summary>
     /// <returns></returns>
-    private Vector3 GetNearEnemyPos()
+    private void GetNearEnemyPos()
     {
         int nearEnemyIndex = 0;
-        float nearEnemyDistance = Calculation.TargetDistance(_iEnemyList.EnemyPhaseList[(int)_iEnemyList.NowPhaseState][0].transform.position, this.transform.position);
+        float nearEnemyDistance = Calculation.TargetDistance(_iEnemyList.CurrentPhaseEnemyList[0].transform.position, _iPlayerPos.PlayerPos);
 
 
-        for (int i = 1; i < _iEnemyList.EnemyPhaseList[(int)_iEnemyList.NowPhaseState].Count; i++)
+        for (int i = 1; i < _iEnemyList.CurrentPhaseEnemyList.Count; i++)
         {
-            float enemyDistance = Calculation.TargetDistance(_iEnemyList.EnemyPhaseList[(int)_iEnemyList.NowPhaseState][i].transform.position, this.transform.position);
+            float enemyDistance = Calculation.TargetDistance(_iEnemyList.CurrentPhaseEnemyList[i].transform.position, _iPlayerPos.PlayerPos);
             if (enemyDistance < nearEnemyDistance)
             {
                 nearEnemyDistance = enemyDistance;
@@ -205,8 +204,7 @@ public class Bullet : MonoBehaviour
             }
         }
 
-        Vector3 nearEnemyVector = _iEnemyList.EnemyPhaseList[(int)_iEnemyList.NowPhaseState][nearEnemyIndex].transform.position;
-        return nearEnemyVector;
+        _distanceVector = _iEnemyList.CurrentPhaseEnemyList[nearEnemyIndex].transform.position;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -228,7 +226,7 @@ public class Bullet : MonoBehaviour
                 case ShooterType.Player:
                     // GetSiblingIndexで当たったオブジェクトが同じ階層で上から何番目かを取得する
                     // Enemyの情報をヒエラルキーの上から順に取得しているためちゃんと動いている
-                    _iEnemyList.EnemyIDamageableList[(int)_iEnemyList.NowPhaseState][collision.transform.GetSiblingIndex()].Damage();
+                    _iEnemyList.CurrentPhaseIDamageableList[collision.transform.GetSiblingIndex()].Damage();
                     BulletParticle playerParticle = _particlePool.LendPlayer(this.transform.position, -1);
                     playerParticle.Play();
                     break;
@@ -246,6 +244,8 @@ public class Bullet : MonoBehaviour
             _bulletPool.ReturnPool(this, _bulletNumber);
 
             _shooterType = ShooterType.None;
+
+            this.transform.rotation = Quaternion.identity;
         }
     }
     #endregion

@@ -10,7 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class BulletPool : MonoBehaviour, IObjectPool<Bullet>
+public class BulletPool : SingletonMonoBehaviour<BulletPool>, IObjectPool<Bullet>
 {
 	#region 変数
 	private const int MAX_GENERATE_PLAYER_BULLET = 45;
@@ -160,8 +160,6 @@ public class BulletPool : MonoBehaviour, IObjectPool<Bullet>
 
 		bullet.gameObject.SetActive(true);
 
-		bullet.Initialize();
-
 		return bullet;
 	}
 
@@ -181,8 +179,6 @@ public class BulletPool : MonoBehaviour, IObjectPool<Bullet>
         bullet.SettingBulletNumber = bulletNumber;
 
 		bullet.gameObject.SetActive(true);
-
-		bullet.Initialize();
 
 		return bullet;
 	}

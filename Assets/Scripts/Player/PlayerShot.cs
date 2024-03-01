@@ -8,39 +8,78 @@ using UnityEngine;
 using System;
 using System.Collections;
 
-public class PlayerShot : MonoBehaviour
+public class PlayerShot
 {
-	#region 変数
+    #region 変数
+    private float _shotTime = 0.1f;
+    private const float SHOT_INTERVAL = 0.1f;
+    private const float SHOT_POS_DIFFERENCE_Y = 0.7f;
+    private const float SHOT_POS_DIFFERENCE_X = 0.2f;
+    private const int LINE_BULLET_AMOUNT = 1;
+    private const int TRACKING_BULLET_AMOUNT = 2;
+    #endregion
 
-	#endregion
+    #region プロパティ
 
-	#region プロパティ
+    #endregion
 
-	#endregion
+    #region メソッド
+    /// <summary>
+    /// １　弾を撃つまでの時間を加算する
+    /// ２　弾を撃ってからの時間を加算する
+    /// </summary>
+    public void AddShotTime()
+    {
+        _shotTime += Time.deltaTime;
+    }
 
-	#region メソッド
-	/// <summary>
-	/// 初期化処理
-	/// </summary>
-	private void Awake()
-	{
-		
-	}
+    public void Shot(Vector3 shotPos, bool isHard)
+    {
+        if (_shotTime >= SHOT_INTERVAL)
+        {
+            shotPos.y += SHOT_POS_DIFFERENCE_Y;
 
-	/// <summary>
-	/// 更新前処理
-	/// </summary>
-	private void Start ()
-	{
-		
-	}
+            for (int bulletCount = 1; bulletCount <= LINE_BULLET_AMOUNT; bulletCount++)
+            {
+                Bullet bullet = BulletPool.Instance.LendPlayer(shotPos, -1);
 
-	/// <summary>
-	/// 更新処理
-	/// </summary>
-	private void Update ()
-	{
-		
-	}
-	#endregion
+                bullet.SettingMoveType = Bullet.MoveType.Line;
+
+                bullet.Initialize();
+            }
+
+            for (int bulletCount = 1; bulletCount <= TRACKING_BULLET_AMOUNT; bulletCount++)
+            {
+                if (bulletCount % 2 == 1)
+                {
+                    shotPos.x -= SHOT_POS_DIFFERENCE_X * bulletCount;
+                }
+                else
+                {
+                    shotPos.x += SHOT_POS_DIFFERENCE_X * bulletCount;
+                }
+
+                if (isHard)
+                {
+                    Bullet bullet = BulletPool.Instance.LendPlayer(shotPos, -1);
+
+                    bullet.SettingMoveType = Bullet.MoveType.Line;
+
+                    bullet.Initialize();
+                }
+                else
+                {
+                    Bullet bullet = BulletPool.Instance.LendPlayer(shotPos, -1);
+
+                    bullet.SettingMoveType = Bullet.MoveType.Tracking;
+
+                    bullet.Initialize();
+                }
+
+            }
+
+            _shotTime = 0;
+        }
+    }
+    #endregion
 }
