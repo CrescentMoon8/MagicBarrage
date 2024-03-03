@@ -14,10 +14,12 @@ public class Item : MonoBehaviour
 	[SerializeField]
 	private int scorePoint = 100;
 
+	private BoxCollider2D _boxCollider2D = default;
+
 	public delegate void ReturnPool(Item item);
 	private ReturnPool _returnPoolCallBack = default;
 
-	private Score _scoreManager = default;
+	private ScoreManager _scoreManager = default;
 	#endregion
 
 	#region プロパティ
@@ -30,7 +32,9 @@ public class Item : MonoBehaviour
 	/// </summary>
 	private void Awake()
 	{
-		_scoreManager = GameObject.FindWithTag("Scripts").GetComponentInChildren<Score>();
+		_scoreManager = GameObject.FindWithTag("Scripts").GetComponentInChildren<ScoreManager>();
+		_boxCollider2D = GetComponent<BoxCollider2D>();
+		_boxCollider2D.enabled = true;
 	}
 
 	/// <summary>
@@ -45,7 +49,7 @@ public class Item : MonoBehaviour
     {
         if(collision.CompareTag("Player"))
         {
-			Debug.Log("得点");
+			_boxCollider2D.enabled = false;
 			_scoreManager.AddScore(scorePoint);
 			_scoreManager.ChangeScoreText();
 			_returnPoolCallBack(this);

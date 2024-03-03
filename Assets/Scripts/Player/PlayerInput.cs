@@ -19,7 +19,8 @@ public class PlayerInput
     /// </summary>
     public void Initialize()
     {
-        _touchParticle = Addressables.LoadAssetAsync<GameObject>("TouchParticle").WaitForCompletion().GetComponent<ParticleSystem>();
+        GameObject particleObject = Addressables.InstantiateAsync("TouchParticle").WaitForCompletion();
+        _touchParticle = particleObject.GetComponent<ParticleSystem>();
     }
 
     /// <summary>

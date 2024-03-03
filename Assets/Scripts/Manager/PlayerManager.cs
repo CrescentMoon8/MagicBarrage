@@ -9,7 +9,7 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : MonoBehaviour, IPlayerPos
 {
 	#region 変数
 	private Touch _activeTouch = default;
@@ -19,14 +19,24 @@ public class PlayerManager : MonoBehaviour
 	[SerializeField]
 	private bool _isHard = false;
 
-	private PlayerInput _playerInput = default;
+	[SerializeField]
+	private Transform _lifeUiParent = default;
+	[SerializeField]
+    private Sprite _brokenHeart = default;
+
+	[SerializeField]
+	private RectTransform _header = default;
+	[SerializeField]
+	private RectTransform _footer = default;
+
+    private PlayerInput _playerInput = default;
 	private PlayerMove _playerMove = default;
 	private PlayerShot _playerShot = default;
-	private PlayerHp _playerHp = default;
+	public PlayerHp _playerHp = default;
 	#endregion
 
 	#region プロパティ
-
+	public Vector3 PlayerPos { get {  return this.transform.position; } }
 	#endregion
 
 	#region メソッド
@@ -40,10 +50,11 @@ public class PlayerManager : MonoBehaviour
 		_playerInput = new PlayerInput();
 		_playerMove = new PlayerMove();
 		_playerShot = new PlayerShot();
-		_playerHp = new PlayerHp(GetComponent<CircleCollider2D>(), GetComponent<SpriteRenderer>(), GetComponent<Animator>());
+		_playerHp = new PlayerHp(GetComponent<CircleCollider2D>(), GetComponent<SpriteRenderer>(), GetComponent<Animator>(), _brokenHeart);
 
 		_playerInput.Initialize();
-		_playerMove.Initialize(this.transform.localScale);
+		_playerMove.Initialize(this.transform.localScale, _header, _footer);
+		_playerHp.Initialize(_lifeUiParent);
 	}
 
 	/// <summary>
@@ -63,6 +74,7 @@ public class PlayerManager : MonoBehaviour
 		}
 		else
         {
+			_playerMove.ResetCursorPosDistance();
 			_isMove = false;
 			_isShot = false;
         }

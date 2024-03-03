@@ -17,8 +17,6 @@ public class PlayerHp : IDamageable
     private float _damageAnimationTime = 0;
     private const float DAMAGE_ANIMATION = 3f;
 
-    // 残機の画像をまとめている親オブジェクト
-    private Transform _lifeUiParent = default;
     private Image[] _lifeUi = new Image[3];
     private Sprite _brokenHeart = default;
 
@@ -26,8 +24,9 @@ public class PlayerHp : IDamageable
     private SpriteRenderer _spriteRenderer = default;
     private Animator _playerAnimator = default;
 
-    public PlayerHp(CircleCollider2D circleCollider2D, SpriteRenderer spriteRenderer, Animator playerAnimator)
+    public PlayerHp(CircleCollider2D circleCollider2D, SpriteRenderer spriteRenderer, Animator playerAnimator, Sprite brokenHeartSprite)
     {
+        _brokenHeart = brokenHeartSprite;
         _circleCollider2D = circleCollider2D;
         _spriteRenderer = spriteRenderer;
         _playerAnimator = playerAnimator;
@@ -39,17 +38,12 @@ public class PlayerHp : IDamageable
     #endregion
 
     #region メソッド
-    public void Initialize()
+    public void Initialize(Transform lifeUiParent)
     {
-        _lifeUiParent = Addressables.LoadAssetAsync<Transform>("LifeUIParent").WaitForCompletion();
-        _brokenHeart = Addressables.LoadAssetAsync<Sprite>("BrokenHeart").WaitForCompletion();
-
         for (int i = 0; i < _lifeUi.Length; i++)
         {
-            _lifeUi[i] = _lifeUiParent.GetChild(i).GetComponent<Image>();
+            _lifeUi[i] = lifeUiParent.transform.GetChild(i).GetComponent<Image>();
         }
-
-        Addressables.Release(_lifeUiParent);
     }
     public void Damage()
     {

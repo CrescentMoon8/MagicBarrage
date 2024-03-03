@@ -73,7 +73,7 @@ public class Bullet : MonoBehaviour
 	{
         _playerObject = GameObject.FindWithTag("Player");
         _iPlayerPos = _playerObject.GetComponent<IPlayerPos>();
-        _playerIDamageable = _playerObject.GetComponent<IDamageable>();
+        _playerIDamageable = _playerObject.GetComponent<PlayerManager>()._playerHp;
         _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<IObjectPool<Bullet>>();
         _particlePool = GameObject.FindWithTag("Scripts").GetComponentInChildren<IObjectPool<BulletParticle>>();
         _iEnemyList = GameObject.FindWithTag("Scripts").GetComponentInChildren<IEnemyList>();
@@ -172,7 +172,7 @@ public class Bullet : MonoBehaviour
     /// <summary>
     /// プレイヤーと弾の距離、プレイヤーとエネミーの距離を比べる
     /// </summary>
-    /// <param name="targetPos">追尾対象の</param>
+    /// <param name="targetPos">追尾対象の座標</param>
     /// <returns></returns>
     private bool ExistsEnemyPosList(Vector3 targetPos)
     {

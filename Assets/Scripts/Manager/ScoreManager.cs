@@ -1,15 +1,13 @@
 // ---------------------------------------------------------
-// Score.cs
+// ScoreManager.cs
 //
 // 作成日:2024/03/01
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
 using TMPro;
-using System;
-using System.Collections;
 
-public class Score : MonoBehaviour
+public class ScoreManager : MonoBehaviour
 {
 	#region 変数
 	private int _score = 0;
