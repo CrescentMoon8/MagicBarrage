@@ -41,7 +41,7 @@ public class PlayerShot
 
             for (int bulletCount = 1; bulletCount <= LINE_BULLET_AMOUNT; bulletCount++)
             {
-                Bullet bullet = BulletPool.Instance.LendPlayer(shotPos, -1);
+                Bullet bullet = PlayerBulletPool.Instance.LendPlayerBullet(shotPos);
 
                 bullet.SettingMoveType = Bullet.MoveType.Line;
 
@@ -61,7 +61,8 @@ public class PlayerShot
 
                 if (isHard)
                 {
-                    Bullet bullet = BulletPool.Instance.LendPlayer(shotPos, -1);
+                    Bullet bullet = PlayerBulletPool.Instance.LendPlayerBullet(shotPos);
+
 
                     bullet.SettingMoveType = Bullet.MoveType.Line;
 
@@ -69,7 +70,7 @@ public class PlayerShot
                 }
                 else
                 {
-                    Bullet bullet = BulletPool.Instance.LendPlayer(shotPos, -1);
+                    Bullet bullet = PlayerBulletPool.Instance.LendPlayerBullet(shotPos);
 
                     bullet.SettingMoveType = Bullet.MoveType.Tracking;
 

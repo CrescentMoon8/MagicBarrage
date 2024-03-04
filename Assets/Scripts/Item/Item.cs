@@ -34,13 +34,17 @@ public class Item : MonoBehaviour
 	{
 		_scoreManager = GameObject.FindWithTag("Scripts").GetComponentInChildren<ScoreManager>();
 		_boxCollider2D = GetComponent<BoxCollider2D>();
+	}
+
+    private void OnEnable()
+    {
 		_boxCollider2D.enabled = true;
 	}
 
-	/// <summary>
-	/// 更新処理
-	/// </summary>
-	private void FixedUpdate ()
+    /// <summary>
+    /// 更新処理
+    /// </summary>
+    private void FixedUpdate ()
 	{
 		this.transform.Translate(Vector3.down / 45);
 	}
@@ -49,6 +53,7 @@ public class Item : MonoBehaviour
     {
         if(collision.CompareTag("Player"))
         {
+			Debug.Log(this.gameObject.transform.GetSiblingIndex());
 			_boxCollider2D.enabled = false;
 			_scoreManager.AddScore(scorePoint);
 			_scoreManager.ChangeScoreText();

@@ -20,10 +20,8 @@ public class EnemyBase : MonoBehaviour, IDamageable
 	[SerializeField]
 	protected bool _isPlayerTarget = false;
 
-    private IObjectPool<Bullet> _bulletPool = default;
 	private ItemPool _itemPool = default;
-	protected EnemyShot _puttingEnemyBullet = default;
-	protected EnemyMove _enemyMove = default;
+	private CircleCollider2D _circleCollider2D = default;
 
 	private delegate void DownEnemyCount(GameObject enemy);
 	private DownEnemyCount _downEnemyCountCallBack = default;
@@ -41,12 +39,11 @@ public class EnemyBase : MonoBehaviour, IDamageable
 	private void Awake()
 	{
 		_iPlayerPos = GameObject.FindWithTag("Player").GetComponent<IPlayerPos>();
-        _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<IObjectPool<Bullet>>();
         _itemPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<ItemPool>();
-		_puttingEnemyBullet = new EnemyShot(_bulletPool, this.transform.localScale.x / 2);
-		_enemyMove = new EnemyMove();
 
-		_downEnemyCountCallBack = GameObject.FindWithTag("Scripts").GetComponentInChildren<EnemyManager>().DownEnemyCount;
+		_circleCollider2D = GetComponent<CircleCollider2D>();
+
+		_downEnemyCountCallBack = GameObject.FindWithTag("Scripts").GetComponentInChildren<EnemyPhaseManager>().DownEnemyCount;
     }
 
     /*public Vector2 BezierCalculation(Vector2 start, Vector2 relay, Vector2 goal, float time)
@@ -79,8 +76,9 @@ public class EnemyBase : MonoBehaviour, IDamageable
 			_hpSlider.value = _hpValue;
 		}
 
-		if (_hpValue <= 0)
+		if (_hpValue <= 0 && _circleCollider2D.enabled)
 		{
+			_circleCollider2D.enabled = false;
 			EnemyDead();
 		}
 	}

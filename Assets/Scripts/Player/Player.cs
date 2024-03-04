@@ -60,9 +60,6 @@ public class Player : MonoBehaviour, IDamageable, IPlayerPos
     private CircleCollider2D _circleCollider2D = default;
     private Animator _playerAnimator = default;
     private AudioSource _audioSource = default;
-    private BulletPool _bulletPool = default;
-
-    Touch a = default;
     #endregion
 
     #region プロパティ
@@ -75,8 +72,6 @@ public class Player : MonoBehaviour, IDamageable, IPlayerPos
     /// </summary>
     private void Awake()
 	{
-        Debug.Log(a);
-        _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<BulletPool>();
         _audioSource = GetComponent<AudioSource>();
         _playerAnimator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -147,7 +142,7 @@ public class Player : MonoBehaviour, IDamageable, IPlayerPos
 
             for (int bulletCount = 1; bulletCount <= LINE_BULLET_AMOUNT; bulletCount++)
             {
-                Bullet bullet = _bulletPool.LendPlayer(shotPos, -1);
+                Bullet bullet = PlayerBulletPool.Instance.LendPlayerBullet(shotPos);
 
                 bullet.SettingMoveType = Bullet.MoveType.Line;
 
@@ -167,7 +162,7 @@ public class Player : MonoBehaviour, IDamageable, IPlayerPos
 
                 if(isHard)
                 {
-                    Bullet bullet = _bulletPool.LendPlayer(shotPos, -1);
+                    Bullet bullet = PlayerBulletPool.Instance.LendPlayerBullet(shotPos);
 
                     bullet.SettingMoveType = Bullet.MoveType.Line;
 
@@ -175,7 +170,7 @@ public class Player : MonoBehaviour, IDamageable, IPlayerPos
                 }
                 else
                 {
-                    Bullet bullet = _bulletPool.LendPlayer(shotPos, -1);
+                    Bullet bullet = PlayerBulletPool.Instance.LendPlayerBullet(shotPos);
 
                     bullet.SettingMoveType = Bullet.MoveType.Tracking;
 

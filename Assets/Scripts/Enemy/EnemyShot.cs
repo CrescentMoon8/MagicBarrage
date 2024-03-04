@@ -9,14 +9,13 @@ using UnityEngine;
 public class EnemyShot
 {
     #region 変数
+    private float _shotTime = 0f;
+
     private float _radius = 0f;
 
-    private IObjectPool<Bullet> _bulletPool = default;
-
-    public EnemyShot(IObjectPool<Bullet> bulletPool, float radius)
+    public EnemyShot(float radius)
 	{
         _radius = radius;
-		_bulletPool = bulletPool;
 	}
 	#endregion
 
@@ -30,7 +29,7 @@ public class EnemyShot
 	/// </summary>
     public void LineShot(Vector3 shooterPos, float angle, int bulletNumber, Bullet.MoveType moveType)
     {
-        Bullet bullet = _bulletPool.LendEnemy(shooterPos, bulletNumber);
+        Bullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shooterPos, bulletNumber);
 
         bullet.SettingMoveType = moveType;
 
@@ -59,11 +58,11 @@ public class EnemyShot
         {
 			// 0の位置がUnity上の-90にあたるため、ADJUST_ANGLEを足すことでUnityに合わせる
             // そのうえで、開始位置をずらすためにminAngleを足す
-            Vector3 bulletPos = Calculation.CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i + minAngle, _radius);
+            Vector3 shotPos = Calculation.CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i + minAngle, _radius);
 
-			Bullet bullet = _bulletPool.LendEnemy(bulletPos, bulletNumber);
+			Bullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotPos, bulletNumber);
 
-			bullet.SettingMoveType = moveType;
+            bullet.SettingMoveType = moveType;
 
 			bullet.transform.rotation = Quaternion.Euler(Vector3.forward * ((maxAngle / angleSplit) * i + minAngle));
         }
@@ -85,14 +84,36 @@ public class EnemyShot
         for (int i = 0; i < angleSplit; i++)
         {
             // 0の位置がUnity上の-90にあたるため、ADJUST_ANGLEを足すことでUnityに合わせる
-            Vector3 bulletPos = Calculation.CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i + shiftAngle, _radius);
+            Vector3 shotPos = Calculation.CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i + shiftAngle, _radius);
 
-            Bullet bullet = _bulletPool.LendEnemy(bulletPos, bulletNumber);
+            Bullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotPos, bulletNumber);
 
             bullet.SettingMoveType = moveType;
 
             bullet.transform.rotation = Quaternion.Euler(Vector3.forward * ((maxAngle / angleSplit) * i + shiftAngle));
         }
+    }
+
+    private void ShotTimeCount()
+    {
+        _shotTime += Time.deltaTime;
+    }
+
+    public bool IsShot(float shotInterval)
+    {
+        ShotTimeCount();
+
+        if(_shotTime >= shotInterval)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void ResetShotTime()
+    {
+        _shotTime = 0;
     }
     #endregion
 }

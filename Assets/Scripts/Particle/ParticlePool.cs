@@ -8,11 +8,20 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-public class ParticlePool : MonoBehaviour, IObjectPool<BulletParticle>
+public class ParticlePool : MonoBehaviour
 {
 	#region 変数
 	private const int PLAYER_PARTICLE_AMOUNT = 15;
-	private const int ENEMY_PARTICLE_AMOUNT = 4;
+	private const int ENEMY_PARTICLE_AMOUNT = 2;
+
+    private const int PLAYER_PARTICLE_NUMBER = -1;
+
+    private List<Color> _particleColorList = new List<Color>();
+    private Color _red = new Color(0.81f, 0f, 0f);
+    private Color _blue = new Color(0f, 0.01f, 0.81f);
+    private Color _yellow = new Color(0.93f, 0.96f, 0f);
+    private Color _green = new Color(0.17f, 0.81f, 0f);
+    private Color _purple = new Color(0.65f, 0f, 0.81f);
 
     private Transform _playerParticleParent = default;
     private Transform _enemyParticleParent = default;
@@ -20,9 +29,10 @@ public class ParticlePool : MonoBehaviour, IObjectPool<BulletParticle>
     [SerializeField]
 	private BulletParticle _playerBulletParticlePrefab = default;
 	[SerializeField]
-	private List<BulletParticle> _enemyBulletParticlePrefabList = new List<BulletParticle>();
+	private BulletParticle _enemyBulletParticlePrefab = default;
 	private Queue<BulletParticle> _playerBulletParticlePool = new Queue<BulletParticle>();
-	private List<Queue<BulletParticle>> _enemyBulletParticlePool = new List<Queue<BulletParticle>>();
+	private Queue<BulletParticle> _enemyBulletParticlePool = new Queue<BulletParticle>();
+    private Dictionary<BulletParticle, ParticleSystem> _enemyParticleSystemDic = new Dictionary<BulletParticle, ParticleSystem>();
 	#endregion
 
 	#region プロパティ
@@ -38,6 +48,12 @@ public class ParticlePool : MonoBehaviour, IObjectPool<BulletParticle>
 		_playerParticleParent = GameObject.FindWithTag("PlayerParticlePool").transform;
 		_enemyParticleParent = GameObject.FindWithTag("EnemyParticlePool").transform;
 
+        _particleColorList.Add(_red);
+        _particleColorList.Add(_blue);
+        _particleColorList.Add(_yellow);
+        _particleColorList.Add(_green);
+        _particleColorList.Add(_purple);
+
         GenerateParticlePool();
     }
 
@@ -48,20 +64,19 @@ public class ParticlePool : MonoBehaviour, IObjectPool<BulletParticle>
             _playerBulletParticlePool.Enqueue(Instantiate(_playerBulletParticlePrefab, _playerParticleParent));
         }
 
-        for (int i = 0; i < _enemyBulletParticlePrefabList.Count; i++)
+        for (int i = 0; i < ENEMY_PARTICLE_AMOUNT; i++)
         {
-            Queue<BulletParticle> particlePool = new Queue<BulletParticle>();
+            BulletParticle bulletParticle = Instantiate(_enemyBulletParticlePrefab, _enemyParticleParent);
 
-            for (int j = 0; j < ENEMY_PARTICLE_AMOUNT; j++)
-            {
-                particlePool.Enqueue(Instantiate(_enemyBulletParticlePrefabList[i], _enemyParticleParent));
-            }
+            ParticleSystem particleSystem = bulletParticle.GetComponent<ParticleSystem>();
 
-            _enemyBulletParticlePool.Add(particlePool);
+            _enemyParticleSystemDic.Add(bulletParticle, particleSystem);
+
+            _enemyBulletParticlePool.Enqueue(bulletParticle);
         }
     }
 
-    public BulletParticle LendPlayer(Vector3 startPos, int particleNumber)
+    public BulletParticle LendPlayerParticle(Vector3 startPos)
     {
         BulletParticle particle = _playerBulletParticlePool.Dequeue();
 
@@ -71,22 +86,26 @@ public class ParticlePool : MonoBehaviour, IObjectPool<BulletParticle>
 
         particle.SettingParticleType = BulletParticle.ParticleType.Player;
 
-        particle.ParticleNumber = particleNumber;
+        particle.ParticleNumber = PLAYER_PARTICLE_NUMBER;
 
         return particle;
     }
 
-    public BulletParticle LendEnemy(Vector3 startPos, int bulletNumber)
+    public BulletParticle LendEnemyParicle(Vector3 startPos, int bulletNumber)
     {
         int particleNumber = bulletNumber / 2;
 
-        BulletParticle particle = _enemyBulletParticlePool[particleNumber].Dequeue();
+        BulletParticle particle = _enemyBulletParticlePool.Dequeue();
 
         particle.transform.position = startPos;
 
         particle.ReturnParticleCallBack = ReturnPool;
 
         particle.SettingParticleType = BulletParticle.ParticleType.Enemy;
+
+        ParticleSystem.MainModule main = _enemyParticleSystemDic[particle].main;
+
+        main.startColor = _particleColorList[particleNumber];
 
         particle.ParticleNumber = particleNumber;
 
@@ -101,7 +120,7 @@ public class ParticlePool : MonoBehaviour, IObjectPool<BulletParticle>
         }
         else
         {
-            _enemyBulletParticlePool[particleNumber].Enqueue(bulletParticle);
+            _enemyBulletParticlePool.Enqueue(bulletParticle);
         }
 
         bulletParticle.SettingParticleType = BulletParticle.ParticleType.None;

@@ -1,16 +1,14 @@
 // ---------------------------------------------------------
-// EnemyManager.cs
+// EnemyPhaseManager.cs
 //
 // 作成日:2024/02/11
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 
-public class EnemyManager : MonoBehaviour, IEnemyList
+public class EnemyPhaseManager : MonoBehaviour, IEnemyList
 {
 	#region 変数
 	public enum PhaseState
@@ -29,9 +27,8 @@ public class EnemyManager : MonoBehaviour, IEnemyList
 
     private List<List<GameObject>> _enemyPhaseList = new List<List<GameObject>>();
     private List<List<IDamageable>> _enemyIDamageableList = new List<List<IDamageable>>();
-    [SerializeField]
+
     private List<GameObject> _currentPhaseEnemyList = new List<GameObject>();
-    [SerializeField]
     private List<IDamageable> _currentPhaseIDamageableList = new List<IDamageable>();
     #endregion
 
@@ -160,7 +157,7 @@ public class EnemyManager : MonoBehaviour, IEnemyList
 
     public void DownEnemyCount(GameObject enemy)
     {
-        _enemyPhaseList[(int)_phaseState].Remove(enemy);
+        _currentPhaseEnemyList.Remove(enemy);
     }
 	#endregion
 }

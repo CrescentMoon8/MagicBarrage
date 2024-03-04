@@ -10,7 +10,7 @@ using System.Collections.Generic;
 public class ItemPool : MonoBehaviour
 {
 	#region 変数
-	private const int MAX_GENERATE_ITEM_AMOUNT = 4;
+	private const int MAX_GENERATE_ITEM_AMOUNT = 10;
 	[SerializeField]
 	private GameObject _itemPrefab = default;
 	[SerializeField]

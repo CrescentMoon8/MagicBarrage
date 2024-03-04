@@ -22,9 +22,10 @@ public class RedSlime : EnemyBase
 	private const int BULLET_AMOUNT = 5;
 	private int _bulletCount = 0;
 
-    private float _shotTime = 0f;
 	private const float SHOT_INTERVAL = 2f;
 
+	private EnemyShot _enemyShot = default;
+	private EnemyMove _enemyMove = default;
 	private BulletInfo _bulletInfo = default;
 	private EnemyDataBase _enemyDataBase = default;
     [SerializeField]
@@ -37,6 +38,9 @@ public class RedSlime : EnemyBase
     /// </summary>
     private void OnEnable ()
 	{
+		_enemyShot = new EnemyShot(this.transform.localScale.x / 2);
+		_enemyMove = new EnemyMove();
+
 		_bulletInfo = Addressables.LoadAssetAsync<BulletInfo>("BulletInfo").WaitForCompletion();
 		_enemyDataBase = Addressables.LoadAssetAsync<EnemyDataBase>("EnemyDataBase").WaitForCompletion();
 
@@ -67,14 +71,13 @@ public class RedSlime : EnemyBase
     /// </summary>
     private void Update ()
 	{
-		_shotTime += Time.deltaTime;
 		_bulletTime += Time.deltaTime;
 
-		this.transform.position = base._enemyMove.NextMovePos();
+		this.transform.position = _enemyMove.NextMovePos();
 
 		base.FollowHpBar(this.transform.position);
 
-		if ( _shotTime >= SHOT_INTERVAL )
+		if (_enemyShot.IsShot(SHOT_INTERVAL))
 		{
 			/* 
 			 * 指定した秒数間隔で指定した回数撃つ
@@ -93,9 +96,9 @@ public class RedSlime : EnemyBase
 				// 追尾弾の初弾と同時に扇形の通常弾を打つ
 				if(_bulletCount == 0)
                 {
-					base._puttingEnemyBullet.FanShot(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
+					_enemyShot.FanShot(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
 				}
-				base._puttingEnemyBullet.LineShot(this.transform.position, _targetAngle, _bulletInfo.RED_NEEDLE_BULLET, Bullet.MoveType.Tracking);
+				_enemyShot.LineShot(this.transform.position, _targetAngle, _bulletInfo.RED_NEEDLE_BULLET, Bullet.MoveType.Tracking);
 
 				_bulletCount++;
 				_bulletTime = 0;
@@ -103,7 +106,7 @@ public class RedSlime : EnemyBase
 			else
             {
 				_bulletCount = 0;
-				_shotTime = 0f;
+				_enemyShot.ResetShotTime();
 			}
 		}
 	}

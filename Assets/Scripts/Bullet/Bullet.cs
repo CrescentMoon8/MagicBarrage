@@ -5,8 +5,6 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
-using System;
-using System.Collections;
 
 public class Bullet : MonoBehaviour
 {
@@ -43,10 +41,32 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private MoveType _moveType = MoveType.Line;
 
+    public enum SpeedChangeType
+    {
+        None,
+        Acceleration,
+        Deceleration
+    }
+
+    [SerializeField]
+    private SpeedChangeType _speedChangeType = SpeedChangeType.None;
+
     private GameObject _playerObject = default;
     private IPlayerPos _iPlayerPos = default;
     // プレイヤーが持つダメージ用インターフェース
     private IDamageable _playerIDamageable = default;
+    // プレイヤーの弾の速度を調整する（高くすれば遅く、低くすれば早くなる）
+    private float _playerBulletSpeedDevisor = 3f;
+
+    private const float LOW_SPEED = 30f;
+    private const float MIDDLE_SPEED = 15f;
+    private const float HIGH_SPEED = 10f;
+    // 弾の加速率
+    private const float ACCELERATION_RATE = 0.1f;
+    //弾の減速率
+    private const float DECELERATION_RATE = 0.1f;
+    // エネミーの弾の速度を調整する（高くすれば遅く、低くすれば早くなる）
+    private float _enemyBulletSpeedDevisor = 15f;
 
     // エネミーとプレイヤーのベクトル差分
     [SerializeField]
@@ -54,14 +74,14 @@ public class Bullet : MonoBehaviour
 
     private int _bulletNumber = 0;
 
-    private IObjectPool<Bullet> _bulletPool = default;
-    private IObjectPool<BulletParticle> _particlePool = default;
+    private ParticlePool _particlePool = default;
     private IEnemyList _iEnemyList = default;
     #endregion
 
     #region プロパティ
     public ShooterType SettingShooterType { set { _shooterType = value; } }
     public MoveType SettingMoveType {  set { _moveType = value; } }
+    public SpeedChangeType SettingSpeedChangeType { set { _speedChangeType = value; } }
     public int SettingBulletNumber {  set { _bulletNumber = value; } }
     #endregion
 
@@ -74,8 +94,7 @@ public class Bullet : MonoBehaviour
         _playerObject = GameObject.FindWithTag("Player");
         _iPlayerPos = _playerObject.GetComponent<IPlayerPos>();
         _playerIDamageable = _playerObject.GetComponent<PlayerManager>()._playerHp;
-        _bulletPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<IObjectPool<Bullet>>();
-        _particlePool = GameObject.FindWithTag("Scripts").GetComponentInChildren<IObjectPool<BulletParticle>>();
+        _particlePool = GameObject.FindWithTag("Scripts").GetComponentInChildren<ParticlePool>();
         _iEnemyList = GameObject.FindWithTag("Scripts").GetComponentInChildren<IEnemyList>();
     }
 
@@ -90,6 +109,7 @@ public class Bullet : MonoBehaviour
                 switch (_moveType)
                 {
                     case MoveType.Line:
+                        this.transform.rotation = Quaternion.identity;
                         break;
                     case MoveType.Tracking:
                         GetNearEnemyPos();
@@ -101,6 +121,25 @@ public class Bullet : MonoBehaviour
                 }
                 break;
 
+            case ShooterType.Enemy:
+                switch (_speedChangeType)
+                {
+                    case SpeedChangeType.None:
+                        _enemyBulletSpeedDevisor = MIDDLE_SPEED;
+                        break;
+
+                    case SpeedChangeType.Acceleration:
+                        _enemyBulletSpeedDevisor = LOW_SPEED;
+                        break;
+
+                    case SpeedChangeType.Deceleration:
+                        _enemyBulletSpeedDevisor = HIGH_SPEED;
+                        break;
+
+                    default:
+                        break;
+                }
+                break;
             default:
                 break;
         }
@@ -117,7 +156,7 @@ public class Bullet : MonoBehaviour
                 switch (_moveType)
                 {
                     case MoveType.Line:
-                        transform.Translate(Vector3.up / 3);
+                        transform.Translate(Vector3.up / _playerBulletSpeedDevisor);
                         break;
 
                     case MoveType.Tracking:
@@ -127,7 +166,7 @@ public class Bullet : MonoBehaviour
                         Quaternion targetRotation = Quaternion.Euler(Vector3.forward * angle);
                         transform.rotation = targetRotation;
 
-                        transform.Translate(Vector3.up / 3);
+                        transform.Translate(Vector3.up / _playerBulletSpeedDevisor);
 
                         if(ExistsEnemyPosList(_distanceVector))
                         {
@@ -147,15 +186,17 @@ public class Bullet : MonoBehaviour
                 switch (_moveType)
                 {
                     case MoveType.Line:
-                        transform.Translate(Vector3.up / 15);
+                        SpeedChange();
+                        transform.Translate(Vector3.up / _enemyBulletSpeedDevisor);
                         break;
                     case MoveType.Tracking:
+                        //SpeedChange();
                         float direction = Calculation.TargetDirectionAngle(_iPlayerPos.PlayerPos, this.transform.position);
                         Quaternion targetRotation = Quaternion.Euler(Vector3.forward * direction);
                         //（現在角度、目標方向、どれぐらい曲がるか）
                         transform.rotation = Quaternion.RotateTowards(this.transform.rotation, targetRotation, 0.5f);
 
-                        transform.Translate(Vector3.up / 15);
+                        transform.Translate(Vector3.up / _enemyBulletSpeedDevisor);
                         break;
                     case MoveType.Curve:
                         break;
@@ -168,6 +209,32 @@ public class Bullet : MonoBehaviour
                 break;
         }
 	}
+
+    private void SpeedChange()
+    {
+        switch (_speedChangeType)
+        {
+            case SpeedChangeType.None:
+                break;
+
+            case SpeedChangeType.Acceleration:
+                if(_enemyBulletSpeedDevisor >= HIGH_SPEED)
+                {
+                    _enemyBulletSpeedDevisor -= ACCELERATION_RATE;
+                }
+                break;
+
+            case SpeedChangeType.Deceleration:
+                if (_enemyBulletSpeedDevisor <= LOW_SPEED)
+                {
+                    _enemyBulletSpeedDevisor += DECELERATION_RATE;
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
 
     /// <summary>
     /// プレイヤーと弾の距離、プレイヤーとエネミーの距離を比べる
@@ -193,7 +260,6 @@ public class Bullet : MonoBehaviour
         int nearEnemyIndex = 0;
         float nearEnemyDistance = Calculation.TargetDistance(_iEnemyList.CurrentPhaseEnemyList[0].transform.position, _iPlayerPos.PlayerPos);
 
-
         for (int i = 1; i < _iEnemyList.CurrentPhaseEnemyList.Count; i++)
         {
             float enemyDistance = Calculation.TargetDistance(_iEnemyList.CurrentPhaseEnemyList[i].transform.position, _iPlayerPos.PlayerPos);
@@ -211,9 +277,24 @@ public class Bullet : MonoBehaviour
     {
         if(collision.CompareTag("ReturnPool"))
         {
-            _bulletPool.ReturnPool(this, _bulletNumber);
+            // 誰が撃った弾か判断する
+            switch (_shooterType)
+            {
+                case ShooterType.Player:
+                    PlayerBulletPool.Instance.ReturnBullet(this);
+                    break;
+
+                case ShooterType.Enemy:
+                    EnemyBulletPool.Instance.ReturnBullet(this, _bulletNumber);
+                    break;
+
+                default:
+                    break;
+            }
 
             _shooterType = ShooterType.None;
+            _moveType = MoveType.Line;
+            _speedChangeType = SpeedChangeType.None;
         }
 
         if((collision.CompareTag("Player") && _shooterType == ShooterType.Enemy) ||
@@ -227,24 +308,27 @@ public class Bullet : MonoBehaviour
                     // GetSiblingIndexで当たったオブジェクトが同じ階層で上から何番目かを取得する
                     // Enemyの情報をヒエラルキーの上から順に取得しているためちゃんと動いている
                     _iEnemyList.CurrentPhaseIDamageableList[collision.transform.GetSiblingIndex()].Damage();
-                    BulletParticle playerParticle = _particlePool.LendPlayer(this.transform.position, -1);
+                    BulletParticle playerParticle = _particlePool.LendPlayerParticle(this.transform.position);
                     playerParticle.Play();
+                    PlayerBulletPool.Instance.ReturnBullet(this);
                     break;
 
                 case ShooterType.Enemy:
                     _playerIDamageable.Damage();
-                    BulletParticle enemyParticle = _particlePool.LendEnemy(this.transform.position, _bulletNumber);
+                    BulletParticle enemyParticle = _particlePool.LendEnemyParicle(this.transform.position, _bulletNumber);
                     enemyParticle.Play();
+                    EnemyBulletPool.Instance.ReturnBullet(this, _bulletNumber);
                     break;
 
                 default:
                     break;
             }
-            
-            _bulletPool.ReturnPool(this, _bulletNumber);
 
             _shooterType = ShooterType.None;
+            _moveType = MoveType.Line;
+            _speedChangeType = SpeedChangeType.None;
 
+            _distanceVector = Vector3.zero;
             this.transform.rotation = Quaternion.identity;
         }
     }

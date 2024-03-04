@@ -10,13 +10,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class BulletPool : SingletonMonoBehaviour<BulletPool>, IObjectPool<Bullet>
+public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 {
 	#region 変数
-	private const int MAX_GENERATE_PLAYER_BULLET = 45;
-	private const int MAX_GENERATE_ENEMY_BULLET = 150;
+	private const int MAX_GENERATE_ENEMY_BULLET = 200;
 	
 	private const int ALL_ENEMY_BULLET = 10;
+	private const int ENEMY_BULLET_KINDS = 2;
 
 
 	// Addressableを用いるときに使う、使うか未定
@@ -47,10 +47,10 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>, IObjectPool<Bullet
 	private GameObject[] _bulletPrefabs = new GameObject[ALL_BULLET];*/
 
 	[SerializeField]
-    private Bullet _playerBulletPrefab = default;
+	private List<Bullet> _enemyBulletPrefabs = default;
 	[SerializeField]
-	private Bullet[] _enemyBulletPrefabs = new Bullet[ALL_ENEMY_BULLET];
-    /*[SerializeField]
+	private List<Sprite> _enemyBulletSprite = default;
+	/*[SerializeField]
     private Bullet _redNomalBulletPrefab = default;
     [SerializeField]
     private Bullet _redNeedleBulletPrefab = default;
@@ -67,11 +67,11 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>, IObjectPool<Bullet
 	[SerializeField]
 	private Bullet _greenNeedleBulletPrefab = default;*/
 
-	private Transform _playerBulletParent = default;
 	private Transform _enemyBulletParent = default;
 
-    private Queue<Bullet> _playerBulletsPool = new Queue<Bullet>();
-	private List<Queue<Bullet>> _enemyBulletsPool = new List<Queue<Bullet>>(ALL_ENEMY_BULLET);
+	private List<Queue<Bullet>> _enemyBulletsPool = new List<Queue<Bullet>>();
+
+	private List<Dictionary<Bullet, SpriteRenderer>> _spriteRendererList = new List<Dictionary<Bullet, SpriteRenderer>>();
     #endregion
 
     #region プロパティ
@@ -84,10 +84,8 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>, IObjectPool<Bullet
     /// </summary>
     private void Start()
 	{
-		_playerBulletsPool.Clear();
 		_enemyBulletsPool.Clear();
 
-        _playerBulletParent = GameObject.FindWithTag("PlayerBulletPool").transform;
         _enemyBulletParent = GameObject.FindWithTag("EnemyBulletPool").transform;
 
 		GenerateBulletPool();
@@ -95,66 +93,58 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>, IObjectPool<Bullet
 
     private void GenerateBulletPool()
 	{
-		for (int i = 0; i < MAX_GENERATE_PLAYER_BULLET; i++)
-		{
-			Bullet bullet = Instantiate(_playerBulletPrefab, _playerBulletParent);
-
-			bullet.gameObject.SetActive(false);
-
-			_playerBulletsPool.Enqueue(bullet);
-		}
-
-        for (int i = 0; i < ALL_ENEMY_BULLET; i++)
+        for (int i = 0; i < ENEMY_BULLET_KINDS; i++)
         {
-            Queue<Bullet> bulletPool = new Queue<Bullet>();
+			Dictionary<Bullet, SpriteRenderer> spriteRendererDic = new Dictionary<Bullet, SpriteRenderer>();
+			Queue<Bullet> bulletPool = new Queue<Bullet>();
 
-            for (int k = 0; k < MAX_GENERATE_ENEMY_BULLET; k++)
+			for (int k = 0; k < MAX_GENERATE_ENEMY_BULLET; k++)
             {
-				Bullet bullet = Instantiate(_enemyBulletPrefabs[i], _enemyBulletParent);
+                Bullet bullet = Instantiate(_enemyBulletPrefabs[i], _enemyBulletParent);
+
+				SpriteRenderer spriteRenderer = bullet.GetComponent<SpriteRenderer>();
+
+				spriteRendererDic.Add(bullet, spriteRenderer);
 
 				bullet.gameObject.SetActive(false);
 
 				bulletPool.Enqueue(bullet);
             }
 
+			_spriteRendererList.Add(spriteRendererDic);
 			_enemyBulletsPool.Add(bulletPool);
-        }
-    }
-	
-	private void AddPlayerBulletPool()
-    {
-		Bullet bullet = Instantiate(_playerBulletPrefab, _playerBulletParent);
-
-		bullet.gameObject.SetActive(false);
-
-		_playerBulletsPool.Enqueue(bullet);
+		}
     }
 
 	private void AddEnemyBulletPool(int bulletNumber)
     {
 		Bullet bullet = Instantiate(_enemyBulletPrefabs[bulletNumber], _enemyBulletParent);
 
+		SpriteRenderer spriteRenderer = bullet.GetComponent<SpriteRenderer>();
+
+		_spriteRendererList[bulletNumber].Add(bullet, spriteRenderer);
+
 		bullet.gameObject.SetActive(false);
 
 		_enemyBulletsPool[bulletNumber].Enqueue(bullet);
 	}
 
-	/// <summary>
-	/// 弾をプレイヤーに貸し出す
-	/// </summary>
-	/// <returns></returns>
-	public Bullet LendPlayer(Vector3 shotPos, int bulletNumber)
+	public Bullet LendEnemyBullet(Vector3 shotPos, int bulletNumber)
 	{
-		if(_playerBulletsPool.Count <= 0)
+		int bulletKindsNumber = bulletNumber % 2;
+
+		if (_enemyBulletsPool[bulletKindsNumber].Count <= 0)
 		{
-			AddPlayerBulletPool();
+			AddEnemyBulletPool(bulletKindsNumber);
 		}
 
-		Bullet bullet = _playerBulletsPool.Dequeue();
+		Bullet bullet = _enemyBulletsPool[bulletKindsNumber].Dequeue();
+
+		_spriteRendererList[bulletKindsNumber][bullet].sprite = _enemyBulletSprite[bulletNumber];
 
 		bullet.transform.position = shotPos;
 
-		bullet.SettingShooterType = Bullet.ShooterType.Player;
+		bullet.SettingShooterType = Bullet.ShooterType.Enemy;
 
 		bullet.SettingBulletNumber = bulletNumber;
 
@@ -163,39 +153,12 @@ public class BulletPool : SingletonMonoBehaviour<BulletPool>, IObjectPool<Bullet
 		return bullet;
 	}
 
-	public Bullet LendEnemy(Vector3 shotPos, int bulletNumber)
-	{
-		if (_enemyBulletsPool[bulletNumber].Count <= 0)
-		{
-			AddEnemyBulletPool(bulletNumber);
-		}
-
-		Bullet bullet = _enemyBulletsPool[bulletNumber].Dequeue();
-
-		bullet.transform.position = shotPos;
-
-		bullet.SettingShooterType = Bullet.ShooterType.Enemy;
-
-        bullet.SettingBulletNumber = bulletNumber;
-
-		bullet.gameObject.SetActive(true);
-
-		return bullet;
-	}
-
-	public void ReturnPool(Bullet bullet, int bulletNumber)
+	public void ReturnBullet(Bullet bullet, int bulletNumber)
 	{
         bullet.gameObject.SetActive(false);
 
-		if(bulletNumber == -1)
-        {
-			_playerBulletsPool.Enqueue(bullet);
-		}
-        else
-        {
-			_enemyBulletsPool[bulletNumber].Enqueue(bullet);
-		}
-    }
+		_enemyBulletsPool[bulletNumber % 2].Enqueue(bullet);
+	}
 
 	#endregion
 }
