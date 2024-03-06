@@ -5,9 +5,11 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
-using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// プレイヤーが撃った弾用のオブジェクトプールクラス
+/// </summary>
 public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 {
 	#region 変数
@@ -31,7 +33,7 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 	/// <summary>
 	/// 初期化処理
 	/// </summary>
-	private void Awake()
+	public void BulletAwake()
 	{
 		_playerBulletsPool.Clear();
 
@@ -40,6 +42,9 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 		GenerateBulletPool();
 	}
 
+	/// <summary>
+	/// 弾のオブジェクトプールを生成する
+	/// </summary>
 	private void GenerateBulletPool()
 	{
 		for (int i = 0; i < MAX_GENERATE_PLAYER_BULLET; i++)
@@ -52,6 +57,9 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 		}
 	}
 
+	/// <summary>
+	/// プレイヤーの弾を追加で生成する
+	/// </summary>
 	private void AddPlayerBulletPool()
 	{
 		Bullet bullet = Instantiate(_playerBulletPrefab, _playerBulletParent);
@@ -64,7 +72,7 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 	/// <summary>
 	/// 弾をプレイヤーに貸し出す
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>弾のスクリプト</returns>
 	public Bullet LendPlayerBullet(Vector3 shotPos)
 	{
 		if (_playerBulletsPool.Count <= 0)
@@ -85,6 +93,10 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 		return bullet;
 	}
 
+	/// <summary>
+	/// 弾を返却する
+	/// </summary>
+	/// <param name="bullet">返却する弾のスクリプト</param>
 	public void ReturnBullet(Bullet bullet)
 	{
 		bullet.gameObject.SetActive(false);

@@ -5,16 +5,21 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
-using System;
-using System.Collections;
 
+/// <summary>
+/// ゲームに使用するBGM、SEを全て管理するクラス
+/// </summary>
 public class AudioManager : SingletonMonoBehaviour<AudioManager>
 {
 	#region 変数
+	// プレイヤーがダメージを受けたときのSE
 	[SerializeField]
-	private AudioClip _damageSe = default;
+	private AudioClip _playerDamageSe = default;
+	// プレイヤーが死亡した時のSE
 	[SerializeField]
-	private AudioClip _deadSe = default;
+	private AudioClip _playerDeadSe = default;
+	[SerializeField]
+	private AudioClip _playerShotSe = default;
 
 	private AudioSource _audioSource = default;
 	#endregion
@@ -28,14 +33,29 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
 		_audioSource = GetComponent<AudioSource>();
 	}
 
-	public void PlayDamageSe()
+	/// <summary>
+	/// プレイヤーがダメージを受けたときのSEを再生する
+	/// </summary>
+	public void PlayPlayerDamageSe()
     {
-		_audioSource.PlayOneShot(_damageSe);
+		_audioSource.PlayOneShot(_playerDamageSe);
     }
 
-	public void PlayDeadSe()
+	/// <summary>
+	/// プレイヤーが死亡した時のSEを再生する
+	/// </summary>
+	public void PlayPlayerDeadSe()
 	{
-		_audioSource.PlayOneShot(_deadSe);
+		_audioSource.PlayOneShot(_playerDeadSe);
+	}
+
+	/// <summary>
+	/// プレイヤーが弾を撃った時のSEを再生する
+	/// </summary>
+	public void PlayPlayerShotSe()
+    {
+		Debug.Log("a");
+		_audioSource.PlayOneShot(_playerShotSe);
 	}
 	#endregion
 }

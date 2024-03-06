@@ -5,9 +5,11 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
-using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// パーティクル用のオブジェクトプールクラス
+/// </summary>
 public class ParticlePool : MonoBehaviour
 {
 	#region 変数
@@ -76,8 +78,41 @@ public class ParticlePool : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// プレイヤーのパーティクルを追加で生成する
+    /// </summary>
+    private void AddPlayerParticle()
+    {
+        _playerBulletParticlePool.Enqueue(Instantiate(_playerBulletParticlePrefab, _playerParticleParent));
+    }
+
+    /// <summary>
+    /// エネミーのパーティクルを追加で生成する
+    /// </summary>
+    private void AddEnemyParticle()
+    {
+        BulletParticle bulletParticle = Instantiate(_enemyBulletParticlePrefab, _enemyParticleParent);
+
+        ParticleSystem particleSystem = bulletParticle.GetComponent<ParticleSystem>();
+
+        _enemyParticleSystemDic.Add(bulletParticle, particleSystem);
+
+        _enemyBulletParticlePool.Enqueue(bulletParticle);
+    }
+
+    /// <summary>
+    /// プレイヤーの弾用パーティクルを貸し出す
+    /// </summary>
+    /// <param name="startPos">パーティクルを配置する座標</param>
+    /// <returns>パーティクルのクラス</returns>
     public BulletParticle LendPlayerParticle(Vector3 startPos)
     {
+        // パーティクルが足りなければ追加する
+        if(_playerBulletParticlePool.Count <= 0)
+        {
+            AddPlayerParticle();
+        }
+
         BulletParticle particle = _playerBulletParticlePool.Dequeue();
 
         particle.transform.position = startPos;
@@ -91,8 +126,20 @@ public class ParticlePool : MonoBehaviour
         return particle;
     }
 
+    /// <summary>
+    /// プレイヤーの弾用パーティクルを貸し出す
+    /// </summary>
+    /// <param name="startPos">パーティクルを配置する座標</param>
+    /// <param name="bulletNumber">弾の種類（どの敵が撃った弾か）</param>
+    /// <returns>パーティクルのクラス</returns>
     public BulletParticle LendEnemyParicle(Vector3 startPos, int bulletNumber)
     {
+        // パーティクルが足りなければ追加する
+        if (_enemyBulletParticlePool.Count <= 0)
+        {
+            AddEnemyParticle();
+        }
+
         int particleNumber = bulletNumber / 2;
 
         BulletParticle particle = _enemyBulletParticlePool.Dequeue();
@@ -112,6 +159,11 @@ public class ParticlePool : MonoBehaviour
         return particle;
     }
 
+    /// <summary>
+    /// パーティクルをプールに返却する
+    /// </summary>
+    /// <param name="bulletParticle">返却するパーティクル</param>
+    /// <param name="particleNumber">パーティクル判別用番号</param>
     public void ReturnPool(BulletParticle bulletParticle, int particleNumber)
     {
         if(particleNumber == -1)

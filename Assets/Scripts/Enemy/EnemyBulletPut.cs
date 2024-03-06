@@ -6,14 +6,17 @@
 // ---------------------------------------------------------
 using UnityEngine;
 
-public class EnemyShot
+/// <summary>
+/// エネミーの弾の配置処理を行うクラス
+/// </summary>
+public class EnemyBulletPut
 {
     #region 変数
     private float _shotTime = 0f;
 
     private float _radius = 0f;
 
-    public EnemyShot(float radius)
+    public EnemyBulletPut(float radius)
 	{
         _radius = radius;
 	}

@@ -5,72 +5,32 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 
-
+/// <summary>
+/// エネミーが撃った弾用のオブジェクトプールクラス
+/// </summary>
 public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 {
 	#region 変数
-	private const int MAX_GENERATE_ENEMY_BULLET = 200;
+	// 生成する弾の数
+	private const int MAX_GENERATE_ENEMY_BULLET = 250;
 	
-	private const int ALL_ENEMY_BULLET = 10;
+	//private const int ALL_ENEMY_BULLET = 10;
+	// 生成する弾の種類
 	private const int ENEMY_BULLET_KINDS = 2;
-
-
-	// Addressableを用いるときに使う、使うか未定
-	/*private const int ALL_BULLET = 10;
-	private const int RED_NOMAL_BULLET = 0;
-	private const int RED_NEEDLE_BULLET = 1;
-	private const int BLUE_NOMAL_BULLET = 2;
-	private const int BLUE_NEEDLE_BULLET = 3;
-	private const int YERROW_NOMAL_BULLET = 4;
-	private const int YERROW_NEEDLE_BULLET = 5;
-	private const int GREEN_NOMAL_BULLET = 6;
-	private const int GREEN_NEEDLE_BULLET = 7;
-	private const int PURPLE_NOMAL_BULLET = 8;
-	private const int PURPLE_NEEDLE_BULLET = 9;
-
-	private const string PLAYER_BULLET_PASS = "PlayerBullet";
-	private const string RED_NOMAL_BULLET_PASS = "RedNomalBullet";
-	private const string RED_NEEDLE_BULLET_PASS = "RedNeedleBullet";
-	private const string BLUE_NOMAL_BULLET_PASS = "BlueNomalBullet";
-	private const string BLUE_NEEDLE_BULLET_PASS = "BlueNeedleBullet";
-	private const string YERROW_NOMAL_BULLET_PASS = "YerrowNomalBullet";
-	private const string YERROW_NEEDLE_BULLET_PASS = "YerrowNeedleBullet";
-	private const string GREEN_NOMAL_BULLET_PASS = "GreenNomalBullet";
-	private const string GREEN_NEEDLE_BULLET_PASS = "GreenNeedleBullet";
-	private const string GREEN_NEEDLE_BULLET_PASS = "PurpleNomalBullet";
-	private const string GREEN_NEEDLE_BULLET_PASS = "PurpleNeedleBullet";
-
-	private GameObject[] _bulletPrefabs = new GameObject[ALL_BULLET];*/
 
 	[SerializeField]
 	private List<Bullet> _enemyBulletPrefabs = default;
 	[SerializeField]
 	private List<Sprite> _enemyBulletSprite = default;
-	/*[SerializeField]
-    private Bullet _redNomalBulletPrefab = default;
-    [SerializeField]
-    private Bullet _redNeedleBulletPrefab = default;
-    [SerializeField]
-	private Bullet _blueNomalBulletPrefab = default;
-	[SerializeField]
-	private Bullet _blueNeedleBulletPrefab = default;
-	[SerializeField]
-	private Bullet _yerrowNomalBulletPrefab = default;
-	[SerializeField]
-	private Bullet _yerrowNeedleBulletPrefab = default;
-	[SerializeField]
-	private Bullet _greenNomalBulletPrefab = default;
-	[SerializeField]
-	private Bullet _greenNeedleBulletPrefab = default;*/
 
+	// 生成する弾の親オブジェクト
 	private Transform _enemyBulletParent = default;
 
 	private List<Queue<Bullet>> _enemyBulletsPool = new List<Queue<Bullet>>();
 
+	// 貸し出した弾のSpriteを変えるためのSpriteRendererを保管するDictionaryのList
 	private List<Dictionary<Bullet, SpriteRenderer>> _spriteRendererList = new List<Dictionary<Bullet, SpriteRenderer>>();
     #endregion
 
@@ -82,7 +42,7 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
     /// <summary>
     /// 初期化処理
     /// </summary>
-    private void Start()
+    private void Awake()
 	{
 		_enemyBulletsPool.Clear();
 
@@ -91,6 +51,9 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 		GenerateBulletPool();
 	}
 
+	/// <summary>
+	/// 弾のオブジェクトプールを生成する
+	/// </summary>
     private void GenerateBulletPool()
 	{
         for (int i = 0; i < ENEMY_BULLET_KINDS; i++)
@@ -104,6 +67,7 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 
 				SpriteRenderer spriteRenderer = bullet.GetComponent<SpriteRenderer>();
 
+				// 弾のスクリプトをKeyとしてSpriteRendererを追加する
 				spriteRendererDic.Add(bullet, spriteRenderer);
 
 				bullet.gameObject.SetActive(false);
@@ -116,23 +80,36 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 		}
     }
 
-	private void AddEnemyBulletPool(int bulletNumber)
+	/// <summary>
+	/// エネミーの弾を追加で生成する
+	/// </summary>
+	/// <param name="bulletKindsNumber">弾の種類</param>
+	private void AddEnemyBulletPool(int bulletKindsNumber)
     {
-		Bullet bullet = Instantiate(_enemyBulletPrefabs[bulletNumber], _enemyBulletParent);
+		Bullet bullet = Instantiate(_enemyBulletPrefabs[bulletKindsNumber], _enemyBulletParent);
 
 		SpriteRenderer spriteRenderer = bullet.GetComponent<SpriteRenderer>();
 
-		_spriteRendererList[bulletNumber].Add(bullet, spriteRenderer);
+		// 弾のスクリプトをKeyとしてSpriteRendererを追加する
+		_spriteRendererList[bulletKindsNumber].Add(bullet, spriteRenderer);
 
 		bullet.gameObject.SetActive(false);
 
-		_enemyBulletsPool[bulletNumber].Enqueue(bullet);
+		_enemyBulletsPool[bulletKindsNumber].Enqueue(bullet);
 	}
 
+	/// <summary>
+	/// 弾をエネミーに貸し出す
+	/// </summary>
+	/// <param name="shotPos">弾を配置する座標</param>
+	/// <param name="bulletNumber">弾の番号</param>
+	/// <returns>弾のスクリプト</returns>
 	public Bullet LendEnemyBullet(Vector3 shotPos, int bulletNumber)
 	{
+		// 弾の種類を判別する（0 or 1）
 		int bulletKindsNumber = bulletNumber % 2;
 
+		// プールの中身がなかったら
 		if (_enemyBulletsPool[bulletKindsNumber].Count <= 0)
 		{
 			AddEnemyBulletPool(bulletKindsNumber);
@@ -140,12 +117,15 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 
 		Bullet bullet = _enemyBulletsPool[bulletKindsNumber].Dequeue();
 
+		// 取り出した弾のスクリプトを使って、それに対応するSpriteRendererを取り出しす
+		// 取り出した弾のSpriteを弾の番号に対応するSpriteに変更する
 		_spriteRendererList[bulletKindsNumber][bullet].sprite = _enemyBulletSprite[bulletNumber];
 
 		bullet.transform.position = shotPos;
 
 		bullet.SettingShooterType = Bullet.ShooterType.Enemy;
 
+		// 弾のスクリプトに弾の番号をセットする
 		bullet.SettingBulletNumber = bulletNumber;
 
 		bullet.gameObject.SetActive(true);
@@ -153,6 +133,10 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 		return bullet;
 	}
 
+	/// <summary>
+	/// 弾を返却する
+	/// </summary>
+	/// <param name="bullet">返却する弾のスクリプト</param>
 	public void ReturnBullet(Bullet bullet, int bulletNumber)
 	{
         bullet.gameObject.SetActive(false);

@@ -7,19 +7,22 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// 得点アイテム用のオブジェクトプールクラス
+/// </summary>
 public class ItemPool : MonoBehaviour
 {
 	#region 変数
+	// 生成するアイテムの数
 	private const int MAX_GENERATE_ITEM_AMOUNT = 10;
+	
 	[SerializeField]
 	private GameObject _itemPrefab = default;
+	// 生成するアイテムの親オブジェクト
 	[SerializeField]
 	private Transform _itemParent = default;
+	
 	private Queue<Item> _itemPool = new Queue<Item>();
-	#endregion
-
-	#region プロパティ
-
 	#endregion
 
 	#region メソッド
@@ -31,12 +34,16 @@ public class ItemPool : MonoBehaviour
 		GenerateItemPool();
 	}
 
+	/// <summary>
+	/// アイテムのオブジェクトプールを生成する
+	/// </summary>
 	private void GenerateItemPool()
     {
         for (int i = 0; i < MAX_GENERATE_ITEM_AMOUNT; i++)
         {
 			Item item = Instantiate(_itemPrefab, _itemParent).GetComponent<Item>();
 
+			// アイテムのdelegateに返却用メソッドを登録する
 			item.RturnPoolCallBack = ReturnPool;
 
 			item.gameObject.SetActive(false);
@@ -45,6 +52,9 @@ public class ItemPool : MonoBehaviour
         }
     }
 
+	/// <summary>
+	/// アイテムを追加で生成する
+	/// </summary>
 	private void AddItemPool()
     {
         Item item = Instantiate(_itemPrefab, _itemParent).GetComponent<Item>();
@@ -56,8 +66,13 @@ public class ItemPool : MonoBehaviour
         _itemPool.Enqueue(item);
     }
 
+	/// <summary>
+	/// アイテムを貸し出す
+	/// </summary>
+	/// <param name="startPos"></param>
 	public void LendItem(Vector3 startPos)
     {
+		// プールの中身がなかったら
 		if(_itemPool.Count <= 0)
         {
 			AddItemPool();
@@ -70,6 +85,10 @@ public class ItemPool : MonoBehaviour
 		item.gameObject.SetActive(true);
     }
 
+	/// <summary>
+	/// アイテムを返却する
+	/// </summary>
+	/// <param name="item">返却するアイテムクラス</param>
 	public void ReturnPool(Item item)
     {
 		item.gameObject.SetActive(false);

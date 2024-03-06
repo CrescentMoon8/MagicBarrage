@@ -12,6 +12,7 @@ using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 public class PlayerManager : MonoBehaviour, IPlayerPos
 {
 	#region 変数
+	// 入力を情報を保存するための変数
 	private Touch _activeTouch = default;
 
 	private bool _isMove = false;
@@ -19,24 +20,35 @@ public class PlayerManager : MonoBehaviour, IPlayerPos
 	[SerializeField]
 	private bool _isHard = false;
 
+	// プレイヤーの残機UIの親オブジェクト
 	[SerializeField]
 	private Transform _lifeUiParent = default;
+	// プレイヤーの残機減少後のSprite
 	[SerializeField]
     private Sprite _brokenHeart = default;
 
+	// 画面上部のUIエリア
 	[SerializeField]
 	private RectTransform _header = default;
+	// 画面下部のUIエリア
 	[SerializeField]
 	private RectTransform _footer = default;
 
     private PlayerInput _playerInput = default;
 	private PlayerMove _playerMove = default;
-	private PlayerShot _playerShot = default;
-	public PlayerHp _playerHp = default;
+	private PlayerBulletPut _playerShot = default;
+	private PlayerHp _playerHp = default;
+
+#if UNITY_STANDALONE_WIN
+	private Vector3 _startMousePos = Vector3.zero;
+	private Vector2 _startObjectPos = Vector2.zero;
+	private Vector2 _cursorPosDistance = Vector2.zero;
+#endif
 	#endregion
 
 	#region プロパティ
 	public Vector3 PlayerPos { get {  return this.transform.position; } }
+	public PlayerHp GettingPlayerHp { get { return _playerHp; } }
 	#endregion
 
 	#region メソッド
@@ -45,16 +57,19 @@ public class PlayerManager : MonoBehaviour, IPlayerPos
 	/// </summary>
 	private void Awake()
 	{
+		// Touch型を使用するための機能を有効化
 		EnhancedTouchSupport.Enable();
 
 		_playerInput = new PlayerInput();
 		_playerMove = new PlayerMove();
-		_playerShot = new PlayerShot();
+		_playerShot = new PlayerBulletPut();
 		_playerHp = new PlayerHp(GetComponent<CircleCollider2D>(), GetComponent<SpriteRenderer>(), GetComponent<Animator>(), _brokenHeart);
 
 		_playerInput.Initialize();
 		_playerMove.Initialize(this.transform.localScale, _header, _footer);
 		_playerHp.Initialize(_lifeUiParent);
+
+		PlayerBulletPool.Instance.BulletAwake();
 	}
 
 	/// <summary>
@@ -64,13 +79,14 @@ public class PlayerManager : MonoBehaviour, IPlayerPos
 	{
 		_playerShot.AddShotTime();
 
-#if UNITY_IOS || UNITY_EDITOR
+	#if UNITY_IOS || UNITY_EDITOR
 		// 触れている指が一本以上あるか
-		// Touch型ではNullかどうか検証できないためここで実行
+		// Touch型ではNullかどうか検証できないためここで実行（改善策を要検討）
 		if (Touch.activeTouches.Count >= 1)
         {
 			_activeTouch = _playerInput.InputTouch();
-			_isMove = _playerMove.MovePos(_activeTouch, this.transform.position);
+			_playerMove.MovePos(_activeTouch, this.transform.position);
+			_isMove = true;
 		}
 		else
         {
@@ -79,7 +95,8 @@ public class PlayerManager : MonoBehaviour, IPlayerPos
 			_isShot = false;
         }
 
-#elif UNITY_STANDALONE_WIN
+		// PCビルド用にここで移動座標計算を行う
+	#elif UNITY_STANDALONE_WIN
 		if (Input.GetMouseButtonDown(0))
 		{
 			_startObjectPos = this.transform.position;
@@ -98,7 +115,7 @@ public class PlayerManager : MonoBehaviour, IPlayerPos
 			_isShot = false;
 			_cursorPosDistance = Vector2.zero;
 		}
-#endif
+	#endif
 
 		_playerHp.AnimationPlayTime();
 	}
@@ -109,10 +126,18 @@ public class PlayerManager : MonoBehaviour, IPlayerPos
         {
 			_isShot = true;
 
+
+
+	#if UNITY_IOS || UNITY_EDITOR
 			this.transform.position = _playerMove.Move();
+
+	#elif UNITY_STANDALONE_WIN
+			this.transform.position = _playerMove.Move(_startObjectPos, _cursorPosDistance);
+
+	#endif
 		}
 
-		if(_isShot)
+		if (_isShot)
         {
 			_playerShot.Shot(this.transform.position, _isHard);
         }

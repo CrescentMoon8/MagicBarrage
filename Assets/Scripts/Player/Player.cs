@@ -44,6 +44,7 @@ public class Player : MonoBehaviour, IDamageable, IPlayerPos
 
     private bool _isDamage = false;
     private int _lifeCount = 3;
+    [SerializeField]
     private float _damageAnimationTime = 0;
     private const float DAMAGE_ANIMATION = 3f;
     [SerializeField]

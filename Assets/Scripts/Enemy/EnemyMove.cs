@@ -6,9 +6,10 @@
 // ---------------------------------------------------------
 using UnityEngine;
 using UnityEngine.Splines;
-using System;
-using System.Collections;
 
+/// <summary>
+/// エネミーの移動処理を行うクラス
+/// </summary>
 public class EnemyMove
 {
     #region 変数
@@ -34,10 +35,6 @@ public class EnemyMove
 
 	private SplineContainer _enterSplineContainer = default;
 	//private SplineContainer _exitSplineContainer = default;
-	#endregion
-
-	#region プロパティ
-
 	#endregion
 
 	#region メソッド

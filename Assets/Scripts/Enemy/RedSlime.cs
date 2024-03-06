@@ -24,7 +24,7 @@ public class RedSlime : EnemyBase
 
 	private const float SHOT_INTERVAL = 2f;
 
-	private EnemyShot _enemyShot = default;
+	private EnemyBulletPut _enemyBulletPut = default;
 	private EnemyMove _enemyMove = default;
 	private BulletInfo _bulletInfo = default;
 	private EnemyDataBase _enemyDataBase = default;
@@ -38,7 +38,7 @@ public class RedSlime : EnemyBase
     /// </summary>
     private void OnEnable ()
 	{
-		_enemyShot = new EnemyShot(this.transform.localScale.x / 2);
+		_enemyBulletPut = new EnemyBulletPut(this.transform.localScale.x / 2);
 		_enemyMove = new EnemyMove();
 
 		_bulletInfo = Addressables.LoadAssetAsync<BulletInfo>("BulletInfo").WaitForCompletion();
@@ -77,7 +77,7 @@ public class RedSlime : EnemyBase
 
 		base.FollowHpBar(this.transform.position);
 
-		if (_enemyShot.IsShot(SHOT_INTERVAL))
+		if (_enemyBulletPut.IsShot(SHOT_INTERVAL))
 		{
 			/* 
 			 * 指定した秒数間隔で指定した回数撃つ
@@ -96,9 +96,9 @@ public class RedSlime : EnemyBase
 				// 追尾弾の初弾と同時に扇形の通常弾を打つ
 				if(_bulletCount == 0)
                 {
-					_enemyShot.FanShot(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
+					_enemyBulletPut.FanShot(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
 				}
-				_enemyShot.LineShot(this.transform.position, _targetAngle, _bulletInfo.RED_NEEDLE_BULLET, Bullet.MoveType.Tracking);
+				_enemyBulletPut.LineShot(this.transform.position, _targetAngle, _bulletInfo.RED_NEEDLE_BULLET, Bullet.MoveType.Tracking);
 
 				_bulletCount++;
 				_bulletTime = 0;
@@ -106,7 +106,7 @@ public class RedSlime : EnemyBase
 			else
             {
 				_bulletCount = 0;
-				_enemyShot.ResetShotTime();
+				_enemyBulletPut.ResetShotTime();
 			}
 		}
 	}

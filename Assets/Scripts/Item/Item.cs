@@ -5,14 +5,18 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
-using System;
-using System.Collections;
 
+/// <summary>
+/// アイテムの点数や移動処理を行うクラス
+/// </summary>
 public class Item : MonoBehaviour
 {
 	#region 変数
 	[SerializeField]
 	private int scorePoint = 100;
+
+	// アイテムの落下速度（大きければ遅く、小さければ早くなる）
+	private float _gravityRate = 45f;
 
 	private BoxCollider2D _boxCollider2D = default;
 
@@ -46,17 +50,22 @@ public class Item : MonoBehaviour
     /// </summary>
     private void FixedUpdate ()
 	{
-		this.transform.Translate(Vector3.down / 45);
+		// アイテムの落下
+		this.transform.Translate(Vector3.down / _gravityRate);
 	}
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag("Player"))
         {
-			Debug.Log(this.gameObject.transform.GetSiblingIndex());
+			// 処理が複数回行われないようにColliderを無効化する
 			_boxCollider2D.enabled = false;
+
+			// スコアの加算処理とテキストの更新処理
 			_scoreManager.AddScore(scorePoint);
 			_scoreManager.ChangeScoreText();
+			
+			// アイテムをプールに返却する
 			_returnPoolCallBack(this);
 		}
 

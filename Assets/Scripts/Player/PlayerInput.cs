@@ -9,6 +9,9 @@ using UnityEngine.AddressableAssets;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 
+/// <summary>
+/// プレイヤーの入力の取得と入力時のパーティクルの再生を行うクラス
+/// </summary>
 public class PlayerInput
 {
     private ParticleSystem _touchParticle = default;

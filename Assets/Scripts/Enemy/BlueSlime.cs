@@ -19,7 +19,7 @@ public class BlueSlime : EnemyBase
 
 	private const float SHOT_INTERVAL = 2f;
 
-	private EnemyShot _enemyShot = default;
+	private EnemyBulletPut _enemyBulletPut = default;
 	private EnemyMove _enemyMove = default;
 	private BulletInfo _bulletInfo = default;
 	private EnemyDataBase _enemyDataBase = default;
@@ -37,7 +37,7 @@ public class BlueSlime : EnemyBase
 	/// </summary>
 	private void OnEnable ()
 	{
-		_enemyShot = new EnemyShot(this.transform.localScale.x / 2);
+		_enemyBulletPut = new EnemyBulletPut(this.transform.localScale.x / 2);
 		_enemyMove = new EnemyMove();
 
 		_bulletInfo = Addressables.LoadAssetAsync<BulletInfo>("BulletInfo").WaitForCompletion();
@@ -69,7 +69,7 @@ public class BlueSlime : EnemyBase
 
 		base.FollowHpBar(this.transform.position);
 
-		if (_enemyShot.IsShot(SHOT_INTERVAL))
+		if (_enemyBulletPut.IsShot(SHOT_INTERVAL))
 		{
             /*// 三方向に扇形の弾を撃つ
 			for (int i = 0; i < 3; i++)
@@ -78,9 +78,9 @@ public class BlueSlime : EnemyBase
 				_direction -= 90;
 			}*/
 
-            _enemyShot.FanShot(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.BLUE_NOMAL_BULLET, Bullet.MoveType.Line);
+            _enemyBulletPut.FanShot(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.BLUE_NOMAL_BULLET, Bullet.MoveType.Line);
 
-			_enemyShot.ResetShotTime();
+			_enemyBulletPut.ResetShotTime();
 		}
 	}
     #endregion

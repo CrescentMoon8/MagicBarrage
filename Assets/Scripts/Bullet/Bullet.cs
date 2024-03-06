@@ -6,6 +6,9 @@
 // ---------------------------------------------------------
 using UnityEngine;
 
+/// <summary>
+/// 弾の移動処理、回転処理、プレイヤー・エネミーのダメージ処理の呼び出しを行う
+/// </summary>
 public class Bullet : MonoBehaviour
 {
     #region 変数
@@ -41,6 +44,12 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private MoveType _moveType = MoveType.Line;
 
+    /// <summary>
+    /// 弾の速度変化
+    /// ０：なし
+    /// １：加速
+    /// ２：減速
+    /// </summary>
     public enum SpeedChangeType
     {
         None,
@@ -58,6 +67,7 @@ public class Bullet : MonoBehaviour
     // プレイヤーの弾の速度を調整する（高くすれば遅く、低くすれば早くなる）
     private float _playerBulletSpeedDevisor = 3f;
 
+    // 弾の速度
     private const float LOW_SPEED = 30f;
     private const float MIDDLE_SPEED = 15f;
     private const float HIGH_SPEED = 10f;
@@ -72,6 +82,7 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private Vector3 _distanceVector = Vector3.zero;
 
+    // どの敵からどの弾が撃たれたかの判別用番号
     private int _bulletNumber = 0;
 
     private ParticlePool _particlePool = default;
@@ -89,11 +100,11 @@ public class Bullet : MonoBehaviour
     /// <summary>
     /// 変数の初期化処理
     /// </summary>
-    private void Awake()
+    private void Start()
 	{
         _playerObject = GameObject.FindWithTag("Player");
         _iPlayerPos = _playerObject.GetComponent<IPlayerPos>();
-        _playerIDamageable = _playerObject.GetComponent<PlayerManager>()._playerHp;
+        _playerIDamageable = _playerObject.GetComponent<PlayerManager>().GettingPlayerHp;
         _particlePool = GameObject.FindWithTag("Scripts").GetComponentInChildren<ParticlePool>();
         _iEnemyList = GameObject.FindWithTag("Scripts").GetComponentInChildren<IEnemyList>();
     }
@@ -182,6 +193,7 @@ public class Bullet : MonoBehaviour
                 }
                 
                 break;
+
             case ShooterType.Enemy:
                 switch (_moveType)
                 {
@@ -218,6 +230,7 @@ public class Bullet : MonoBehaviour
                 break;
 
             case SpeedChangeType.Acceleration:
+                // 速度上限になるまで加速する
                 if(_enemyBulletSpeedDevisor >= HIGH_SPEED)
                 {
                     _enemyBulletSpeedDevisor -= ACCELERATION_RATE;
@@ -225,6 +238,7 @@ public class Bullet : MonoBehaviour
                 break;
 
             case SpeedChangeType.Deceleration:
+                // 速度下限になるまで減速する
                 if (_enemyBulletSpeedDevisor <= LOW_SPEED)
                 {
                     _enemyBulletSpeedDevisor += DECELERATION_RATE;
@@ -254,22 +268,27 @@ public class Bullet : MonoBehaviour
     /// <summary>
     /// 一番近いエネミーの座標を取得する
     /// </summary>
-    /// <returns></returns>
     private void GetNearEnemyPos()
     {
+        // 一番近いエネミーの番号
         int nearEnemyIndex = 0;
+        // 初期値を一番目のエネミーとの距離にすることで、初期値ゼロより処理を一回減らす
         float nearEnemyDistance = Calculation.TargetDistance(_iEnemyList.CurrentPhaseEnemyList[0].transform.position, _iPlayerPos.PlayerPos);
 
         for (int i = 1; i < _iEnemyList.CurrentPhaseEnemyList.Count; i++)
         {
             float enemyDistance = Calculation.TargetDistance(_iEnemyList.CurrentPhaseEnemyList[i].transform.position, _iPlayerPos.PlayerPos);
+
+            // エネミーの距離の比較
             if (enemyDistance < nearEnemyDistance)
             {
+                // 一番近いエネミーの距離の更新
                 nearEnemyDistance = enemyDistance;
                 nearEnemyIndex = i;
             }
         }
 
+        // 一番近いエネミーの座標を代入する
         _distanceVector = _iEnemyList.CurrentPhaseEnemyList[nearEnemyIndex].transform.position;
     }
 
@@ -292,6 +311,7 @@ public class Bullet : MonoBehaviour
                     break;
             }
 
+            // 各状態を初期化する
             _shooterType = ShooterType.None;
             _moveType = MoveType.Line;
             _speedChangeType = SpeedChangeType.None;
@@ -324,6 +344,7 @@ public class Bullet : MonoBehaviour
                     break;
             }
 
+            // 各状態を初期化する
             _shooterType = ShooterType.None;
             _moveType = MoveType.Line;
             _speedChangeType = SpeedChangeType.None;

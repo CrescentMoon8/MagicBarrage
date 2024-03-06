@@ -5,19 +5,26 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// プレイヤーのダメージ処理とダメージアニメーションを行うクラス
+/// </summary>
 public class PlayerHp : IDamageable
 {
 	#region 変数
 	private bool _isDamage = false;
+    // プレイヤーの残機
 	private int _lifeCount = 3;
+    // アニメーション開始からの時間を計測する
     private float _damageAnimationTime = 0;
+    // アニメーションの時間
     private const float DAMAGE_ANIMATION = 3f;
 
+    // プレイヤーの残機UIを格納する配列
     private Image[] _lifeUi = new Image[3];
+    // プレイヤーの残機減少後のSprite
     private Sprite _brokenHeart = default;
 
     private CircleCollider2D _circleCollider2D = default;
@@ -33,11 +40,11 @@ public class PlayerHp : IDamageable
     }
     #endregion
 
-    #region プロパティ
-
-    #endregion
-
     #region メソッド
+    /// <summary>
+    /// 親オブジェクトからプレイヤーの残機UIを取得する
+    /// </summary>
+    /// <param name="lifeUiParent">プレイヤーの残機UIの親オブジェクト</param>
     public void Initialize(Transform lifeUiParent)
     {
         for (int i = 0; i < _lifeUi.Length; i++)
@@ -45,6 +52,10 @@ public class PlayerHp : IDamageable
             _lifeUi[i] = lifeUiParent.transform.GetChild(i).GetComponent<Image>();
         }
     }
+
+    /// <summary>
+    /// プレイヤーのダメージ処理
+    /// </summary>
     public void Damage()
     {
         /* 
@@ -65,6 +76,7 @@ public class PlayerHp : IDamageable
         _isDamage = true;
 
         _lifeCount--;
+        // 残機UIを残機減少後のSpriteに入れ替える
         _lifeUi[_lifeCount].sprite = _brokenHeart;
 
         if (_lifeCount <= 0)
@@ -72,9 +84,12 @@ public class PlayerHp : IDamageable
             Dead();
         }
 
-        AudioManager.Instance.PlayDamageSe();
+        AudioManager.Instance.PlayPlayerDamageSe();
     }
 
+    /// <summary>
+    /// アニメーションが開始されてからの時間を計測し、終了時間を過ぎたら元に戻す
+    /// </summary>
     public void AnimationPlayTime()
     {
         if (_isDamage)
@@ -91,9 +106,10 @@ public class PlayerHp : IDamageable
         }
     }
 
+    // プレイヤーの死亡処理
     private void Dead()
     {
-        AudioManager.Instance.PlayDeadSe();
+        AudioManager.Instance.PlayPlayerDeadSe();
         SceneManager.LoadScene("GameOver");
     }
     #endregion

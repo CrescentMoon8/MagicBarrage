@@ -2440,8 +2440,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1418.9, y: 0}
-  m_SizeDelta: {x: 1665.9, y: 2532}
+  m_AnchoredPosition: {x: 1658.3, y: 0}
+  m_SizeDelta: {x: 2144.8, y: 2532}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &656107233
 MonoBehaviour:
@@ -2787,7 +2787,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &852727766
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3100,8 +3100,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1418.9, y: 0}
-  m_SizeDelta: {x: 1665.8, y: 2532}
+  m_AnchoredPosition: {x: -1658.78, y: 0}
+  m_SizeDelta: {x: 2145.66, y: 2532}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &936343790
 MonoBehaviour:
@@ -3578,8 +3578,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1c0354f36e0ad4481dfe333a818d36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damageSe: {fileID: 8300000, guid: aa5167219a0eaa14390aaad3958bdadb, type: 3}
-  _deadSe: {fileID: 8300000, guid: f652757d4f6c66e4eb306ad86fecc207, type: 3}
+  _playerDamageSe: {fileID: 0}
+  _playerDeadSe: {fileID: 0}
+  _playerShotSe: {fileID: 0}
 --- !u!1 &1098466707
 GameObject:
   m_ObjectHideFlags: 0
@@ -8621,7 +8622,7 @@ CircleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2064983171}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:

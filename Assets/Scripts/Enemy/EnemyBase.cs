@@ -7,10 +7,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// エネミーのHPを管理するクラス
+/// RigidBody2DとCircleCollider2Dの実装を必須とする
+/// </summary>
 [RequireComponent(typeof(Rigidbody2D), typeof(CircleCollider2D))]
 public class EnemyBase : MonoBehaviour, IDamageable
 {
 	#region 変数
+	// HPバーの位置を調整するための定数
 	private const float HPBAR_ADJUST_POS_Y = 0.44f;
     [SerializeField]
 	protected Slider _hpSlider = default;
@@ -25,10 +30,6 @@ public class EnemyBase : MonoBehaviour, IDamageable
 
 	private delegate void DownEnemyCount(GameObject enemy);
 	private DownEnemyCount _downEnemyCountCallBack = default;
-
-	#endregion
-
-	#region プロパティ
 
 	#endregion
 
@@ -62,6 +63,9 @@ public class EnemyBase : MonoBehaviour, IDamageable
         _hpSlider.transform.position = hpBarPos;
     }
 
+	/// <summary>
+	/// エネミーのダメージ処理を行う
+	/// </summary>
 	public void Damage()
 	{
 		// 初めてダメージを受けたときにHpバーを表示させる
@@ -78,15 +82,21 @@ public class EnemyBase : MonoBehaviour, IDamageable
 
 		if (_hpValue <= 0 && _circleCollider2D.enabled)
 		{
+			// 複数回実行されるのを防ぐためにColliderを無効化する
 			_circleCollider2D.enabled = false;
 			EnemyDead();
 		}
 	}
 
+	/// <summary>
+	/// エネミーの死亡処理を行う
+	/// </summary>
 	private void EnemyDead()
 	{
 		_downEnemyCountCallBack(this.gameObject);
 		_hpSlider.gameObject.SetActive(false);
+
+		// アイテムをプールから取り出す
 		_itemPool.LendItem(this.transform.position);
 		this.gameObject.SetActive(false);
 	}

@@ -17,46 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 7fdc9cd33787b594aa89d131bfeb9f8a
   m_SerializeEntries:
-  - m_GUID: ae5c99de712f0364eb20652502f39ac6
-    m_Address: RedNomalBullet
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 59f159465a0a1264a811c12aec2964cb
-    m_Address: RedNeedleBullet
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 0581af1a9ece0f746abb40e002794af9
-    m_Address: BlueNomalBullet
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: bb208d6d4fc29844da7a7979ac92f7ee
-    m_Address: BlueNeedleBullet
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: bbd180f9aa9f3c143b131324899ef460
-    m_Address: YerrowNomalBullet
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: fdab0b06cfa4e344aa768ca532381ffc
-    m_Address: YerrowNeedleBullet
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 18bf813322bf6774b9330888c4e3096d
-    m_Address: GreenNomalBullet
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 3b2b99293d7431c47a8a1e91d1bb004a
-    m_Address: GreenNeedleBullet
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 38b975c32ed9ef640925e823bca17a64
     m_Address: BulletInfo
     m_ReadOnly: 0
