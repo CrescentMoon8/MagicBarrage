@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// PuttingEnemyBullet.cs
+// PuttingShot.cs
 //
 // 作成日:2024/02/06
 // 作成者:小林慎
@@ -9,14 +9,14 @@ using UnityEngine;
 /// <summary>
 /// エネミーの弾の配置処理を行うクラス
 /// </summary>
-public class EnemyBulletPut
+public class EnemyShot
 {
     #region 変数
     private float _shotTime = 0f;
 
     private float _radius = 0f;
 
-    public EnemyBulletPut(float radius)
+    public EnemyShot(float radius)
 	{
         _radius = radius;
 	}

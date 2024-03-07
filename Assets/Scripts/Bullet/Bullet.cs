@@ -100,7 +100,7 @@ public class Bullet : MonoBehaviour
     /// <summary>
     /// 変数の初期化処理
     /// </summary>
-    private void Start()
+    private void Awake()
 	{
         _playerObject = GameObject.FindWithTag("Player");
         _iPlayerPos = _playerObject.GetComponent<IPlayerPos>();

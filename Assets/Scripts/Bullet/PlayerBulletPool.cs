@@ -31,7 +31,7 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 
 	#region メソッド
 	/// <summary>
-	/// 初期化処理
+	/// 弾のオブジェクトプールの初期化処理
 	/// </summary>
 	public void BulletAwake()
 	{

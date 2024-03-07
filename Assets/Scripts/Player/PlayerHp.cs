@@ -6,7 +6,6 @@
 // ---------------------------------------------------------
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// プレイヤーのダメージ処理とダメージアニメーションを行うクラス
@@ -110,7 +109,7 @@ public class PlayerHp : IDamageable
     private void Dead()
     {
         AudioManager.Instance.PlayPlayerDeadSe();
-        SceneManager.LoadScene("GameOver");
+        GameManager.Instance.SettingGameState = GameManager.GameState.GameOver;
     }
     #endregion
 }

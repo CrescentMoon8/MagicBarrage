@@ -54,7 +54,6 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
 	/// </summary>
 	public void PlayPlayerShotSe()
     {
-		Debug.Log("a");
 		_audioSource.PlayOneShot(_playerShotSe);
 	}
 	#endregion

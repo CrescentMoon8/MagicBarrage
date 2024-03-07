@@ -22,8 +22,6 @@ public class Item : MonoBehaviour
 
 	public delegate void ReturnPool(Item item);
 	private ReturnPool _returnPoolCallBack = default;
-
-	private ScoreManager _scoreManager = default;
 	#endregion
 
 	#region プロパティ
@@ -36,7 +34,6 @@ public class Item : MonoBehaviour
 	/// </summary>
 	private void Awake()
 	{
-		_scoreManager = GameObject.FindWithTag("Scripts").GetComponentInChildren<ScoreManager>();
 		_boxCollider2D = GetComponent<BoxCollider2D>();
 	}
 
@@ -62,8 +59,8 @@ public class Item : MonoBehaviour
 			_boxCollider2D.enabled = false;
 
 			// スコアの加算処理とテキストの更新処理
-			_scoreManager.AddScore(scorePoint);
-			_scoreManager.ChangeScoreText();
+			ScoreManager.Instance.AddScore(scorePoint);
+			ScoreManager.Instance.ChangeScoreText();
 			
 			// アイテムをプールに返却する
 			_returnPoolCallBack(this);

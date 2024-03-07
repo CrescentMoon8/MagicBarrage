@@ -36,7 +36,7 @@ public class PlayerManager : MonoBehaviour, IPlayerPos
 
     private PlayerInput _playerInput = default;
 	private PlayerMove _playerMove = default;
-	private PlayerBulletPut _playerShot = default;
+	private PlayerShot _playerShot = default;
 	private PlayerHp _playerHp = default;
 
 #if UNITY_STANDALONE_WIN
@@ -62,20 +62,18 @@ public class PlayerManager : MonoBehaviour, IPlayerPos
 
 		_playerInput = new PlayerInput();
 		_playerMove = new PlayerMove();
-		_playerShot = new PlayerBulletPut();
+		_playerShot = new PlayerShot();
 		_playerHp = new PlayerHp(GetComponent<CircleCollider2D>(), GetComponent<SpriteRenderer>(), GetComponent<Animator>(), _brokenHeart);
 
 		_playerInput.Initialize();
 		_playerMove.Initialize(this.transform.localScale, _header, _footer);
 		_playerHp.Initialize(_lifeUiParent);
-
-		PlayerBulletPool.Instance.BulletAwake();
 	}
 
-	/// <summary>
-	/// 更新処理
-	/// </summary>
-	private void Update ()
+    /// <summary>
+    /// 更新処理
+    /// </summary>
+    private void Update ()
 	{
 		_playerShot.AddShotTime();
 

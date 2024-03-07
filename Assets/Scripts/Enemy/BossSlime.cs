@@ -31,7 +31,7 @@ public class BossSlime : EnemyBase
 
 	private Event _bossShot;
 
-	private EnemyBulletPut _enemyBulletPut = default;
+	private EnemyShot _enemyBulletPut = default;
 	private EnemyMove _enemyMove = default;
 	private BulletInfo _bulletInfo = default;
 	private EnemyDataBase _enemyDataBase = default;
@@ -46,7 +46,7 @@ public class BossSlime : EnemyBase
     #region メソッド
     private void OnEnable ()
     {
-		_enemyBulletPut = new EnemyBulletPut(this.transform.localScale.x / 2);
+		_enemyBulletPut = new EnemyShot(this.transform.localScale.x / 2);
 		_enemyMove = new EnemyMove();
 
 		_bulletInfo = Addressables.LoadAssetAsync<BulletInfo>("BulletInfo").WaitForCompletion();

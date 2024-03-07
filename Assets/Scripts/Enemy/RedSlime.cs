@@ -24,7 +24,7 @@ public class RedSlime : EnemyBase
 
 	private const float SHOT_INTERVAL = 2f;
 
-	private EnemyBulletPut _enemyBulletPut = default;
+	private EnemyShot _enemyBulletPut = default;
 	private EnemyMove _enemyMove = default;
 	private BulletInfo _bulletInfo = default;
 	private EnemyDataBase _enemyDataBase = default;
@@ -38,7 +38,7 @@ public class RedSlime : EnemyBase
     /// </summary>
     private void OnEnable ()
 	{
-		_enemyBulletPut = new EnemyBulletPut(this.transform.localScale.x / 2);
+		_enemyBulletPut = new EnemyShot(this.transform.localScale.x / 2);
 		_enemyMove = new EnemyMove();
 
 		_bulletInfo = Addressables.LoadAssetAsync<BulletInfo>("BulletInfo").WaitForCompletion();

@@ -6,20 +6,24 @@
 // ---------------------------------------------------------
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+public class GameManager : SingletonMonoBehaviour<GameManager>
 {
 	#region 変数
-	private enum GameState
+	public enum GameState
     {
 		Start,
 		Pose,
 		Play,
-		Score,
-		End
+		GameOver,
+		Result
     }
 
 	private GameState _gameState = GameState.Start;
+
+	private string _gameOverSceneName = "GameOver";
+	private string _clearSceneName = "Result";
 
 	[SerializeField]
 	private Image _posePanel = default;
@@ -31,26 +35,10 @@ public class GameManager : MonoBehaviour
 	#endregion
 
 	#region プロパティ
-
+	public GameState SettingGameState { set { _gameState = value; } }
 	#endregion
 
 	#region メソッド
-	/// <summary>
-	/// 初期化処理
-	/// </summary>
-	private void Awake()
-	{
-		
-	}
-
-	/// <summary>
-	/// 更新前処理
-	/// </summary>
-	private void Start ()
-	{
-		
-	}
-
 	/// <summary>
 	/// 更新処理
 	/// </summary>
@@ -65,6 +53,11 @@ public class GameManager : MonoBehaviour
 				{
 					Time.timeScale = 1;
 				}
+
+				PlayerBulletPool.Instance.BulletAwake();
+				EnemyBulletPool.Instance.BulletAwake();
+
+				_gameState = GameState.Play;
                 break;
 
             case GameState.Pose:
@@ -73,11 +66,15 @@ public class GameManager : MonoBehaviour
             case GameState.Play:
                 break;
 
-            case GameState.Score:
-                break;
+            case GameState.GameOver:
+				ScoreManager.Instance.ScoreSave();
+				SceneManager.LoadScene(_gameOverSceneName, LoadSceneMode.Single);
+				break;
 
-            case GameState.End:
-                break;
+			case GameState.Result:
+				ScoreManager.Instance.ScoreSave();
+				SceneManager.LoadScene(_clearSceneName, LoadSceneMode.Single);
+				break;
 
             default:
                 break;

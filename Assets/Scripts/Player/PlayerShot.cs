@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// PlayerBulletPut.cs
+// PlayerShot.cs
 //
 // 作成日:2024/02/14
 // 作成者:小林慎
@@ -9,7 +9,7 @@ using UnityEngine;
 /// <summary>
 /// プレイヤーの弾の配置処理を行うクラス
 /// </summary>
-public class PlayerBulletPut
+public class PlayerShot
 {
     #region 変数
     private float _shotTime = 0.1f;

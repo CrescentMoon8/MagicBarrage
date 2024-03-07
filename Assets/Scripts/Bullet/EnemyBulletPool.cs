@@ -40,9 +40,9 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 
     #region メソッド
     /// <summary>
-    /// 初期化処理
+    /// 弾のオブジェクトプールの初期化処理
     /// </summary>
-    private void Awake()
+    public void BulletAwake()
 	{
 		_enemyBulletsPool.Clear();
 

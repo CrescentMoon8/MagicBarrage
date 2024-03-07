@@ -111,8 +111,8 @@ public class EnemyPhaseManager : MonoBehaviour, IEnemyList
                 break;
 
 			case PhaseState.End:
-                SceneManager.LoadScene("Result");
-				break;
+                GameManager.Instance.SettingGameState = GameManager.GameState.Result;
+                break;
 
 			default:
 				break;
