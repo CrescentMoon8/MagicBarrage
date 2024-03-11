@@ -7,7 +7,7 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-public class PurpleSlime : EnemyBase
+public class PurpleSlime : EnemyHp
 {
 	#region 変数
 	// 撃ちたい角度
@@ -55,6 +55,14 @@ public class PurpleSlime : EnemyBase
 		// Debug.Log(_splineContainer.Splines[0].EvaluatePosition(0).y);
 	}
 
+	/// <summary>
+	/// 非アクティブになったときにBulletInfoをアンロードする
+	/// </summary>
+	private void OnDisable()
+	{
+		Addressables.Release(_bulletInfo);
+	}
+
     /// <summary>
     /// 更新処理
     /// </summary>
@@ -64,16 +72,11 @@ public class PurpleSlime : EnemyBase
 
 		base.FollowHpBar(this.transform.position);
 
-
-		if (_enemyBulletPut.IsShot(SHOT_INTERVAL))
+		if (_isInsideCamera && _enemyBulletPut.IsShot(SHOT_INTERVAL))
 		{
-            /*// 三方向に扇形の弾を撃つ
-			for (int i = 0; i < 3; i++)
-			{
-				base.RoundShot(this.transform.position, _maxAngle, _angleSplit, _direction, 0, Bullet.MoveType.Line);
-				_direction -= 90;
-			}*/
-            _enemyBulletPut.RoundShot(this.transform.position, _angleSplit, _targetAngle, _bulletInfo.PURPLE_NOMAL_BULLET, Bullet.MoveType.Line);
+			// 射撃に必要なパラメータを生成する
+			ShotParameter roundShotParameter = new ShotParameter(this.transform.position, _targetAngle, _angleSplit, _bulletInfo.PURPLE_NOMAL_BULLET, Bullet.MoveType.Line);
+			_enemyBulletPut.RoundShot(roundShotParameter);
 
 			_enemyBulletPut.ResetShotTime();
 		}

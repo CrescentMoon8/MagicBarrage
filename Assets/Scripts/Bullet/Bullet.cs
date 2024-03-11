@@ -60,7 +60,6 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private SpeedChangeType _speedChangeType = SpeedChangeType.None;
 
-    private GameObject _playerObject = default;
     private IPlayerPos _iPlayerPos = default;
     // プレイヤーが持つダメージ用インターフェース
     private IDamageable _playerIDamageable = default;
@@ -102,9 +101,9 @@ public class Bullet : MonoBehaviour
     /// </summary>
     private void Awake()
 	{
-        _playerObject = GameObject.FindWithTag("Player");
-        _iPlayerPos = _playerObject.GetComponent<IPlayerPos>();
-        _playerIDamageable = _playerObject.GetComponent<PlayerManager>().GettingPlayerHp;
+        GameObject playerObject = GameObject.FindWithTag("Player");
+        _iPlayerPos = playerObject.GetComponent<IPlayerPos>();
+        _playerIDamageable = playerObject.GetComponent<PlayerManager>().GettingPlayerHp;
         _particlePool = GameObject.FindWithTag("Scripts").GetComponentInChildren<ParticlePool>();
         _iEnemyList = GameObject.FindWithTag("Scripts").GetComponentInChildren<IEnemyList>();
     }

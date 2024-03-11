@@ -7,7 +7,7 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-public class YellowSlime : EnemyBase
+public class YellowSlime : EnemyHp
 {
     #region 変数
     // 撃ちたい角度
@@ -60,6 +60,14 @@ public class YellowSlime : EnemyBase
     }
 
     /// <summary>
+	/// 非アクティブになったときにBulletInfoをアンロードする
+	/// </summary>
+    private void OnDisable()
+    {
+        Addressables.Release(_bulletInfo);
+    }
+
+    /// <summary>
     /// 更新処理
     /// </summary>
     private void Update()
@@ -70,7 +78,7 @@ public class YellowSlime : EnemyBase
 
         base.FollowHpBar(this.transform.position);
 
-        if (_enemyBulletPut.IsShot(SHOT_INTERVAL))
+        if (_isInsideCamera && _enemyBulletPut.IsShot(SHOT_INTERVAL))
         {
             /* 
 			 * 指定した秒数間隔で指定した回数撃つ
@@ -82,7 +90,9 @@ public class YellowSlime : EnemyBase
 
             if (_bulletTime >= BULLET_INTERVAL && _bulletCount < BULLET_AMOUNT)
             {
-                _enemyBulletPut.LineShot(this.transform.position, _targetAngle, _bulletInfo.YERROW_NOMAL_BULLET, Bullet.MoveType.Line);
+                // 射撃に必要なパラメータを生成する
+                ShotParameter lineShotParameter = new ShotParameter(this.transform.position, _targetAngle, _bulletInfo.YERROW_NOMAL_BULLET, Bullet.MoveType.Line);
+                _enemyBulletPut.LineShot(lineShotParameter);
                 //base._puttingEnemyBullet.FanShot(this.transform.position, _centerAngle, _angleSplit, _angleWidth, 4, Bullet.MoveType.Line);
                 //base._puttingEnemyBullet.RoundShot(this.transform.position, _angleSplit, _targetAngle, _bulletInfo.YERROW_NOMAL_BULLET, Bullet.MoveType.Line);
 

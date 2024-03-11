@@ -13,7 +13,7 @@ public class Item : MonoBehaviour
 {
 	#region 変数
 	[SerializeField]
-	private int scorePoint = 100;
+	private int scorePoint = 1000;
 
 	// アイテムの落下速度（大きければ遅く、小さければ早くなる）
 	private float _gravityRate = 45f;

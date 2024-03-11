@@ -7,7 +7,7 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-public class RedSlime : EnemyBase
+public class RedSlime : EnemyHp
 {
 	#region 変数
 	// 撃ちたい角度
@@ -77,7 +77,7 @@ public class RedSlime : EnemyBase
 
 		base.FollowHpBar(this.transform.position);
 
-		if (_enemyBulletPut.IsShot(SHOT_INTERVAL))
+		if (_isInsideCamera && _enemyBulletPut.IsShot(SHOT_INTERVAL))
 		{
 			/* 
 			 * 指定した秒数間隔で指定した回数撃つ
@@ -96,9 +96,13 @@ public class RedSlime : EnemyBase
 				// 追尾弾の初弾と同時に扇形の通常弾を打つ
 				if(_bulletCount == 0)
                 {
-					_enemyBulletPut.FanShot(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
+					// 射撃に必要なパラメータを生成する
+					ShotParameter fanShotParameter = new ShotParameter(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
+					_enemyBulletPut.FanShot(fanShotParameter);
 				}
-				_enemyBulletPut.LineShot(this.transform.position, _targetAngle, _bulletInfo.RED_NEEDLE_BULLET, Bullet.MoveType.Tracking);
+				// 射撃に必要なパラメータを生成する
+				ShotParameter lineShotParameter = new ShotParameter(this.transform.position, _targetAngle, _bulletInfo.RED_NEEDLE_BULLET, Bullet.MoveType.Tracking);
+				_enemyBulletPut.LineShot(lineShotParameter);
 
 				_bulletCount++;
 				_bulletTime = 0;

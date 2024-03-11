@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// PuttingShot.cs
+// EnemyShot.cs
 //
 // 作成日:2024/02/06
 // 作成者:小林慎
@@ -30,13 +30,13 @@ public class EnemyShot
 	/// <summary>
 	/// 弾を指定された方向に直線で撃ち出す
 	/// </summary>
-    public void LineShot(Vector3 shooterPos, float angle, int bulletNumber, Bullet.MoveType moveType)
+    public void LineShot(ShotParameter shotParameter)
     {
-        Bullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shooterPos, bulletNumber);
+        Bullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotParameter.ShooterPos, shotParameter.BulletNumber);
 
-        bullet.SettingMoveType = moveType;
+        bullet.SettingMoveType = shotParameter.MoveType;
 
-        bullet.transform.rotation = Quaternion.Euler(Vector3.forward * angle);
+        bullet.transform.rotation = Quaternion.Euler(Vector3.forward * shotParameter.CenterAngle);
     }
 
     /// <summary>
@@ -44,64 +44,61 @@ public class EnemyShot
     /// 撃つ範囲を引数で設定する
 	/// 例：centerAngle = 180, angleSplit = 9, angleWidth = 45の場合は下向きの中心角が90度の扇形の弧を9分割する
     /// </summary>
-    /// <param name="shooterPos">射手の座標</param>
-    /// <param name="centerAngle">撃ちたい角度</param>
-    /// <param name="angleSplit">角度を何分割するか</param>
-    /// <param name="angleWidth">撃ちたい角度からの角度幅</param>
-    /// <param name="bulletNumber">弾の種類</param>
-    /// <param name="moveType">弾の軌道</param>
-    public void FanShot(Vector3 shooterPos, float centerAngle, float angleSplit, int angleWidth, int bulletNumber, Bullet.MoveType moveType)
+    public void FanShot(ShotParameter shotParameter)
 	{
         // 座標計算を始める角度
-        float minAngle = centerAngle - angleWidth;
+        float minAngle = shotParameter.CenterAngle - shotParameter.AngleWidth;
         // 座標計算を行う角度（minAngleからの角度）
-        float maxAngle = 2 * angleWidth;
+        float maxAngle = 2 * shotParameter.AngleWidth;
 
-        for (int i = 0; i < angleSplit; i++)
+        for (int i = 0; i < shotParameter.AngleSplit; i++)
         {
 			// 0の位置がUnity上の-90にあたるため、ADJUST_ANGLEを足すことでUnityに合わせる
             // そのうえで、開始位置をずらすためにminAngleを足す
-            Vector3 shotPos = Calculation.CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i + minAngle, _radius);
+            Vector3 shotPos = Calculation.CirclePosCalculate(shotParameter.ShooterPos, (maxAngle / shotParameter.AngleSplit) * i + minAngle, _radius);
 
-			Bullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotPos, bulletNumber);
+			Bullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotPos, shotParameter.BulletNumber);
 
-            bullet.SettingMoveType = moveType;
+            bullet.SettingMoveType = shotParameter.MoveType;
 
-			bullet.transform.rotation = Quaternion.Euler(Vector3.forward * ((maxAngle / angleSplit) * i + minAngle));
+			bullet.transform.rotation = Quaternion.Euler(Vector3.forward * ((maxAngle / shotParameter.AngleSplit) * i + minAngle));
         }
     }
 
     /// <summary>
     /// 円形に弾幕を撃つ
     /// </summary>
-    /// <param name="shooterPos">射手の位置</param>
-    /// <param name="angleSplit">角度を何分割するか</param>
-    /// <param name="shiftAngle">生成開始角度</param>
-    /// <param name="bulletNumber">弾の番号</param>
-    /// <param name="moveType">弾の軌道</param>
-    public void RoundShot(Vector3 shooterPos, float angleSplit, float shiftAngle, int bulletNumber, Bullet.MoveType moveType)
+    public void RoundShot(ShotParameter shotParameter)
     {
         // 中心角の最大
         float maxAngle = 360;
 
-        for (int i = 0; i < angleSplit; i++)
+        for (int i = 0; i < shotParameter.AngleSplit; i++)
         {
             // 0の位置がUnity上の-90にあたるため、ADJUST_ANGLEを足すことでUnityに合わせる
-            Vector3 shotPos = Calculation.CirclePosCalculate(shooterPos, (maxAngle / angleSplit) * i + shiftAngle, _radius);
+            Vector3 shotPos = Calculation.CirclePosCalculate(shotParameter.ShooterPos, (maxAngle / shotParameter.AngleSplit) * i + shotParameter.CenterAngle, _radius);
 
-            Bullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotPos, bulletNumber);
+            Bullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotPos, shotParameter.BulletNumber);
 
-            bullet.SettingMoveType = moveType;
+            bullet.SettingMoveType = shotParameter.MoveType;
 
-            bullet.transform.rotation = Quaternion.Euler(Vector3.forward * ((maxAngle / angleSplit) * i + shiftAngle));
+            bullet.transform.rotation = Quaternion.Euler(Vector3.forward * ((maxAngle / shotParameter.AngleSplit) * i + shotParameter.CenterAngle));
         }
     }
 
+    /// <summary>
+    /// 次の射撃までの時間を加算する
+    /// </summary>
     private void ShotTimeCount()
     {
         _shotTime += Time.deltaTime;
     }
 
+    /// <summary>
+    /// 指定された時間が経過したか
+    /// </summary>
+    /// <param name="shotInterval"></param>
+    /// <returns></returns>
     public bool IsShot(float shotInterval)
     {
         ShotTimeCount();
@@ -114,6 +111,9 @@ public class EnemyShot
         return false;
     }
 
+    /// <summary>
+    /// 次の射撃までの時間をリセットする
+    /// </summary>
     public void ResetShotTime()
     {
         _shotTime = 0;

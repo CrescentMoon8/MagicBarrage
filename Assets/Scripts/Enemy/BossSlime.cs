@@ -7,7 +7,7 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-public class BossSlime : EnemyBase
+public class BossSlime : EnemyHp
 {
 	#region 変数
 
@@ -62,6 +62,14 @@ public class BossSlime : EnemyBase
 		Addressables.Release(_enemyDataBase);
 	}
 
+	/// <summary>
+	/// 非アクティブになったときにBulletInfoをアンロードする
+	/// </summary>
+	private void OnDisable()
+	{
+		Addressables.Release(_bulletInfo);
+	}
+
     /// <summary>
     /// 更新処理
     /// </summary>
@@ -69,27 +77,21 @@ public class BossSlime : EnemyBase
     {
         this.transform.position = _enemyMove.NextMovePos();
 
-		//base._playerPos = base._player.transform.position;
-
 		ShootWindmillBullet();
 
+		if (_isInsideCamera && _enemyBulletPut.IsShot(SHOT_INTERVAL))
+		{
+			// 射撃に必要なパラメータを生成する
+			ShotParameter fanShotParameter1 = new ShotParameter(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
+			_enemyBulletPut.FanShot(fanShotParameter1);
 
-        if (_enemyBulletPut.IsShot(SHOT_INTERVAL))
-        {
-			/*// 三方向に扇形の弾を撃つ
-			for (int i = 0; i < 3; i++)
-			{
-				base.RoundShot(this.transform.position, _maxAngle, _angleSplit, _direction, 0, Bullet.MoveType.Line);
-				_direction -= 90;
-			}*/
-
-			//_targetAngle = 180;
-			_enemyBulletPut.FanShot(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
-			_enemyBulletPut.FanShot(this.transform.position, _targetAngle + 180, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
+			// 射撃に必要なパラメータを生成する
+			ShotParameter fanShotParameter2 = new ShotParameter(this.transform.position, _targetAngle + 180, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
+			_enemyBulletPut.FanShot(fanShotParameter2);
 
 			_enemyBulletPut.ResetShotTime();
-        }
-    }
+		}
+	}
 
     private void ShootWindmillBullet()
     {
@@ -105,7 +107,8 @@ public class BossSlime : EnemyBase
 
 		if (_bulletTime >= BULLET_INTERVAL && _bulletCount < BULLET_AMOUNT)
 		{
-			_enemyBulletPut.RoundShot(this.transform.position, _windmillAngleSplit, _targetAngle, _bulletInfo.PURPLE_NOMAL_BULLET, Bullet.MoveType.Line);
+			ShotParameter roundShotParameter = new ShotParameter(this.transform.position, _targetAngle, _windmillAngleSplit, _bulletInfo.PURPLE_NOMAL_BULLET, Bullet.MoveType.Line);
+			_enemyBulletPut.RoundShot(roundShotParameter);
 			_bulletCount++;
 			_bulletTime = 0;
 			_targetAngle += 360 / BULLET_AMOUNT;

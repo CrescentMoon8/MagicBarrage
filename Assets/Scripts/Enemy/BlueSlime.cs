@@ -7,7 +7,7 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-public class BlueSlime : EnemyBase
+public class BlueSlime : EnemyHp
 {
 	#region 変数
 	// 撃ちたい角度
@@ -55,30 +55,30 @@ public class BlueSlime : EnemyBase
 		_enemyMove.DifferencePosInitialize(this.transform.position);
 
 		Addressables.Release(_enemyDataBase);
-		// _splineContainer.Splines[0].EvaluatePosition(0) → Spline0の始点の座標
-		// _splineContainer.Splines[1].EvaluatePosition(0) → Spline1の始点の座標
-		// Debug.Log(_splineContainer.Splines[0].EvaluatePosition(0).y);
 	}
 
-    /// <summary>
-    /// 更新処理
-    /// </summary>
-    private void Update ()
+	/// <summary>
+	/// 非アクティブになったときにBulletInfoをアンロードする
+	/// </summary>
+	private void OnDisable()
+	{
+		Addressables.Release(_bulletInfo);
+	}
+
+	/// <summary>
+	/// 更新処理
+	/// </summary>
+	private void Update ()
 	{
 		this.transform.position = _enemyMove.NextMovePos();
 
 		base.FollowHpBar(this.transform.position);
 
-		if (_enemyBulletPut.IsShot(SHOT_INTERVAL))
+		if (_isInsideCamera && _enemyBulletPut.IsShot(SHOT_INTERVAL))
 		{
-            /*// 三方向に扇形の弾を撃つ
-			for (int i = 0; i < 3; i++)
-			{
-				base.RoundShot(this.transform.position, _maxAngle, _angleSplit, _direction, 0, Bullet.MoveType.Line);
-				_direction -= 90;
-			}*/
-
-            _enemyBulletPut.FanShot(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.BLUE_NOMAL_BULLET, Bullet.MoveType.Line);
+			// 射撃に必要なパラメータを生成する
+			ShotParameter fanShotParameter = new ShotParameter(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.BLUE_NOMAL_BULLET, Bullet.MoveType.Line);
+			_enemyBulletPut.FanShot(fanShotParameter);
 
 			_enemyBulletPut.ResetShotTime();
 		}

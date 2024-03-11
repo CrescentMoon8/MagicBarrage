@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// EnemyBase.cs
+// EnemyHp.cs
 //
 // 作成日:2024/02/06
 // 作成者:小林慎
@@ -12,7 +12,7 @@ using UnityEngine.UI;
 /// RigidBody2DとCircleCollider2Dの実装を必須とする
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D), typeof(CircleCollider2D))]
-public class EnemyBase : MonoBehaviour, IDamageable
+public class EnemyHp : MonoBehaviour, IDamageable
 {
 	#region 変数
 	// HPバーの位置を調整するための定数
@@ -24,6 +24,8 @@ public class EnemyBase : MonoBehaviour, IDamageable
 	protected IPlayerPos _iPlayerPos = default;
 	[SerializeField]
 	protected bool _isPlayerTarget = false;
+
+	protected bool _isInsideCamera = false;
 
 	private ItemPool _itemPool = default;
 	private CircleCollider2D _circleCollider2D = default;
@@ -45,6 +47,11 @@ public class EnemyBase : MonoBehaviour, IDamageable
 		_circleCollider2D = GetComponent<CircleCollider2D>();
 
 		_downEnemyCountCallBack = GameObject.FindWithTag("Scripts").GetComponentInChildren<EnemyPhaseManager>().DownEnemyCount;
+    }
+
+    private void OnBecameVisible()
+    {
+		_isInsideCamera = true;
     }
 
     /*public Vector2 BezierCalculation(Vector2 start, Vector2 relay, Vector2 goal, float time)
