@@ -9,10 +9,6 @@ using UnityEngine.SceneManagement;
 
 public class MoveGameSceneButton : MonoBehaviour
 {
-	#region 変数
-
-	#endregion
-
 	#region メソッド
 	public void MoveGameScene()
     {

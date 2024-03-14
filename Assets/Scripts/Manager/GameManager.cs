@@ -36,13 +36,25 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
 	#region プロパティ
 	public GameState SettingGameState { set { _gameState = value; } }
-	#endregion
+    #endregion
 
-	#region メソッド
-	/// <summary>
-	/// 更新処理
-	/// </summary>
-	private void Update ()
+    #region メソッド
+#if UNITY_IOS
+    private void Awake()
+    {
+        Application.targetFrameRate = 60;
+    }
+#elif UNITY_STANDALONE_WIN
+    private void Awake()
+    {
+        Application.targetFrameRate = 0;
+    }
+#endif
+
+    /// <summary>
+    /// 更新処理
+    /// </summary>
+    private void Update ()
 	{
         switch (_gameState)
         {
@@ -72,6 +84,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 				break;
 
 			case GameState.Result:
+#if UNITY_IOS
+                Application.targetFrameRate = 30;
+#endif
 				ScoreManager.Instance.ScoreSave();
 				SceneManager.LoadScene(_clearSceneName, LoadSceneMode.Single);
 				break;
@@ -100,5 +115,5 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             _gameState = GameState.Play;
         }
     }
-    #endregion
+#endregion
 }
