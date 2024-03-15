@@ -5,10 +5,8 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
-using System;
-using System.Collections;
 
-public class BulletParticle : MonoBehaviour
+public class ParticleScript : MonoBehaviour
 {
 	#region 変数
     public enum ParticleType
@@ -25,7 +23,7 @@ public class BulletParticle : MonoBehaviour
 
     private int _particleNumber = -1;
 
-    public delegate void ReturnParticle(BulletParticle bulletParticle, int particleNumber);
+    public delegate void ReturnParticle(ParticleScript particleScript, int particleNumber);
     private ReturnParticle _returnParticleCallBack;
     #endregion
 

@@ -29,13 +29,16 @@ public class PlayerHp : IDamageable
     private CircleCollider2D _circleCollider2D = default;
     private SpriteRenderer _spriteRenderer = default;
     private Animator _playerAnimator = default;
+    private PlayerParticlePool _playerParticlePool = default;
+    private IPlayerPos _iPlayerPos = default;
 
-    public PlayerHp(CircleCollider2D circleCollider2D, SpriteRenderer spriteRenderer, Animator playerAnimator, Sprite brokenHeartSprite)
+    public PlayerHp(CircleCollider2D circleCollider2D, SpriteRenderer spriteRenderer, Animator playerAnimator, PlayerParticlePool particlePool, IPlayerPos iPlayerPos)
     {
-        _brokenHeart = brokenHeartSprite;
         _circleCollider2D = circleCollider2D;
         _spriteRenderer = spriteRenderer;
         _playerAnimator = playerAnimator;
+        _playerParticlePool = particlePool;
+        _iPlayerPos = iPlayerPos;
     }
     #endregion
 
@@ -44,12 +47,14 @@ public class PlayerHp : IDamageable
     /// 親オブジェクトからプレイヤーの残機UIを取得する
     /// </summary>
     /// <param name="lifeUiParent">プレイヤーの残機UIの親オブジェクト</param>
-    public void Initialize(Transform lifeUiParent)
+    public void Initialize(Transform lifeUiParent, Sprite brokenHeartSprite)
     {
         for (int i = 0; i < _lifeUi.Length; i++)
         {
             _lifeUi[i] = lifeUiParent.transform.GetChild(i).GetComponent<Image>();
         }
+
+        _brokenHeart = brokenHeartSprite;
     }
 
     /// <summary>
@@ -108,6 +113,8 @@ public class PlayerHp : IDamageable
     // プレイヤーの死亡処理
     private void Dead()
     {
+        ParticleScript particleScript = _playerParticlePool.LendPlayerParticle(_iPlayerPos.PlayerPos);
+        particleScript.Play();
         AudioManager.Instance.PlayPlayerDeadSe();
         GameManager.Instance.SettingGameState = GameManager.GameState.GameOver;
     }

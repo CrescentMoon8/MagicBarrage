@@ -44,7 +44,10 @@ public class RedSlime : EnemyHp
 		_bulletInfo = Addressables.LoadAssetAsync<BulletInfo>("BulletInfo").WaitForCompletion();
 		_enemyDataBase = Addressables.LoadAssetAsync<EnemyDataBase>("EnemyDataBase").WaitForCompletion();
 
-		base._hpValue = _enemyDataBase._enemyDataList[_enemyDataBase.RED_SLIME]._maxHp;
+		EnemyData enemyData = _enemyDataBase._enemyDataList[_enemyDataBase.RED_SLIME];
+		base._enemyNumber = _enemyDataBase.RED_SLIME;
+
+		base._hpValue = enemyData._maxHp;
 		base._hpSlider.maxValue = base._hpValue;
 		base._hpSlider.value = base._hpValue;
 
@@ -97,11 +100,11 @@ public class RedSlime : EnemyHp
 				if(_bulletCount == 0)
                 {
 					// 射撃に必要なパラメータを生成する
-					ShotParameter fanShotParameter = new ShotParameter(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line);
+					ShotParameter fanShotParameter = new ShotParameter(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line, Bullet.SpeedType.Middle);
 					_enemyBulletPut.FanShot(fanShotParameter);
 				}
 				// 射撃に必要なパラメータを生成する
-				ShotParameter lineShotParameter = new ShotParameter(this.transform.position, _targetAngle, _bulletInfo.RED_NEEDLE_BULLET, Bullet.MoveType.Tracking);
+				ShotParameter lineShotParameter = new ShotParameter(this.transform.position, _targetAngle, _bulletInfo.RED_NEEDLE_BULLET, Bullet.MoveType.Tracking, Bullet.SpeedType.Middle);
 				_enemyBulletPut.LineShot(lineShotParameter);
 
 				_bulletCount++;

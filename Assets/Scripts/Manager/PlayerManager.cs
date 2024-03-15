@@ -63,11 +63,15 @@ public class PlayerManager : MonoBehaviour, IPlayerPos
 		_playerInput = new PlayerInput();
 		_playerMove = new PlayerMove();
 		_playerShot = new PlayerShot();
-		_playerHp = new PlayerHp(GetComponent<CircleCollider2D>(), GetComponent<SpriteRenderer>(), GetComponent<Animator>(), _brokenHeart);
+		_playerHp = new PlayerHp(GetComponent<CircleCollider2D>(), 
+								GetComponent<SpriteRenderer>(), 
+								GetComponent<Animator>(), 
+								GameObject.FindWithTag("Scripts").GetComponentInChildren<PlayerParticlePool>(), 
+								this);
 
 		_playerInput.Initialize();
-		_playerMove.Initialize(this.transform.localScale, _header, _footer);
-		_playerHp.Initialize(_lifeUiParent);
+		_playerMove.Initialize(this.transform.localScale);
+		_playerHp.Initialize(_lifeUiParent, _brokenHeart);
 	}
 
     /// <summary>
@@ -85,6 +89,7 @@ public class PlayerManager : MonoBehaviour, IPlayerPos
 			_activeTouch = _playerInput.InputTouch();
 			_playerMove.MovePos(_activeTouch, this.transform.position);
 			_isMove = true;
+			_isShot = true;
 		}
 		else
         {
@@ -122,16 +127,10 @@ public class PlayerManager : MonoBehaviour, IPlayerPos
     {
 		if(_isMove)
         {
-			_isShot = true;
-
-
-
 	#if UNITY_IOS || UNITY_EDITOR
 			this.transform.position = _playerMove.Move();
-
 	#elif UNITY_STANDALONE_WIN
 			this.transform.position = _playerMove.Move(_startObjectPos, _cursorPosDistance);
-
 	#endif
 		}
 

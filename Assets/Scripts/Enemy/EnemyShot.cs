@@ -22,19 +22,17 @@ public class EnemyShot
 	}
 	#endregion
 
-	#region プロパティ
-
-	#endregion
-
 	#region メソッド
 	/// <summary>
 	/// 弾を指定された方向に直線で撃ち出す
 	/// </summary>
     public void LineShot(ShotParameter shotParameter)
     {
-        Bullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotParameter.ShooterPos, shotParameter.BulletNumber);
+        EnemyBullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotParameter.ShooterPos, shotParameter.BulletNumber);
 
         bullet.SettingMoveType = shotParameter.MoveType;
+
+        bullet.SettingSpeedType = shotParameter.SpeedType;
 
         bullet.transform.rotation = Quaternion.Euler(Vector3.forward * shotParameter.CenterAngle);
     }
@@ -57,11 +55,13 @@ public class EnemyShot
             // そのうえで、開始位置をずらすためにminAngleを足す
             Vector3 shotPos = Calculation.CirclePosCalculate(shotParameter.ShooterPos, (maxAngle / shotParameter.AngleSplit) * i + minAngle, _radius);
 
-			Bullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotPos, shotParameter.BulletNumber);
+            EnemyBullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotPos, shotParameter.BulletNumber);
 
             bullet.SettingMoveType = shotParameter.MoveType;
 
-			bullet.transform.rotation = Quaternion.Euler(Vector3.forward * ((maxAngle / shotParameter.AngleSplit) * i + minAngle));
+            bullet.SettingSpeedType = shotParameter.SpeedType;
+
+            bullet.transform.rotation = Quaternion.Euler(Vector3.forward * ((maxAngle / shotParameter.AngleSplit) * i + minAngle));
         }
     }
 
@@ -78,9 +78,31 @@ public class EnemyShot
             // 0の位置がUnity上の-90にあたるため、ADJUST_ANGLEを足すことでUnityに合わせる
             Vector3 shotPos = Calculation.CirclePosCalculate(shotParameter.ShooterPos, (maxAngle / shotParameter.AngleSplit) * i + shotParameter.CenterAngle, _radius);
 
-            Bullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotPos, shotParameter.BulletNumber);
+            EnemyBullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotPos, shotParameter.BulletNumber);
 
             bullet.SettingMoveType = shotParameter.MoveType;
+
+            bullet.SettingSpeedType = shotParameter.SpeedType;
+
+            bullet.transform.rotation = Quaternion.Euler(Vector3.forward * ((maxAngle / shotParameter.AngleSplit) * i + shotParameter.CenterAngle));
+        }
+    }
+
+    public void RoundShot(ShotParameter shotParameter, Bullet.SpeedType speedChangeType)
+    {
+        // 中心角の最大
+        float maxAngle = 360;
+
+        for (int i = 0; i < shotParameter.AngleSplit; i++)
+        {
+            // 0の位置がUnity上の-90にあたるため、ADJUST_ANGLEを足すことでUnityに合わせる
+            Vector3 shotPos = Calculation.CirclePosCalculate(shotParameter.ShooterPos, (maxAngle / shotParameter.AngleSplit) * i + shotParameter.CenterAngle, _radius);
+
+            EnemyBullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotPos, shotParameter.BulletNumber);
+
+            bullet.SettingMoveType = shotParameter.MoveType;
+
+            bullet.SettingSpeedType = speedChangeType;
 
             bullet.transform.rotation = Quaternion.Euler(Vector3.forward * ((maxAngle / shotParameter.AngleSplit) * i + shotParameter.CenterAngle));
         }

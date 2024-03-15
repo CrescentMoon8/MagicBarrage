@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5649885399318748635}
   - component: {fileID: 2970343695917398230}
-  - component: {fileID: 1907828748405350194}
+  - component: {fileID: -2294882859328610229}
   - component: {fileID: 1698844284895704908}
   m_Layer: 6
   m_Name: DefaultNeedleBullet
@@ -86,7 +86,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1907828748405350194
+--- !u!114 &-2294882859328610229
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,13 +95,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5097765949919854141}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f388cbc28f354b840976102ec9564b5c, type: 3}
+  m_Script: {fileID: 11500000, guid: 0dd8e9251eafce74c91b32c916bf838d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shooterType: 0
   _moveType: 0
   _speedChangeType: 0
-  _distanceVector: {x: 0, y: 0, z: 0}
 --- !u!70 &1698844284895704908
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

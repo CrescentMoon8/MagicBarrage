@@ -33,23 +33,12 @@ public class PlayerMove
     /// 移動制限に必要な座標を計算する
     /// </summary>
     /// <param name="radius">プレイヤーコアの半径</param>
-    /// <param name="header">上部UI</param>
-    /// <param name="footer">下部UI</param>
-    public void Initialize(Vector3 radius, RectTransform header, RectTransform footer)
+
+    public void Initialize(Vector3 radius)
     {
-        // 取得する座標の番号
-        int MAX_MOVE_POS_INDEX = 3;
-        int MIN_MOVE_POS_INDEX = 1;
+        _maxMoveLimitPos = FieldSize.Instance.MaxFieldVector - radius;
 
-        // UIオブジェクトの頂点の座標を取得し、移動制限の大きさを調整する
-        // 座標の取得順は左下、左上、右上、右下
-        Vector3[] headerCorners = new Vector3[4];
-        header.GetWorldCorners(headerCorners);
-        _maxMoveLimitPos = headerCorners[MAX_MOVE_POS_INDEX] - radius;
-
-        Vector3[] footerCorners = new Vector3[4];
-        footer.GetWorldCorners(footerCorners);
-        _minMoveLimitPos = footerCorners[MIN_MOVE_POS_INDEX] + radius;
+        _minMoveLimitPos = FieldSize.Instance.MinFieldVector + radius;
     }
 
     /// <summary>

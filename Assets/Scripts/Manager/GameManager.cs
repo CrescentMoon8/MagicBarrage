@@ -60,12 +60,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         {
 			// ゲーム開始前処理
             case GameState.Start:
-				// ポーズからリトライするとタイムスケールが０のままのため、１に変更する
-				if(Time.timeScale <= 0)
-				{
-					Time.timeScale = 1;
-				}
-
+				// Awakeの処理順によってNullになることがあるため、ゲーム開始前に弾を生成する
 				PlayerBulletPool.Instance.BulletAwake();
 				EnemyBulletPool.Instance.BulletAwake();
 

@@ -16,6 +16,7 @@ TagManager:
   - Header
   - Footer
   - ItemPool
+  - DeadParticlePool
   layers:
   - Default
   - TransparentFX

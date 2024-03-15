@@ -15,6 +15,8 @@ using UnityEngine.UI;
 public class EnemyHp : MonoBehaviour, IDamageable
 {
 	#region 変数
+	protected int _enemyNumber = 0;
+
 	// HPバーの位置を調整するための定数
 	private const float HPBAR_ADJUST_POS_Y = 0.44f;
     [SerializeField]
@@ -28,6 +30,7 @@ public class EnemyHp : MonoBehaviour, IDamageable
 	protected bool _isInsideCamera = false;
 
 	private ItemPool _itemPool = default;
+	private EnemyParticlePool _particlePool = default;
 	private CircleCollider2D _circleCollider2D = default;
 
 	private delegate void DownEnemyCount(GameObject enemy);
@@ -43,6 +46,7 @@ public class EnemyHp : MonoBehaviour, IDamageable
 	{
 		_iPlayerPos = GameObject.FindWithTag("Player").GetComponent<IPlayerPos>();
         _itemPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<ItemPool>();
+        _particlePool = GameObject.FindWithTag("Scripts").GetComponentInChildren<EnemyParticlePool>();
 
 		_circleCollider2D = GetComponent<CircleCollider2D>();
 
@@ -105,6 +109,11 @@ public class EnemyHp : MonoBehaviour, IDamageable
 
 		// アイテムをプールから取り出す
 		_itemPool.LendItem(this.transform.position);
+		
+		// 死亡時のパーティクルを取り出し再生する
+		ParticleScript particleScript = _particlePool.LendEnemyDeadParticle(this.transform.position, _enemyNumber);
+		particleScript.Play();
+
 		this.gameObject.SetActive(false);
 	}
 	#endregion

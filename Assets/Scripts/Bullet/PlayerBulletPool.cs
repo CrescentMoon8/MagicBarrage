@@ -18,11 +18,11 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 	private const int PLAYER_BULLET_NUMBER = -1;
 
 	[SerializeField]
-	private Bullet _playerBulletPrefab = default;
+	private PlayerBullet _playerBulletPrefab = default;
 
 	private Transform _playerBulletParent = default;
 
-	private Queue<Bullet> _playerBulletsPool = new Queue<Bullet>();
+	private Queue<PlayerBullet> _playerBulletsPool = new Queue<PlayerBullet>();
 	#endregion
 
 	#region プロパティ
@@ -49,7 +49,7 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 	{
 		for (int i = 0; i < MAX_GENERATE_PLAYER_BULLET; i++)
 		{
-			Bullet bullet = Instantiate(_playerBulletPrefab, _playerBulletParent);
+			PlayerBullet bullet = Instantiate(_playerBulletPrefab, _playerBulletParent);
 
 			bullet.gameObject.SetActive(false);
 
@@ -62,7 +62,7 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 	/// </summary>
 	private void AddPlayerBulletPool()
 	{
-		Bullet bullet = Instantiate(_playerBulletPrefab, _playerBulletParent);
+		PlayerBullet bullet = Instantiate(_playerBulletPrefab, _playerBulletParent);
 
 		bullet.gameObject.SetActive(false);
 
@@ -73,18 +73,16 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 	/// 弾をプレイヤーに貸し出す
 	/// </summary>
 	/// <returns>弾のスクリプト</returns>
-	public Bullet LendPlayerBullet(Vector3 shotPos)
+	public PlayerBullet LendPlayerBullet(Vector3 shotPos)
 	{
 		if (_playerBulletsPool.Count <= 0)
 		{
 			AddPlayerBulletPool();
 		}
 
-		Bullet bullet = _playerBulletsPool.Dequeue();
+		PlayerBullet bullet = _playerBulletsPool.Dequeue();
 
 		bullet.transform.position = shotPos;
-
-		bullet.SettingShooterType = Bullet.ShooterType.Player;
 
 		bullet.SettingBulletNumber = PLAYER_BULLET_NUMBER;
 
@@ -97,7 +95,7 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 	/// 弾を返却する
 	/// </summary>
 	/// <param name="bullet">返却する弾のスクリプト</param>
-	public void ReturnBullet(Bullet bullet)
+	public void ReturnBullet(PlayerBullet bullet)
 	{
 		bullet.gameObject.SetActive(false);
 

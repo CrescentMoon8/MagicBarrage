@@ -16,6 +16,12 @@ public class TitleButton : MonoBehaviour
 	#region メソッド
 	public void MoveTitle()
     {
+		// ゲームシーンでポーズからタイトルへ戻ったときに１に戻すため
+		if (Time.timeScale <= 0)
+		{
+			Time.timeScale = 1;
+		}
+
 		SceneManager.LoadScene("Title");
     }
 	#endregion

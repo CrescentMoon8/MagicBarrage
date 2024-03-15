@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8957522753222624716}
   - component: {fileID: 5895801801558801347}
-  - component: {fileID: 5823443337260058415}
+  - component: {fileID: 2167742312386813112}
   - component: {fileID: 4492136494008744317}
   m_Layer: 6
   m_Name: DefaultNomalBullet
@@ -86,7 +86,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5823443337260058415
+--- !u!114 &2167742312386813112
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,13 +95,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4415822044867780374}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f388cbc28f354b840976102ec9564b5c, type: 3}
+  m_Script: {fileID: 11500000, guid: 0dd8e9251eafce74c91b32c916bf838d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shooterType: 0
   _moveType: 0
   _speedChangeType: 0
-  _distanceVector: {x: 0, y: 0, z: 0}
 --- !u!58 &4492136494008744317
 CircleCollider2D:
   m_ObjectHideFlags: 0

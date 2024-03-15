@@ -18,6 +18,7 @@ public class ShotParameter
 	private int _angleWidth = default;
 	private int _bulletNumber = default;
 	private Bullet.MoveType _moveType = default;
+	private Bullet.SpeedType _speedType = default;
     #endregion
 
     #region コンストラクタ
@@ -28,12 +29,13 @@ public class ShotParameter
     /// <param name="centerAngle">撃ちたい角度</param>
     /// <param name="bulletNumber">弾の種類</param>
     /// <param name="moveType">弾の軌道</param>
-    public ShotParameter(Vector3 shooterPos, float centerAngle, int bulletNumber, Bullet.MoveType moveType)
+    public ShotParameter(Vector3 shooterPos, float centerAngle, int bulletNumber, Bullet.MoveType moveType, Bullet.SpeedType speedType)
 	{
 		_shooterPos = shooterPos;
 		_centerAngle = centerAngle;
 		_bulletNumber = bulletNumber;
 		_moveType = moveType;
+		_speedType = speedType;
 	}
 
 	/// <summary>
@@ -45,7 +47,7 @@ public class ShotParameter
 	/// <param name="angleWidth">撃ちたい角度からの角度幅</param>
 	/// <param name="bulletNumber">弾の種類</param>
 	/// <param name="moveType">弾の軌道</param>
-	public ShotParameter(Vector3 shooterPos, float centerAngle, int angleSplit, int angleWidth, int bulletNumber, Bullet.MoveType moveType)
+	public ShotParameter(Vector3 shooterPos, float centerAngle, int angleSplit, int angleWidth, int bulletNumber, Bullet.MoveType moveType, Bullet.SpeedType speedType)
     {
 		_shooterPos = shooterPos;
 		_centerAngle = centerAngle;
@@ -53,6 +55,7 @@ public class ShotParameter
 		_angleWidth = angleWidth;
 		_bulletNumber = bulletNumber;
 		_moveType = moveType;
+		_speedType = speedType;
 	}
 
 	/// <summary>
@@ -63,13 +66,14 @@ public class ShotParameter
 	/// <param name="angleSplit">角度を何分割するか</param>
 	/// <param name="bulletNumber">弾の種類</param>
 	/// <param name="moveType">弾の軌道</param>
-	public ShotParameter(Vector3 shooterPos, float centerAngle, int angleSplit, int bulletNumber, Bullet.MoveType moveType)
+	public ShotParameter(Vector3 shooterPos, float centerAngle, int angleSplit, int bulletNumber, Bullet.MoveType moveType, Bullet.SpeedType speedType)
 	{
 		_shooterPos = shooterPos;
 		_centerAngle = centerAngle;
 		_angleSplit = angleSplit;
 		_bulletNumber = bulletNumber;
 		_moveType = moveType;
+		_speedType = speedType;
 	}
     #endregion
 
@@ -80,5 +84,6 @@ public class ShotParameter
 	public int AngleWidth { get { return _angleWidth; } }
 	public int BulletNumber { get { return _bulletNumber; } }
 	public Bullet.MoveType MoveType { get { return _moveType; } }
+	public Bullet.SpeedType SpeedType { get { return _speedType; } }
     #endregion
 }

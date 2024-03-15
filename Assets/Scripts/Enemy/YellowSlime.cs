@@ -30,10 +30,6 @@ public class YellowSlime : EnemyHp
     private BarrageTemplate _barrageTemplate = default;
     #endregion
 
-    #region プロパティ
-
-    #endregion
-
     #region メソッド
     /// <summary>
     /// 更新前処理
@@ -46,17 +42,17 @@ public class YellowSlime : EnemyHp
         _bulletInfo = Addressables.LoadAssetAsync<BulletInfo>("BulletInfo").WaitForCompletion();
         _enemyDataBase = Addressables.LoadAssetAsync<EnemyDataBase>("EnemyDataBase").WaitForCompletion();
 
-        base._hpValue = _enemyDataBase._enemyDataList[_enemyDataBase.YELLOW_SLIME]._maxHp;
+        EnemyData enemyData = _enemyDataBase._enemyDataList[_enemyDataBase.YELLOW_SLIME];
+        base._enemyNumber = _enemyDataBase.YELLOW_SLIME;
+
+        base._hpValue = enemyData._maxHp;
         base._hpSlider.maxValue = base._hpValue;
         base._hpSlider.value = base._hpValue;
 
-        _enemyMove.SetSplineContainer(_enemyDataBase._enemyDataList[_enemyDataBase.YELLOW_SLIME]._splineIndex);
+        _enemyMove.SetSplineContainer(enemyData._splineIndex);
         _enemyMove.DifferencePosInitialize(this.transform.position);
 
         Addressables.Release(_enemyDataBase);
-        // _splineContainer.Splines[0].EvaluatePosition(0) → Spline0の始点の座標
-        // _splineContainer.Splines[1].EvaluatePosition(0) → Spline1の始点の座標
-        // Debug.Log(_splineContainer.Splines[0].EvaluatePosition(0).y);
     }
 
     /// <summary>
@@ -91,7 +87,7 @@ public class YellowSlime : EnemyHp
             if (_bulletTime >= BULLET_INTERVAL && _bulletCount < BULLET_AMOUNT)
             {
                 // 射撃に必要なパラメータを生成する
-                ShotParameter lineShotParameter = new ShotParameter(this.transform.position, _targetAngle, _bulletInfo.YERROW_NOMAL_BULLET, Bullet.MoveType.Line);
+                ShotParameter lineShotParameter = new ShotParameter(this.transform.position, _targetAngle, _bulletInfo.YERROW_NOMAL_BULLET, Bullet.MoveType.Line, Bullet.SpeedType.Middle);
                 _enemyBulletPut.LineShot(lineShotParameter);
                 //base._puttingEnemyBullet.FanShot(this.transform.position, _centerAngle, _angleSplit, _angleWidth, 4, Bullet.MoveType.Line);
                 //base._puttingEnemyBullet.RoundShot(this.transform.position, _angleSplit, _targetAngle, _bulletInfo.YERROW_NOMAL_BULLET, Bullet.MoveType.Line);

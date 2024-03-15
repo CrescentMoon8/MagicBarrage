@@ -4865,7 +4865,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 4
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -4905,7 +4905,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4005360945669348250}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 292df314d08d45b4faede5ea463fd1cf, type: 3}
+  m_Script: {fileID: 11500000, guid: b70c2266b008e3a4fa7d0e091204f3e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _particleType: 0

@@ -27,10 +27,6 @@ public class BlueSlime : EnemyHp
 	private BarrageTemplate _barrageTemplate = default;
 	#endregion
 
-	#region プロパティ
-
-	#endregion
-
 	#region メソッド
 	/// <summary>
 	/// 更新前処理
@@ -43,7 +39,10 @@ public class BlueSlime : EnemyHp
 		_bulletInfo = Addressables.LoadAssetAsync<BulletInfo>("BulletInfo").WaitForCompletion();
 		_enemyDataBase = Addressables.LoadAssetAsync<EnemyDataBase>("EnemyDataBase").WaitForCompletion();
 
-		base._hpValue = _enemyDataBase._enemyDataList[_enemyDataBase.BLUE_SLIME]._maxHp;
+		EnemyData enemyData = _enemyDataBase._enemyDataList[_enemyDataBase.BLUE_SLIME];
+		base._enemyNumber = _enemyDataBase.BLUE_SLIME;
+
+		base._hpValue = enemyData._maxHp;
 		base._hpSlider.maxValue = base._hpValue;
 		base._hpSlider.value = base._hpValue;
 
@@ -51,7 +50,7 @@ public class BlueSlime : EnemyHp
         _angleWidth = _barrageTemplate.AngleWidth;
         _angleSplit = _barrageTemplate.AngleSplit;
 
-        _enemyMove.SetSplineContainer(_enemyDataBase._enemyDataList[_enemyDataBase.BLUE_SLIME]._splineIndex);
+        _enemyMove.SetSplineContainer(enemyData._splineIndex);
 		_enemyMove.DifferencePosInitialize(this.transform.position);
 
 		Addressables.Release(_enemyDataBase);
@@ -77,7 +76,7 @@ public class BlueSlime : EnemyHp
 		if (_isInsideCamera && _enemyBulletPut.IsShot(SHOT_INTERVAL))
 		{
 			// 射撃に必要なパラメータを生成する
-			ShotParameter fanShotParameter = new ShotParameter(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.BLUE_NOMAL_BULLET, Bullet.MoveType.Line);
+			ShotParameter fanShotParameter = new ShotParameter(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.BLUE_NOMAL_BULLET, Bullet.MoveType.Line, Bullet.SpeedType.Middle);
 			_enemyBulletPut.FanShot(fanShotParameter);
 
 			_enemyBulletPut.ResetShotTime();
