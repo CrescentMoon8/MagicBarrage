@@ -12,7 +12,6 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
 	#region 変数
-	[SerializeField]
 	private int scorePoint = 1000;
 
 	// アイテムの落下速度（大きければ遅く、小さければ早くなる）

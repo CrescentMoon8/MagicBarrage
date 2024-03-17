@@ -17,8 +17,12 @@ public class EnemyHp : MonoBehaviour, IDamageable
 	#region 変数
 	protected int _enemyNumber = 0;
 
-	// HPバーの位置を調整するための定数
-	private const float HPBAR_ADJUST_POS_Y = 0.44f;
+    protected const int NOMAL_KILL_POINT = 2000;
+    protected const int BOSS_KILL_POINT = 5000;
+	protected int _killPoint = NOMAL_KILL_POINT;
+
+    // HPバーの位置を調整するための定数
+    private const float HPBAR_ADJUST_POS_Y = 0.44f;
     [SerializeField]
 	protected Slider _hpSlider = default;
 	protected int _hpValue = 0;
@@ -114,7 +118,11 @@ public class EnemyHp : MonoBehaviour, IDamageable
 		ParticleScript particleScript = _particlePool.LendEnemyDeadParticle(this.transform.position, _enemyNumber);
 		particleScript.Play();
 
-		this.gameObject.SetActive(false);
+		// 敵が死んだ場合にも点数を加算する
+		ScoreManager.Instance.AddScore(_killPoint);
+        ScoreManager.Instance.ChangeScoreText();
+
+        this.gameObject.SetActive(false);
 	}
 	#endregion
 }

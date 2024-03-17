@@ -51,6 +51,8 @@ public class RedSlime : EnemyHp
 		base._hpSlider.maxValue = base._hpValue;
 		base._hpSlider.value = base._hpValue;
 
+        base._killPoint = EnemyHp.NOMAL_KILL_POINT;
+
         _targetAngle = _barrageTemplate.TargetAngle;
         _angleWidth = _barrageTemplate.AngleWidth;
         _angleSplit = _barrageTemplate.AngleSplit;

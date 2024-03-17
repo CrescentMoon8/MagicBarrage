@@ -45,7 +45,9 @@ public class PurpleSlime : EnemyHp
 		base._hpSlider.maxValue = base._hpValue;
 		base._hpSlider.value = base._hpValue;
 
-		_enemyMove.SetSplineContainer(enemyData._splineIndex);
+        base._killPoint = EnemyHp.NOMAL_KILL_POINT;
+
+        _enemyMove.SetSplineContainer(enemyData._splineIndex);
 		_enemyMove.DifferencePosInitialize(this.transform.position);
 
 		Addressables.Release(_enemyDataBase);

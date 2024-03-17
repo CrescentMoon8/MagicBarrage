@@ -49,6 +49,8 @@ public class YellowSlime : EnemyHp
         base._hpSlider.maxValue = base._hpValue;
         base._hpSlider.value = base._hpValue;
 
+        base._killPoint = EnemyHp.NOMAL_KILL_POINT;
+
         _enemyMove.SetSplineContainer(enemyData._splineIndex);
         _enemyMove.DifferencePosInitialize(this.transform.position);
 
