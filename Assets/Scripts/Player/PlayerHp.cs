@@ -113,9 +113,16 @@ public class PlayerHp : IDamageable
     // プレイヤーの死亡処理
     private void Dead()
     {
-        ParticleScript particleScript = _playerParticlePool.LendPlayerParticle(_iPlayerPos.PlayerPos);
-        particleScript.Play();
-        AudioManager.Instance.PlayPlayerDeadSe();
+        ParticleScript particleScript = _playerParticlePool.SetPlayerDeadParticle(_iPlayerPos.PlayerPos);
+        if(particleScript.IsPlaying())
+        {
+            return;
+        }
+        else
+        {
+            particleScript.Play();
+            AudioManager.Instance.PlayPlayerDeadSe();
+        }
         GameManager.Instance.SettingGameState = GameManager.GameState.GameOver;
     }
     #endregion

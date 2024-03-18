@@ -10,7 +10,7 @@ using System.Collections.Generic;
 /// <summary>
 /// パーティクル用のオブジェクトプールクラス
 /// </summary>
-public class EnemyParticlePool : MonoBehaviour
+public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
 {
 	#region 変数
 	private const int ENEMY_PARTICLE_AMOUNT = 2;
@@ -37,14 +37,21 @@ public class EnemyParticlePool : MonoBehaviour
     private ParticleScript _deadParticlePrefab = default;
     private Queue<ParticleScript> _deadParticlePool = new Queue<ParticleScript>();
     private Dictionary<ParticleScript, ParticleSystem> _deadParticleSystemDic = new Dictionary<ParticleScript, ParticleSystem>();
+
+    [SerializeField]
+    private ParticleScript _bossDeadParticlePrefab = default;
+    private ParticleScript _bossDeadParticleScript = default;
+    private ParticleSystem _bossDeadPrticleSystem = default;
     #endregion
 
     #region メソッド
     /// <summary>
     /// 初期化処理
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
 		_enemyParticleParent = GameObject.FindWithTag("EnemyParticlePool").transform;
 		_deadParticleParent = GameObject.FindWithTag("DeadParticlePool").transform;
 
@@ -55,6 +62,10 @@ public class EnemyParticlePool : MonoBehaviour
         _particleColorList.Add(_purple);
 
         GenerateParticlePool();
+
+        _bossDeadParticleScript = Instantiate(_bossDeadParticlePrefab, _deadParticleParent);
+
+        _bossDeadPrticleSystem = _bossDeadParticleScript.GetComponent<ParticleSystem>();
     }
 
     private void GenerateParticlePool()
@@ -146,6 +157,13 @@ public class EnemyParticlePool : MonoBehaviour
         particle.ParticleNumber = DEAD_PARTICLE_NUMBER;
 
         return particle;
+    }
+
+    public void LendBossDeadParticle(Vector3 startPos)
+    {
+       _bossDeadParticleScript.transform.position = startPos;
+
+        _bossDeadParticleScript.SettingParticleType = ParticleScript.ParticleType.Enemy;
     }
 
     /// <summary>

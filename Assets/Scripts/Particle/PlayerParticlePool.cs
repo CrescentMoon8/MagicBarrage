@@ -7,13 +7,14 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class PlayerParticlePool : MonoBehaviour
+public class PlayerParticlePool : SingletonMonoBehaviour<PlayerParticlePool>
 {
     #region 変数
     private const int PLAYER_PARTICLE_AMOUNT = 15;
 
-    private const int PLAYER_PARTICLE_NUMBER = -1;
+    private const int PLAYER_BULLET_PARTICLE_NUMBER = -1;
 
+    // プレイヤーカラー
     private Color32 _pink = new Color32(255, 125, 218, 255);
 
     private Transform _playerParticleParent = default;
@@ -33,16 +34,18 @@ public class PlayerParticlePool : MonoBehaviour
     /// <summary>
     /// 初期化処理
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         _playerParticleParent = GameObject.FindWithTag("PlayerParticlePool").transform;
         _deadParticleParent = GameObject.FindWithTag("DeadParticlePool").transform;
 
         GenerateParticlePool();
 
-        ParticleScript deadParticle = Instantiate(_deadParticlePrefab, _deadParticleParent);
+        _deadParticleScriptl = Instantiate(_deadParticlePrefab, _deadParticleParent);
 
-        ParticleSystem particleSystem = deadParticle.GetComponent<ParticleSystem>();
+        _deadParticleSystem = _deadParticleScriptl.GetComponent<ParticleSystem>();
     }
 
     private void GenerateParticlePool()
@@ -82,24 +85,19 @@ public class PlayerParticlePool : MonoBehaviour
 
         particle.SettingParticleType = ParticleScript.ParticleType.Player;
 
-        particle.ParticleNumber = PLAYER_PARTICLE_NUMBER;
+        particle.ParticleNumber = PLAYER_BULLET_PARTICLE_NUMBER;
 
         return particle;
     }
 
-    public ParticleScript LendPlayerDeadParticle(Vector3 startPos)
+    public ParticleScript SetPlayerDeadParticle(Vector3 startPos)
     {
-
         _deadParticleScriptl.transform.position = startPos;
-
-        _deadParticleScriptl.SettingParticleType = ParticleScript.ParticleType.Player;
 
         ParticleSystem.MainModule main = _deadParticleSystem.main;
 
         // Color32では代入できないのでColorにキャスト
         main.startColor = (Color)_pink;
-
-        _deadParticleScriptl.ParticleNumber = 0;
 
         return _deadParticleScriptl;
     }
@@ -109,7 +107,7 @@ public class PlayerParticlePool : MonoBehaviour
     /// </summary>
     /// <param name="particleScript">返却するパーティクル</param>
     /// <param name="particleNumber">パーティクル判別用番号</param>
-    public void ReturnPool(ParticleScript particleScript, int particleNumber = PLAYER_PARTICLE_NUMBER)
+    public void ReturnPool(ParticleScript particleScript, int particleNumber = PLAYER_BULLET_PARTICLE_NUMBER)
     {
         _playerBulletParticlePool.Enqueue(particleScript);
 

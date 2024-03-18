@@ -14,7 +14,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	public enum GameState
     {
 		Start,
-		Pose,
+		Pause,
 		Play,
 		GameOver,
 		Result
@@ -26,9 +26,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	private string _clearSceneName = "Result";
 
 	[SerializeField]
-	private Image _posePanel = default;
+	private Image _pausePanel = default;
 	[SerializeField]
-	private Image _poseText = default;
+	private Image _pauseText = default;
 	[SerializeField]
 	private Button _retryButton = default;
 
@@ -40,13 +40,17 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     #region メソッド
 #if UNITY_IOS
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        
         Application.targetFrameRate = 60;
     }
 #elif UNITY_STANDALONE_WIN
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         Application.targetFrameRate = 0;
     }
 #endif
@@ -60,17 +64,20 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         {
 			// ゲーム開始前処理
             case GameState.Start:
-				// Awakeの処理順によってNullになることがあるため、ゲーム開始前に弾を生成する
+                PlayerManager.Instance.PlayerAwake();
+                EnemyPhaseManager.Instance.EnemyPhaseAwake();
 				PlayerBulletPool.Instance.BulletAwake();
 				EnemyBulletPool.Instance.BulletAwake();
 
 				_gameState = GameState.Play;
                 break;
 
-            case GameState.Pose:
+            case GameState.Pause:
                 break;
 
             case GameState.Play:
+                PlayerManager.Instance.PlayerUpdate();
+                EnemyPhaseManager.Instance.EnemyPhaseUpdate();
                 break;
 
             case GameState.GameOver:
@@ -91,24 +98,42 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         }
     }
 
-    public void OnPose()
+    /// <summary>
+    /// ポーズ状態への移行、プレイ状態への移行を行う
+    /// </summary>
+    public void OnPause()
     {
         if (Time.timeScale >= 1.0f)
         {
             Time.timeScale = 0f;
-			_posePanel.gameObject.SetActive(true);
-			_poseText.gameObject.SetActive(true);
+			_pausePanel.gameObject.SetActive(true);
+			_pauseText.gameObject.SetActive(true);
 			_retryButton.gameObject.SetActive(true);
-			_gameState = GameState.Pose;
+			_gameState = GameState.Pause;
         }
         else
         {
             Time.timeScale = 1.0f;
-            _posePanel.gameObject.SetActive(false);
-            _poseText.gameObject.SetActive(false);
+            _pausePanel.gameObject.SetActive(false);
+            _pauseText.gameObject.SetActive(false);
             _retryButton.gameObject.SetActive(false);
             _gameState = GameState.Play;
         }
     }
+
+#if UNITY_IOS
+    /// <summary>
+    /// バックグラウンドに移動したとき、スマホをロックしたときにポーズ状態に移行
+    /// </summary>
+    private void OnApplicationPause()
+    {
+        Debug.Log("強制Pause");
+        Time.timeScale = 0f;
+        _pausePanel.gameObject.SetActive(true);
+        _pauseText.gameObject.SetActive(true);
+        _retryButton.gameObject.SetActive(true);
+        _gameState = GameState.Pause;
+    }
+#endif
 #endregion
 }

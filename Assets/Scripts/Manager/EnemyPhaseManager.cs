@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
-public class EnemyPhaseManager : MonoBehaviour, IEnemyList
+public class EnemyPhaseManager : SingletonMonoBehaviour<EnemyPhaseManager>, IEnemyList
 {
 	#region 変数
 	public enum PhaseState
@@ -41,8 +41,10 @@ public class EnemyPhaseManager : MonoBehaviour, IEnemyList
     /// <summary>
     /// 初期化処理
     /// </summary>
-    private void Awake()
+    public void EnemyPhaseAwake()
     {
+        base.Awake();
+
         GenerateEnemyList();
         for (int i = 0; i < _enemyPhaseList[(int)PhaseState.First].Count; i++)
         {
@@ -54,7 +56,7 @@ public class EnemyPhaseManager : MonoBehaviour, IEnemyList
 	/// <summary>
 	/// 更新処理
 	/// </summary>
-	private void Update ()
+	public void EnemyPhaseUpdate ()
 	{
 		switch (_phaseState)
 		{
@@ -140,6 +142,15 @@ public class EnemyPhaseManager : MonoBehaviour, IEnemyList
 
             _enemyPhaseList.Add(enemyList);
             _enemyIDamageableList.Add(interfaceList);
+        }
+
+        foreach(List<GameObject> enemyList in _enemyPhaseList)
+        {
+            foreach(GameObject enemy in enemyList)
+            {
+                // エネミーの親クラスの初期化メソッド
+                enemy.GetComponent<EnemyHp>().EnemyAwake();
+            }
         }
     }
 

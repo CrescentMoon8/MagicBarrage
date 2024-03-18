@@ -15,7 +15,6 @@ public class PlayerBullet : Bullet
 	[SerializeField]
 	private Vector3 _distanceVector = Vector3.zero;
 
-	private PlayerParticlePool _playerParticlePool = default;
 	private IEnemyList _iEnemyList = default;
 	#endregion
 
@@ -27,8 +26,7 @@ public class PlayerBullet : Bullet
 	{
 		base.GetIPlayerPos();
 
-		_playerParticlePool = GameObject.FindWithTag("Scripts").GetComponentInChildren<PlayerParticlePool>();
-		_iEnemyList = GameObject.FindWithTag("Scripts").GetComponentInChildren<IEnemyList>();
+		_iEnemyList = EnemyPhaseManager.Instance;
 	}
 
 	/// <summary>
@@ -42,7 +40,6 @@ public class PlayerBullet : Bullet
 				this.transform.rotation = Quaternion.identity;
 				break;
 			case MoveType.Tracking:
-				Debug.Log("a");
 				GetNearEnemyPos();
 				break;
 			case MoveType.Curve:
@@ -77,7 +74,6 @@ public class PlayerBullet : Bullet
 
 				if (ExistsEnemyPosList(_distanceVector))
 				{
-					Debug.Log("d");
 					_moveType = MoveType.Line;
 				}
 				break;
@@ -99,7 +95,6 @@ public class PlayerBullet : Bullet
 	/// <returns></returns>
 	private bool ExistsEnemyPosList(Vector3 targetPos)
 	{
-		Debug.Log("c");
 		if (Calculation.TargetDistance(targetPos, _iPlayerPos.PlayerPos) <= Calculation.TargetDistance(this.transform.position, _iPlayerPos.PlayerPos))
 		{
 			return true;
@@ -113,7 +108,6 @@ public class PlayerBullet : Bullet
 	/// </summary>
 	private void GetNearEnemyPos()
 	{
-		Debug.Log("b.a");
 		// 一番近いエネミーの番号
 		int nearEnemyIndex = 0;
 		// 初期値を一番目のエネミーとの距離にすることで、初期値ゼロより処理を一回減らす
@@ -131,8 +125,6 @@ public class PlayerBullet : Bullet
 				nearEnemyIndex = i;
 			}
 		}
-
-		Debug.Log("b");
 
 		// 一番近いエネミーの座標を代入する
 		_distanceVector = _iEnemyList.CurrentPhaseEnemyList[nearEnemyIndex].transform.position;
@@ -153,7 +145,7 @@ public class PlayerBullet : Bullet
 			// GetSiblingIndexで当たったオブジェクトが同じ階層で上から何番目かを取得する
 			// Enemyの情報をヒエラルキーの上から順に取得しているためちゃんと動いている
 			_iEnemyList.CurrentPhaseIDamageableList[collision.transform.GetSiblingIndex()].Damage();
-			ParticleScript playerParticle = _playerParticlePool.LendPlayerParticle(this.transform.position);
+			ParticleScript playerParticle = PlayerParticlePool.Instance.LendPlayerParticle(this.transform.position);
 			playerParticle.Play();
 			PlayerBulletPool.Instance.ReturnBullet(this);
 

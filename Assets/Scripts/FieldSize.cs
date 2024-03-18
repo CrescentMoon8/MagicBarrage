@@ -12,8 +12,10 @@ public class FieldSize : SingletonMonoBehaviour<FieldSize>
     private Vector3 _maxFieldVector = Vector3.zero;
     private Vector3 _minFieldVector = Vector3.zero;
 
+    // 画面上部のUIエリア
     [SerializeField]
     private RectTransform _header = default;
+    // 画面下部のUIエリア
     [SerializeField]
     private RectTransform _footer = default;
     #endregion
@@ -27,8 +29,10 @@ public class FieldSize : SingletonMonoBehaviour<FieldSize>
     /// <summary>
     /// 初期化処理
     /// </summary>
-    private void Awake()
+    public void SetFieldSize()
 	{
+        base.Awake();
+
         // 取得する座標の番号
         int MAX_MOVE_POS_INDEX = 3;
         int MIN_MOVE_POS_INDEX = 1;
@@ -42,9 +46,6 @@ public class FieldSize : SingletonMonoBehaviour<FieldSize>
         Vector3[] footerCorners = new Vector3[4];
         _footer.GetWorldCorners(footerCorners);
         _minFieldVector = footerCorners[MIN_MOVE_POS_INDEX];
-
-        Debug.Log(_maxFieldVector);
-        Debug.Log(_minFieldVector);
     }
 	#endregion
 }

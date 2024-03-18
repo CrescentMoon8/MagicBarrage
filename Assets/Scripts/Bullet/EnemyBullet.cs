@@ -14,15 +14,15 @@ public class EnemyBullet : Bullet
 	private const float MIDDLE_SPEED = 15f;
 	private const float HIGH_SPEED = 10f;
 	// 弾の加速率
-	private const float ACCELERATION_RATE = 0.1f;
+	private const float ACCELERATION_RATE = 0.2f;
 	//弾の減速率
 	private const float DECELERATION_RATE = 0.1f;
 	// エネミーの弾の速度を調整する（高くすれば遅く、低くすれば早くなる）
+	[SerializeField]
 	private float _enemyBulletSpeedDevisor = 15f;
 
 	// プレイヤーが持つダメージ用インターフェース
 	private IDamageable _playerIDamageable = default;
-	private EnemyParticlePool _enemyParticlePool = default;
 	#endregion
 
 	#region メソッド
@@ -34,7 +34,6 @@ public class EnemyBullet : Bullet
 		base.GetIPlayerPos();
 
 		_playerIDamageable = GameObject.FindWithTag("Player").GetComponent<PlayerManager>().GettingPlayerHp;
-		_enemyParticlePool = GameObject.FindWithTag("Scripts").GetComponentInChildren<EnemyParticlePool>();
 	}
 
 	/// <summary>
@@ -155,7 +154,7 @@ public class EnemyBullet : Bullet
 		if (collision.CompareTag("Player"))
 		{
 			_playerIDamageable.Damage();
-			ParticleScript enemyParticle = _enemyParticlePool.LendEnemyParicle(this.transform.position, _bulletNumber);
+			ParticleScript enemyParticle = EnemyParticlePool.Instance.LendEnemyParicle(this.transform.position, _bulletNumber);
 			enemyParticle.Play();
 			EnemyBulletPool.Instance.ReturnBullet(this, _bulletNumber);
 

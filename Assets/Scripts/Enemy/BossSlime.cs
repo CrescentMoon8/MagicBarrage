@@ -90,7 +90,7 @@ public class BossSlime : EnemyHp
 
 		ShootGridBullet(GRID_BULLET_INTERVAL);
 
-		if (_isInsideCamera && _enemyBulletPut.IsShot(SHOT_INTERVAL))
+		/*if (_isInsideCamera && _enemyBulletPut.IsShot(SHOT_INTERVAL))
 		{
 			// 射撃に必要なパラメータを生成する
 			ShotParameter fanShotParameter1 = new ShotParameter(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line, Bullet.SpeedType.Middle);
@@ -101,7 +101,7 @@ public class BossSlime : EnemyHp
 			_enemyBulletPut.FanShot(fanShotParameter2);
 
 			_enemyBulletPut.ResetShotTime();
-		}
+		}*/
 	}
 
 	private void ShootWindmillBullet(float bulletInterval)

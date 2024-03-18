@@ -9,7 +9,7 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
-public class PlayerManager : MonoBehaviour, IPlayerPos
+public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 {
 	#region 変数
 	// 入力を情報を保存するための変数
@@ -26,13 +26,6 @@ public class PlayerManager : MonoBehaviour, IPlayerPos
 	// プレイヤーの残機減少後のSprite
 	[SerializeField]
     private Sprite _brokenHeart = default;
-
-	// 画面上部のUIエリア
-	[SerializeField]
-	private RectTransform _header = default;
-	// 画面下部のUIエリア
-	[SerializeField]
-	private RectTransform _footer = default;
 
     private PlayerInput _playerInput = default;
 	private PlayerMove _playerMove = default;
@@ -55,18 +48,22 @@ public class PlayerManager : MonoBehaviour, IPlayerPos
 	/// <summary>
 	/// 初期化処理
 	/// </summary>
-	private void Awake()
+	public void PlayerAwake()
 	{
+		base.Awake();
+
 		// Touch型を使用するための機能を有効化
 		EnhancedTouchSupport.Enable();
+
+		FieldSize.Instance.SetFieldSize();
 
 		_playerInput = new PlayerInput();
 		_playerMove = new PlayerMove();
 		_playerShot = new PlayerShot();
-		_playerHp = new PlayerHp(GetComponent<CircleCollider2D>(), 
-								GetComponent<SpriteRenderer>(), 
-								GetComponent<Animator>(), 
-								GameObject.FindWithTag("Scripts").GetComponentInChildren<PlayerParticlePool>(), 
+		_playerHp = new PlayerHp(GetComponent<CircleCollider2D>(),
+								GetComponent<SpriteRenderer>(),
+								GetComponent<Animator>(),
+								PlayerParticlePool.Instance,
 								this);
 
 		_playerInput.Initialize();
@@ -77,7 +74,7 @@ public class PlayerManager : MonoBehaviour, IPlayerPos
     /// <summary>
     /// 更新処理
     /// </summary>
-    private void Update ()
+    public void PlayerUpdate ()
 	{
 		_playerShot.AddShotTime();
 

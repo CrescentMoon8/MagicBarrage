@@ -31,10 +31,9 @@ public class EnemyHp : MonoBehaviour, IDamageable
 	[SerializeField]
 	protected bool _isPlayerTarget = false;
 
-	protected bool _isInsideCamera = false;
+	protected bool _isInsideCamera = true;
 
 	private ItemPool _itemPool = default;
-	private EnemyParticlePool _particlePool = default;
 	private CircleCollider2D _circleCollider2D = default;
 
 	private delegate void DownEnemyCount(GameObject enemy);
@@ -46,20 +45,19 @@ public class EnemyHp : MonoBehaviour, IDamageable
 	/// <summary>
 	/// 初期化処理
 	/// </summary>
-	private void Awake()
+	public void EnemyAwake()
 	{
 		_iPlayerPos = GameObject.FindWithTag("Player").GetComponent<IPlayerPos>();
         _itemPool = GameObject.FindWithTag("Scripts").GetComponentInChildren<ItemPool>();
-        _particlePool = GameObject.FindWithTag("Scripts").GetComponentInChildren<EnemyParticlePool>();
 
 		_circleCollider2D = GetComponent<CircleCollider2D>();
 
-		_downEnemyCountCallBack = GameObject.FindWithTag("Scripts").GetComponentInChildren<EnemyPhaseManager>().DownEnemyCount;
+		_downEnemyCountCallBack = EnemyPhaseManager.Instance.DownEnemyCount;
     }
 
     private void OnBecameVisible()
     {
-		_isInsideCamera = true;
+		//_isInsideCamera = true;
     }
 
     /*public Vector2 BezierCalculation(Vector2 start, Vector2 relay, Vector2 goal, float time)
@@ -115,7 +113,7 @@ public class EnemyHp : MonoBehaviour, IDamageable
 		_itemPool.LendItem(this.transform.position);
 		
 		// 死亡時のパーティクルを取り出し再生する
-		ParticleScript particleScript = _particlePool.LendEnemyDeadParticle(this.transform.position, _enemyNumber);
+		ParticleScript particleScript = EnemyParticlePool.Instance.LendEnemyDeadParticle(this.transform.position, _enemyNumber);
 		particleScript.Play();
 
 		// 敵が死んだ場合にも点数を加算する

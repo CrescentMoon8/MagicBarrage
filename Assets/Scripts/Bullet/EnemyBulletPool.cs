@@ -32,14 +32,24 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 
 	// 貸し出した弾のSpriteを変えるためのSpriteRendererを保管するDictionaryのList
 	private List<Dictionary<EnemyBullet, SpriteRenderer>> _spriteRendererList = new List<Dictionary<EnemyBullet, SpriteRenderer>>();
-    #endregion
 
-    #region メソッド
-    /// <summary>
-    /// 弾のオブジェクトプールの初期化処理
-    /// </summary>
-    public void BulletAwake()
+	// 貸し出されているエネミーの弾を格納するリスト
+	//[SerializeField]
+	//private List<EnemyBullet> _lendedEnemyBulletList = new List<EnemyBullet>();
+	#endregion
+
+	#region プロパティ
+	//public List<EnemyBullet> LendedEnemyBulletList { get { return _lendedEnemyBulletList; } }
+	#endregion
+
+	#region メソッド
+	/// <summary>
+	/// 弾のオブジェクトプールの初期化処理
+	/// </summary>
+	public void BulletAwake()
 	{
+		base.Awake();
+
 		_enemyBulletsPool.Clear();
 
         _enemyBulletParent = GameObject.FindWithTag("EnemyBulletPool").transform;
@@ -124,6 +134,8 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 
 		bullet.gameObject.SetActive(true);
 
+		//_lendedEnemyBulletList.Add(bullet);
+
 		return bullet;
 	}
 
@@ -136,6 +148,8 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
         bullet.gameObject.SetActive(false);
 
 		_enemyBulletsPool[bulletNumber % 2].Enqueue(bullet);
+
+		//_lendedEnemyBulletList.Remove(bullet);
 	}
 
 	#endregion

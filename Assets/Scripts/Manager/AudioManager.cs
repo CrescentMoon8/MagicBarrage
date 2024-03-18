@@ -28,8 +28,11 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
 	/// <summary>
 	/// 初期化処理
 	/// </summary>
-	private void Awake()
+	protected override void Awake()
 	{
+		base._dontDestroyOnLoad = true;
+		base.Awake();
+		
 		_audioSource = GetComponent<AudioSource>();
 	}
 

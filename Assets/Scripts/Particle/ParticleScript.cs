@@ -41,7 +41,7 @@ public class ParticleScript : MonoBehaviour
 
     private void Update()
     {
-        if(!_particleSystem.isPlaying && _particleType != ParticleType.None)
+        if(!IsPlaying() && _particleType != ParticleType.None)
         {
             _returnParticleCallBack(this, _particleNumber);
         }
@@ -51,5 +51,15 @@ public class ParticleScript : MonoBehaviour
 	{
         _particleSystem.Play();
 	}
+
+    public bool IsPlaying()
+    {
+        if(_particleSystem.isPlaying)
+        {
+            return true;
+        }
+
+        return false;
+    }
 	#endregion
 }

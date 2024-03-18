@@ -35,6 +35,8 @@ public class EnemyShot
         bullet.SettingSpeedType = shotParameter.SpeedType;
 
         bullet.transform.rotation = Quaternion.Euler(Vector3.forward * shotParameter.CenterAngle);
+
+        bullet.Initialize();
     }
 
     /// <summary>
@@ -62,6 +64,8 @@ public class EnemyShot
             bullet.SettingSpeedType = shotParameter.SpeedType;
 
             bullet.transform.rotation = Quaternion.Euler(Vector3.forward * ((maxAngle / shotParameter.AngleSplit) * i + minAngle));
+
+            bullet.Initialize();
         }
     }
 
@@ -85,6 +89,8 @@ public class EnemyShot
             bullet.SettingSpeedType = shotParameter.SpeedType;
 
             bullet.transform.rotation = Quaternion.Euler(Vector3.forward * ((maxAngle / shotParameter.AngleSplit) * i + shotParameter.CenterAngle));
+
+            bullet.Initialize();
         }
     }
 
@@ -105,6 +111,8 @@ public class EnemyShot
             bullet.SettingSpeedType = speedChangeType;
 
             bullet.transform.rotation = Quaternion.Euler(Vector3.forward * ((maxAngle / shotParameter.AngleSplit) * i + shotParameter.CenterAngle));
+
+            bullet.Initialize();
         }
     }
 

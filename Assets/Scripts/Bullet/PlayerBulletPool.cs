@@ -23,10 +23,13 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 	private Transform _playerBulletParent = default;
 
 	private Queue<PlayerBullet> _playerBulletsPool = new Queue<PlayerBullet>();
+
+	// 貸し出されているプレイヤーの弾を格納するリスト
+	//private List<PlayerBullet> _lendedPlayerBulletList = new List<PlayerBullet>();
 	#endregion
 
 	#region プロパティ
-
+	//public List<PlayerBullet> LendedPlayerBulletList { get { return _lendedPlayerBulletList; } }
 	#endregion
 
 	#region メソッド
@@ -35,6 +38,8 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 	/// </summary>
 	public void BulletAwake()
 	{
+		base.Awake();
+
 		_playerBulletsPool.Clear();
 
 		_playerBulletParent = GameObject.FindWithTag("PlayerBulletPool").transform;
@@ -88,6 +93,8 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 
 		bullet.gameObject.SetActive(true);
 
+		//_lendedPlayerBulletList.Add(bullet);
+
 		return bullet;
 	}
 
@@ -100,6 +107,8 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 		bullet.gameObject.SetActive(false);
 
 		_playerBulletsPool.Enqueue(bullet);
+
+		//_lendedPlayerBulletList.Remove(bullet);
 	}
 	#endregion
 }

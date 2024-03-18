@@ -39,6 +39,9 @@ public class PlayerMove
         _maxMoveLimitPos = FieldSize.Instance.MaxFieldVector - radius;
 
         _minMoveLimitPos = FieldSize.Instance.MinFieldVector + radius;
+
+        /*Debug.Log(_maxMoveLimitPos);
+        Debug.Log(_minMoveLimitPos);*/
     }
 
     /// <summary>
