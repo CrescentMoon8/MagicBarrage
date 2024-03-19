@@ -71,6 +71,11 @@ public class BlueSlime : EnemyHp
 	/// </summary>
 	private void Update ()
 	{
+		if (base._isDead)
+		{
+			return;
+		}
+
 		this.transform.position = _enemyMove.NextMovePos();
 
 		base.FollowHpBar(this.transform.position);

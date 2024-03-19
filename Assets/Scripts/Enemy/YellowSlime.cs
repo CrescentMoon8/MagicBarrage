@@ -70,6 +70,11 @@ public class YellowSlime : EnemyHp
     /// </summary>
     private void Update()
     {
+        if (base._isDead)
+        {
+            return;
+        }
+
         _bulletTime += Time.deltaTime;
 
         this.transform.position = _enemyMove.NextMovePos();

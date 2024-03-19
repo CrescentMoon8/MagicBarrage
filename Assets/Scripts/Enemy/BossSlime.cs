@@ -25,7 +25,7 @@ public class BossSlime : EnemyHp
 	private int _windmillAngleSplit = 9;
 	// 開始点を何度ずつずらすかを(360 / BULLET_AMOUNT)で決める
 	private const float BULLET_AMOUNT = 108;
-	private const float WINDMILL_BULLET_INTERVAL = 0.15f;
+	private const float WINDMILL_BULLET_INTERVAL = 0.25f;
 
 	private float _gridBulletTime = 0f;
 	private int _gridBulletCount = 0;
@@ -84,25 +84,32 @@ public class BossSlime : EnemyHp
     /// </summary>
     private void Update ()
     {
+		if(base._isDead)
+        {
+			return;
+        }
+
         this.transform.position = _enemyMove.NextMovePos();
 
 		ShootWindmillBullet(WINDMILL_BULLET_INTERVAL);
 
-		ShootGridBullet(GRID_BULLET_INTERVAL);
+		//ShootGridBullet(GRID_BULLET_INTERVAL);
 
-		/*if (_isInsideCamera && _enemyBulletPut.IsShot(SHOT_INTERVAL))
-		{
-			// 射撃に必要なパラメータを生成する
-			ShotParameter fanShotParameter1 = new ShotParameter(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line, Bullet.SpeedType.Middle);
-			_enemyBulletPut.FanShot(fanShotParameter1);
+        if (_isInsideCamera && _enemyBulletPut.IsShot(SHOT_INTERVAL))
+        {
+			//_targetAngle = _windmillTargetAngle;
 
-			// 射撃に必要なパラメータを生成する
-			ShotParameter fanShotParameter2 = new ShotParameter(this.transform.position, _targetAngle + 180, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line, Bullet.SpeedType.Middle);
-			_enemyBulletPut.FanShot(fanShotParameter2);
+            // 射撃に必要なパラメータを生成する
+            ShotParameter fanShotParameter1 = new ShotParameter(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line, Bullet.SpeedType.Middle);
+            _enemyBulletPut.FanShot(fanShotParameter1);
 
-			_enemyBulletPut.ResetShotTime();
-		}*/
-	}
+            // 射撃に必要なパラメータを生成する
+            ShotParameter fanShotParameter2 = new ShotParameter(this.transform.position, _targetAngle + 180, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line, Bullet.SpeedType.Middle);
+            _enemyBulletPut.FanShot(fanShotParameter2);
+
+            _enemyBulletPut.ResetShotTime();
+        }
+    }
 
 	private void ShootWindmillBullet(float bulletInterval)
     {

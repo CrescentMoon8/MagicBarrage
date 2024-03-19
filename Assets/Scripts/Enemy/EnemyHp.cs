@@ -16,6 +16,9 @@ public class EnemyHp : MonoBehaviour, IDamageable
 {
 	#region 変数
 	protected int _enemyNumber = 0;
+	private const int BOSS_NUMBER = 5;
+
+	protected bool _isDead = false;
 
     protected const int NOMAL_KILL_POINT = 2000;
     protected const int BOSS_KILL_POINT = 5000;
@@ -95,9 +98,17 @@ public class EnemyHp : MonoBehaviour, IDamageable
 
 		if (_hpValue <= 0 && _circleCollider2D.enabled)
 		{
+			_isDead = true;
 			// 複数回実行されるのを防ぐためにColliderを無効化する
 			_circleCollider2D.enabled = false;
-			EnemyDead();
+			if(_enemyNumber != BOSS_NUMBER)
+            {
+				EnemyDead();
+			}
+			else
+            {
+				BossDead();
+            }
 		}
 	}
 
@@ -121,6 +132,16 @@ public class EnemyHp : MonoBehaviour, IDamageable
         ScoreManager.Instance.ChangeScoreText();
 
         this.gameObject.SetActive(false);
+	}
+
+	private void BossDead()
+    {
+		_downEnemyCountCallBack(this.gameObject);
+		_hpSlider.gameObject.SetActive(false);
+
+		// 敵が死んだ場合にも点数を加算する
+		ScoreManager.Instance.AddScore(_killPoint);
+		ScoreManager.Instance.ChangeScoreText();
 	}
 	#endregion
 }

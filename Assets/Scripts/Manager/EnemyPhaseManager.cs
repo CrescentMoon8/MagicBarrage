@@ -30,11 +30,17 @@ public class EnemyPhaseManager : SingletonMonoBehaviour<EnemyPhaseManager>, IEne
 
     private List<GameObject> _currentPhaseEnemyList = new List<GameObject>();
     private List<IDamageable> _currentPhaseIDamageableList = new List<IDamageable>();
+
+    private bool _isEnd = false;
+
+    private BossDeadAnimation _bossDeadAnimation = default;
     #endregion
 
     #region プロパティ
     public List<GameObject> CurrentPhaseEnemyList { get { return _currentPhaseEnemyList; } }
     public List<IDamageable> CurrentPhaseIDamageableList { get { return _currentPhaseIDamageableList; } }
+    public PhaseState GettingPhaseState { get { return _phaseState; } }
+    public bool IsEnd { get { return _isEnd; } }
     #endregion
 
     #region メソッド
@@ -44,6 +50,8 @@ public class EnemyPhaseManager : SingletonMonoBehaviour<EnemyPhaseManager>, IEne
     public void EnemyPhaseAwake()
     {
         base.Awake();
+
+        _bossDeadAnimation = GetComponent<BossDeadAnimation>();
 
         GenerateEnemyList();
         for (int i = 0; i < _enemyPhaseList[(int)PhaseState.First].Count; i++)
@@ -108,12 +116,16 @@ public class EnemyPhaseManager : SingletonMonoBehaviour<EnemyPhaseManager>, IEne
 			case PhaseState.Boss:
                 if (_enemyPhaseList[(int)PhaseState.Boss].Count <= 0)
                 {
+                    _bossDeadAnimation.Play();
                     _phaseState = PhaseState.End;
                 }
                 break;
 
 			case PhaseState.End:
-                GameManager.Instance.SettingGameState = GameManager.GameState.Result;
+                if(_bossDeadAnimation.EndDeadAnimation())
+                {
+                    _isEnd = true;
+                }
                 break;
 
 			default:
@@ -135,9 +147,9 @@ public class EnemyPhaseManager : SingletonMonoBehaviour<EnemyPhaseManager>, IEne
 
             for (int enemyCount = 1; enemyCount <= _enemysObject.transform.GetChild(phaseCount - 1).childCount; enemyCount++)
             {
-                enemyList.Add(_enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1).gameObject);
-                interfaceList.Add(_enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1).GetComponent<IDamageable>());
-
+                Transform enemy = _enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1);
+                enemyList.Add(enemy.gameObject);
+                interfaceList.Add(enemy.GetComponent<IDamageable>());
             }
 
             _enemyPhaseList.Add(enemyList);

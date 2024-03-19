@@ -16,6 +16,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		Start,
 		Pause,
 		Play,
+        EndAnimation,
 		GameOver,
 		Result
     }
@@ -78,6 +79,23 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             case GameState.Play:
                 PlayerManager.Instance.PlayerUpdate();
                 EnemyPhaseManager.Instance.EnemyPhaseUpdate();
+
+                if(PlayerManager.Instance.IsDead)
+                {
+                    _gameState = GameState.GameOver;
+                }
+
+                if(EnemyPhaseManager.Instance.GettingPhaseState == EnemyPhaseManager.PhaseState.End)
+                {
+                    _gameState = GameState.EndAnimation;
+                }
+                break;
+
+            case GameState.EndAnimation:
+                if(EnemyPhaseManager.Instance.IsEnd)
+                {
+                    _gameState = GameState.Result;
+                }
                 break;
 
             case GameState.GameOver:

@@ -5,7 +5,6 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
@@ -27,6 +26,8 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 	[SerializeField]
     private Sprite _brokenHeart = default;
 
+	private bool _isDead = false;
+
     private PlayerInput _playerInput = default;
 	private PlayerMove _playerMove = default;
 	private PlayerShot _playerShot = default;
@@ -42,6 +43,7 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 	#region プロパティ
 	public Vector3 PlayerPos { get {  return this.transform.position; } }
 	public PlayerHp GettingPlayerHp { get { return _playerHp; } }
+	public bool IsDead { get { return _isDead; } }
 	#endregion
 
 	#region メソッド
@@ -76,6 +78,20 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
     /// </summary>
     public void PlayerUpdate ()
 	{
+		if (_playerHp.IsDead)
+		{
+			if(!_playerHp.ParticleIsPlaying())
+            {
+				_isDead = true;
+            }
+
+			return;
+		}
+		else
+		{
+			_playerHp.AnimationPlayTime();
+		}
+
 		_playerShot.AddShotTime();
 
 	#if UNITY_IOS || UNITY_EDITOR
@@ -116,8 +132,6 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 			_cursorPosDistance = Vector2.zero;
 		}
 	#endif
-
-		_playerHp.AnimationPlayTime();
 	}
 
 	private void FixedUpdate()

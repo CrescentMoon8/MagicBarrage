@@ -26,6 +26,9 @@ public class PlayerHp : IDamageable
     // プレイヤーの残機減少後のSprite
     private Sprite _brokenHeart = default;
 
+    private bool _isDead = false;
+    private ParticleScript _particleScript = default;
+
     private CircleCollider2D _circleCollider2D = default;
     private SpriteRenderer _spriteRenderer = default;
     private Animator _playerAnimator = default;
@@ -40,6 +43,10 @@ public class PlayerHp : IDamageable
         _playerParticlePool = particlePool;
         _iPlayerPos = iPlayerPos;
     }
+    #endregion
+
+    #region プロパティ
+    public bool IsDead { get { return _isDead; } }
     #endregion
 
     #region メソッド
@@ -113,17 +120,15 @@ public class PlayerHp : IDamageable
     // プレイヤーの死亡処理
     private void Dead()
     {
-        ParticleScript particleScript = _playerParticlePool.SetPlayerDeadParticle(_iPlayerPos.PlayerPos);
-        if(particleScript.IsPlaying())
-        {
-            return;
-        }
-        else
-        {
-            particleScript.Play();
-            AudioManager.Instance.PlayPlayerDeadSe();
-        }
-        GameManager.Instance.SettingGameState = GameManager.GameState.GameOver;
+        _particleScript = _playerParticlePool.SetPlayerDeadParticle(_iPlayerPos.PlayerPos);
+        _particleScript.Play();
+        AudioManager.Instance.PlayPlayerDeadSe();
+        _isDead = true;
+    }
+
+    public bool ParticleIsPlaying()
+    {
+        return _particleScript.IsPlaying();
     }
     #endregion
 }
