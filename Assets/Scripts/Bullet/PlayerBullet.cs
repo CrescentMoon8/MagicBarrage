@@ -64,18 +64,19 @@ public class PlayerBullet : Bullet
 				break;
 
 			case MoveType.Tracking:
-				int angle = Calculation.TargetDirectionAngle(_distanceVector, this.transform.position);
+                if (ExistsEnemyPosList(_distanceVector))
+                {
+                    _moveType = MoveType.Line;
+                }
 
-				Quaternion targetRotation = Quaternion.Euler(Vector3.forward * angle);
-				//（現在角度、目標方向、どれぐらい曲がるか）
-				rotateAngle = Quaternion.RotateTowards(this.transform.rotation, targetRotation, 100f);
+                int angle = Calculation.TargetDirectionAngle(_distanceVector, this.transform.position);
+
+				// Quaternion targetRotation = Quaternion.Euler(Vector3.forward * angle);
+				rotateAngle = Quaternion.Euler(Vector3.forward * angle);
+				/*//（現在角度、目標方向、どれぐらい曲がるか）
+				rotateAngle = Quaternion.RotateTowards(this.transform.rotation, targetRotation, 100f);*/
 
 				movePos += transform.up / _playerBulletSpeedDevisor;
-
-				if (ExistsEnemyPosList(_distanceVector))
-				{
-					_moveType = MoveType.Line;
-				}
 				break;
 
 			case MoveType.Curve:

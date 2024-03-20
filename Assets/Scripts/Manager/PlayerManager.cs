@@ -46,7 +46,7 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 	public bool IsDead { get { return _isDead; } }
 	#endregion
 
-	#region メソッド
+	 #region メソッド
 	/// <summary>
 	/// 初期化処理
 	/// </summary>
@@ -56,6 +56,8 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 
 		// Touch型を使用するための機能を有効化
 		EnhancedTouchSupport.Enable();
+
+		_isHard = GameDataManager.Instance.PlayerDifficult;
 
 		FieldSize.Instance.SetFieldSize();
 

@@ -40,21 +40,16 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     #endregion
 
     #region メソッド
+    protected override void Awake()
+    {
+        base.Awake();
 #if UNITY_IOS
-    protected override void Awake()
-    {
-        base.Awake();
-        
         Application.targetFrameRate = 60;
-    }
 #elif UNITY_STANDALONE_WIN
-    protected override void Awake()
-    {
-        base.Awake();
-
         Application.targetFrameRate = 0;
-    }
 #endif
+    }
+
 
     /// <summary>
     /// 更新処理

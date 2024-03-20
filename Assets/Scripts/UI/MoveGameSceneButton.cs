@@ -6,11 +6,23 @@
 // ---------------------------------------------------------
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MoveGameSceneButton : MonoBehaviour
 {
-	#region メソッド
-	public void MoveGameScene()
+    #region メソッド
+    private void Awake()
+    {
+        if(gameObject.name == "EasyButton")
+        {
+            this.GetComponent<Button>().onClick.AddListener(GameDataManager.Instance.SetEasy);
+        }
+        else
+        {
+            this.GetComponent<Button>().onClick.AddListener(GameDataManager.Instance.SetHard);
+        }
+    }
+    public void MoveGameScene()
     {
 		SceneManager.LoadScene("Main");
     }
