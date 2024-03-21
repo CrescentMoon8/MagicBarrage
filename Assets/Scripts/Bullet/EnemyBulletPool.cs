@@ -14,7 +14,7 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 {
 	#region 変数
 	// 生成する弾の数
-	private const int MAX_GENERATE_ENEMY_BULLET = 250;
+	private int[] _maxGenerateEnemyBullet = { 250, 50 };
 	
 	//private const int ALL_ENEMY_BULLET = 10;
 	// 生成する弾の種類
@@ -67,7 +67,7 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 			Dictionary<EnemyBullet, SpriteRenderer> spriteRendererDic = new Dictionary<EnemyBullet, SpriteRenderer>();
 			Queue<EnemyBullet> bulletPool = new Queue<EnemyBullet>();
 
-			for (int k = 0; k < MAX_GENERATE_ENEMY_BULLET; k++)
+			for (int k = 0; k < _maxGenerateEnemyBullet[i]; k++)
             {
 				EnemyBullet bullet = Instantiate(_enemyBulletPrefabs[i], _enemyBulletParent);
 
