@@ -15,6 +15,9 @@ public class PlayerBullet : Bullet
 	[SerializeField]
 	private Vector3 _distanceVector = Vector3.zero;
 
+	// 一番近いエネミーの番号
+	private int _nearEnemyIndex = 0;
+
 	private IEnemyList _iEnemyList = default;
 	#endregion
 
@@ -40,7 +43,7 @@ public class PlayerBullet : Bullet
 				this.transform.rotation = Quaternion.identity;
 				break;
 			case MoveType.Tracking:
-				GetNearEnemyPos();
+				GetNearEnemyIndex();
 				break;
 			case MoveType.Curve:
 				break;
@@ -64,19 +67,21 @@ public class PlayerBullet : Bullet
 				break;
 
 			case MoveType.Tracking:
-                if (ExistsEnemyPosList(_distanceVector))
-                {
-                    _moveType = MoveType.Line;
-                }
+				GetNearEnemyPos(_nearEnemyIndex);
+
+				if (ExistsEnemyPosList(_distanceVector, _nearEnemyIndex))
+				{
+					_moveType = MoveType.Line;
+				}
 
                 int angle = Calculation.TargetDirectionAngle(_distanceVector, this.transform.position);
 
-				// Quaternion targetRotation = Quaternion.Euler(Vector3.forward * angle);
-				rotateAngle = Quaternion.Euler(Vector3.forward * angle);
-				/*//（現在角度、目標方向、どれぐらい曲がるか）
-				rotateAngle = Quaternion.RotateTowards(this.transform.rotation, targetRotation, 100f);*/
+                //Quaternion targetRotation = Quaternion.Euler(Vector3.forward * angle);
+                rotateAngle = Quaternion.Euler(Vector3.forward * angle);
+                //（現在角度、目標方向、どれぐらい曲がるか）
+                //rotateAngle = Quaternion.RotateTowards(this.transform.rotation, targetRotation, 0f);
 
-				movePos += transform.up / _playerBulletSpeedDevisor;
+                movePos += transform.up / _playerBulletSpeedDevisor;
 				break;
 
 			case MoveType.Curve:
@@ -94,26 +99,30 @@ public class PlayerBullet : Bullet
 	/// </summary>
 	/// <param name="targetPos">追尾対象の座標</param>
 	/// <returns></returns>
-	private bool ExistsEnemyPosList(Vector3 targetPos)
+	private bool ExistsEnemyPosList(Vector3 targetPos, int nearEnemyIndex)
 	{
-		for (int i = 0; i < _iEnemyList.CurrentPhaseEnemyList.Count; i++)
-		{
-			if(_iEnemyList.CurrentPhaseEnemyList[i].transform.position == targetPos)
-            {
-				return false;
-            }
-		}
+		//Debug.Log(targetPos);
 
-		return true;
+		if(_iEnemyList.CurrentPhaseEnemyList.Count <= nearEnemyIndex)
+        {
+			return true;
+        }
+
+		if (_iEnemyList.CurrentPhaseEnemyList[nearEnemyIndex].transform.position == targetPos)
+		{
+			return false;
+		}
+		else
+        {
+			Debug.Log("解除");
+			return true;
+		}
 	}
 
-	/// <summary>
-	/// 一番近いエネミーの座標を取得する
-	/// </summary>
-	private void GetNearEnemyPos()
-	{
+	private void GetNearEnemyIndex()
+    {
 		// 一番近いエネミーの番号
-		int nearEnemyIndex = 0;
+		_nearEnemyIndex = 0;
 		// 初期値を一番目のエネミーとの距離にすることで、初期値ゼロより処理を一回減らす
 		float nearEnemyDistance = Calculation.TargetDistance(_iEnemyList.CurrentPhaseEnemyList[0].transform.position, _iPlayerPos.PlayerPos);
 
@@ -126,12 +135,20 @@ public class PlayerBullet : Bullet
 			{
 				// 一番近いエネミーの距離の更新
 				nearEnemyDistance = enemyDistance;
-				nearEnemyIndex = i;
+				_nearEnemyIndex = i;
 			}
 		}
+	}
 
-		// 一番近いエネミーの座標を代入する
-		_distanceVector = _iEnemyList.CurrentPhaseEnemyList[nearEnemyIndex].transform.position;
+	/// <summary>
+	/// 一番近いエネミーの座標を取得する
+	/// </summary>
+	private void GetNearEnemyPos(int nearEnemyIndex)
+	{
+		if(nearEnemyIndex < _iEnemyList.CurrentPhaseEnemyList.Count)
+        {
+			_distanceVector = _iEnemyList.CurrentPhaseEnemyList[nearEnemyIndex].transform.position;
+		}
 	}
 
 	protected override void OnTriggerEnter2D(Collider2D collision)

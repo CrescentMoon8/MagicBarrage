@@ -73,6 +73,8 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 		}
 
 		FieldSize.Instance.SetFieldSize();
+		Debug.Log(FieldSize.Instance.MaxWindowVector);
+		Debug.Log(FieldSize.Instance.MinWindowVector);
 
 		PlayerCoreCollider = GetComponent<CircleCollider2D>();
 
@@ -111,7 +113,7 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 
 		_playerShot.AddShotTime();
 
-	#if UNITY_IOS || UNITY_EDITOR
+#if UNITY_IOS || UNITY_EDITOR
 		// 触れている指が一本以上あるか
 		// Touch型ではNullかどうか検証できないためここで実行（改善策を要検討）
 		if (Touch.activeTouches.Count >= 1)
@@ -126,7 +128,7 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 			_playerMove.ResetCursorPosDistance();
 			_isMove = false;
 			_isShot = false;
-        }
+		}
 
 		// PCビルド用にここで移動座標計算を行う
 	#elif UNITY_STANDALONE_WIN
@@ -140,7 +142,14 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 			_isMove = true;
 			_isShot = true;
 
-			_cursorPosDistance = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Camera.main.ScreenToWorldPoint(_startMousePos);
+            /*if (FieldSize.Instance.MaxWindowVector.x < Camera.main.ScreenToWorldPoint(Input.mousePosition).x ||
+                Camera.main.ScreenToWorldPoint(Input.mousePosition).x < FieldSize.Instance.MinWindowVector.x)
+            {
+				_startObjectPos = this.transform.position;
+				_startMousePos = Input.mousePosition;
+            }*/
+
+            _cursorPosDistance = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Camera.main.ScreenToWorldPoint(_startMousePos);
 		}
 		else
 		{
@@ -155,11 +164,11 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
     {
 		if(_isMove)
         {
-	#if UNITY_IOS || UNITY_EDITOR
+#if UNITY_IOS || UNITY_EDITOR
 			this.transform.position = _playerMove.Move();
-	#elif UNITY_STANDALONE_WIN
+#elif UNITY_STANDALONE_WIN
 			this.transform.position = _playerMove.Move(_startObjectPos, _cursorPosDistance);
-	#endif
+#endif
 		}
 
 		if (_isShot)
