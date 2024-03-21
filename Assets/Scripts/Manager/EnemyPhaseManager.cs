@@ -31,6 +31,7 @@ public class EnemyPhaseManager : SingletonMonoBehaviour<EnemyPhaseManager>, IEne
     private List<GameObject> _currentPhaseEnemyList = new List<GameObject>();
     private List<IDamageable> _currentPhaseIDamageableList = new List<IDamageable>();
 
+    [SerializeField]
     private bool _isEnd = false;
 
     private BossDeadAnimation _bossDeadAnimation = default;
@@ -59,6 +60,8 @@ public class EnemyPhaseManager : SingletonMonoBehaviour<EnemyPhaseManager>, IEne
             _enemyPhaseList[(int)PhaseState.First][i].SetActive(true);
         }
         AddCurrentPhaseList((int)PhaseState.First);
+
+        _bossDeadAnimation.DeadAnimationAwake();
     }
 
 	/// <summary>

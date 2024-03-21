@@ -96,12 +96,15 @@ public class PlayerBullet : Bullet
 	/// <returns></returns>
 	private bool ExistsEnemyPosList(Vector3 targetPos)
 	{
-		if (Calculation.TargetDistance(targetPos, _iPlayerPos.PlayerPos) <= Calculation.TargetDistance(this.transform.position, _iPlayerPos.PlayerPos))
+		for (int i = 0; i < _iEnemyList.CurrentPhaseEnemyList.Count; i++)
 		{
-			return true;
+			if(_iEnemyList.CurrentPhaseEnemyList[i].transform.position == targetPos)
+            {
+				return false;
+            }
 		}
 
-		return false;
+		return true;
 	}
 
 	/// <summary>

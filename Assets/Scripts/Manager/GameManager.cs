@@ -21,6 +21,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		Result
     }
 
+    [SerializeField]
 	private GameState _gameState = GameState.Start;
 
 	private string _gameOverSceneName = "GameOver";
@@ -87,6 +88,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                 break;
 
             case GameState.EndAnimation:
+                EnemyPhaseManager.Instance.EnemyPhaseUpdate();
+
+                PlayerManager.Instance.PlayerCoreCollider.enabled = false;
+
                 if(EnemyPhaseManager.Instance.IsEnd)
                 {
                     _gameState = GameState.Result;

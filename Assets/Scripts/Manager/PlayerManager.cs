@@ -28,6 +28,11 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 
 	private bool _isDead = false;
 
+	[SerializeField]
+	private bool _isDebug = false;
+	[Header("falseでEasy、trueでHard"), SerializeField]
+	private bool _isDebugDifficult = false;
+
     private PlayerInput _playerInput = default;
 	private PlayerMove _playerMove = default;
 	private PlayerShot _playerShot = default;
@@ -44,6 +49,7 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 	public Vector3 PlayerPos { get {  return this.transform.position; } }
 	public PlayerHp GettingPlayerHp { get { return _playerHp; } }
 	public bool IsDead { get { return _isDead; } }
+	public CircleCollider2D PlayerCoreCollider { get; set; }
 	#endregion
 
 	 #region メソッド
@@ -57,14 +63,23 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 		// Touch型を使用するための機能を有効化
 		EnhancedTouchSupport.Enable();
 
-		_isHard = GameDataManager.Instance.PlayerDifficult;
+		if(_isDebug)
+        {
+			_isHard = _isDebugDifficult;
+        }
+		else
+        {
+			_isHard = GameDataManager.Instance.PlayerDifficult;
+		}
 
 		FieldSize.Instance.SetFieldSize();
+
+		PlayerCoreCollider = GetComponent<CircleCollider2D>();
 
 		_playerInput = new PlayerInput();
 		_playerMove = new PlayerMove();
 		_playerShot = new PlayerShot();
-		_playerHp = new PlayerHp(GetComponent<CircleCollider2D>(),
+		_playerHp = new PlayerHp(PlayerCoreCollider,
 								GetComponent<SpriteRenderer>(),
 								GetComponent<Animator>(),
 								PlayerParticlePool.Instance,

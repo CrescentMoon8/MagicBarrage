@@ -17,7 +17,7 @@ public class MoveGameSceneButton : MonoBehaviour
         {
             this.GetComponent<Button>().onClick.AddListener(GameDataManager.Instance.SetEasy);
         }
-        else
+        else if(gameObject.name == "HardButton")
         {
             this.GetComponent<Button>().onClick.AddListener(GameDataManager.Instance.SetHard);
         }

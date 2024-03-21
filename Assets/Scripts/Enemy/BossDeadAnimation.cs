@@ -17,7 +17,7 @@ public class BossDeadAnimation : MonoBehaviour
 	private List<ParticleSystem> _deadParticleList = new List<ParticleSystem>();
 
 	[SerializeField]
-	private SpriteRenderer _spriteRenderer = default;
+	private SpriteRenderer _bossSpriteRenderer = default;
 	private Color _color = default;
 	private const float ANIMATION_TIME = 3.6f;
 	#endregion
@@ -30,11 +30,11 @@ public class BossDeadAnimation : MonoBehaviour
 	/// <summary>
 	/// 初期化処理
 	/// </summary>
-	private void Awake()
+	public void DeadAnimationAwake()
 	{
 		GameObject deadParticles = Instantiate(_deadParticles);
 
-		_color = _spriteRenderer.color;
+		_color = _bossSpriteRenderer.color;
 
         for (int i = 0; i < deadParticles.transform.childCount; i++)
         {
@@ -66,7 +66,7 @@ public class BossDeadAnimation : MonoBehaviour
 
 		_color.a -= 1 / ANIMATION_TIME * Time.deltaTime;
 
-		_spriteRenderer.color = _color;
+		_bossSpriteRenderer.color = _color;
 
 		return false;
     }

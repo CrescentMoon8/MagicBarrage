@@ -25,7 +25,7 @@ public class BossSlime : EnemyHp
 	private int _windmillAngleSplit = 9;
 	// 開始点を何度ずつずらすかを(360 / BULLET_AMOUNT)で決める
 	private const float BULLET_AMOUNT = 108;
-	private const float WINDMILL_BULLET_INTERVAL = 0.25f;
+	private const float WINDMILL_BULLET_INTERVAL = 0.2f;
 
 	private float _gridBulletTime = 0f;
 	private int _gridBulletCount = 0;
@@ -97,7 +97,7 @@ public class BossSlime : EnemyHp
 
         if (_isInsideCamera && _enemyBulletPut.IsShot(SHOT_INTERVAL))
         {
-			//_targetAngle = _windmillTargetAngle;
+			_targetAngle = _windmillTargetAngle;
 
             // 射撃に必要なパラメータを生成する
             ShotParameter fanShotParameter1 = new ShotParameter(this.transform.position, _targetAngle, _angleSplit, _angleWidth, _bulletInfo.RED_NOMAL_BULLET, Bullet.MoveType.Line, Bullet.SpeedType.Middle);

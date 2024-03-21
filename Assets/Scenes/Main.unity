@@ -277,6 +277,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 427c086394eb8f24ea928ca470aabb2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameState: 0
   _pausePanel: {fileID: 75123436}
   _pauseText: {fileID: 806022791}
   _retryButton: {fileID: 469079196}
@@ -559,6 +560,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _phaseState: 0
+  _isEnd: 0
 --- !u!114 &155683935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -573,7 +575,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _deadParticles: {fileID: 8133198247835361198, guid: 40791a0eb6f013d4b8f8a17bb6c6589f, type: 3}
   _deadParticleList: []
-  _spriteRenderer: {fileID: 1765811806}
+  _bossSpriteRenderer: {fileID: 1765811806}
 --- !u!1 &183459610
 GameObject:
   m_ObjectHideFlags: 0
@@ -8339,6 +8341,8 @@ MonoBehaviour:
   _isHard: 0
   _lifeUiParent: {fileID: 7823227134143577050}
   _brokenHeart: {fileID: 21300000, guid: d04c07c3c54cab044bbdb61a69e2a6cb, type: 3}
+  _isDebug: 1
+  _isDebugDifficult: 0
 --- !u!1 &2066235703
 GameObject:
   m_ObjectHideFlags: 0
