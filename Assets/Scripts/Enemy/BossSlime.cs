@@ -25,7 +25,7 @@ public class BossSlime : EnemyHp
 	private int _windmillAngleSplit = 9;
 	// 開始点を何度ずつずらすかを(360 / BULLET_AMOUNT)で決める
 	private const float BULLET_AMOUNT = 108;
-	private const float WINDMILL_BULLET_INTERVAL = 0.2f;
+	private const float WINDMILL_BULLET_INTERVAL = 0.175f;
 
 	private float _gridBulletTime = 0f;
 	private int _gridBulletCount = 0;

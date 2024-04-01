@@ -37,7 +37,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	#endregion
 
 	#region プロパティ
-	public GameState SettingGameState { set { _gameState = value; } }
+
     #endregion
 
     #region メソッド
@@ -90,7 +90,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             case GameState.EndAnimation:
                 EnemyPhaseManager.Instance.EnemyPhaseUpdate();
 
-                PlayerManager.Instance.PlayerCoreCollider.enabled = false;
+                PlayerManager.Instance.FalseCollider();
 
                 if(EnemyPhaseManager.Instance.IsEnd)
                 {

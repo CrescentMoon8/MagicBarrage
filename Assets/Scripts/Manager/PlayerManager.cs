@@ -33,6 +33,9 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 	[Header("falseでEasy、trueでHard"), SerializeField]
 	private bool _isDebugDifficult = false;
 
+	private bool _isGameEnd = false;
+	private CircleCollider2D _playerCoreCollider = default;
+
     private PlayerInput _playerInput = default;
 	private PlayerMove _playerMove = default;
 	private PlayerShot _playerShot = default;
@@ -49,7 +52,7 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 	public Vector3 PlayerPos { get {  return this.transform.position; } }
 	public PlayerHp GettingPlayerHp { get { return _playerHp; } }
 	public bool IsDead { get { return _isDead; } }
-	public CircleCollider2D PlayerCoreCollider { get; set; }
+	public CircleCollider2D PlayerCoreCollider { get { return _playerCoreCollider; } }
 	#endregion
 
 	 #region メソッド
@@ -73,15 +76,15 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 		}
 
 		FieldSize.Instance.SetFieldSize();
-		Debug.Log(FieldSize.Instance.MaxWindowVector);
-		Debug.Log(FieldSize.Instance.MinWindowVector);
+		/*Debug.Log(FieldSize.Instance.MaxWindowVector);
+		Debug.Log(FieldSize.Instance.MinWindowVector);*/
 
-		PlayerCoreCollider = GetComponent<CircleCollider2D>();
+		_playerCoreCollider = GetComponent<CircleCollider2D>();
 
 		_playerInput = new PlayerInput();
 		_playerMove = new PlayerMove();
 		_playerShot = new PlayerShot();
-		_playerHp = new PlayerHp(PlayerCoreCollider,
+		_playerHp = new PlayerHp(_playerCoreCollider,
 								GetComponent<SpriteRenderer>(),
 								GetComponent<Animator>(),
 								PlayerParticlePool.Instance,
@@ -175,6 +178,14 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
         {
 			_playerShot.Shot(this.transform.position, _isHard);
         }
+    }
+
+	/// <summary>
+	/// プレイヤーの当たり判定を消す
+	/// </summary>
+	public void FalseCollider()
+    {
+		_playerCoreCollider.enabled = false;
     }
 	#endregion
 }

@@ -39,7 +39,7 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 	#endregion
 
 	#region プロパティ
-	//public List<EnemyBullet> LendedEnemyBulletList { get { return _lendedEnemyBulletList; } }
+	
 	#endregion
 
 	#region メソッド

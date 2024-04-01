@@ -28,10 +28,10 @@ public class FieldSize : SingletonMonoBehaviour<FieldSize>
     #region プロパティ
     public Vector3 MaxFieldVector { get { return _maxFieldVector; } }
     public Vector3 MinFieldVector { get { return _minFieldVector; } }
-#if UNITY_STANDALONE_WIN
+/*#if UNITY_STANDALONE_WIN
     public Vector3 MaxWindowVector { get { return _maxWindowVector; } }
     public Vector3 MinWindowVector { get { return _minWindowVector; } }
-#endif
+#endif*/
     #endregion
 
     #region メソッド
@@ -56,7 +56,7 @@ public class FieldSize : SingletonMonoBehaviour<FieldSize>
         _footer.GetWorldCorners(footerCorners);
         _minFieldVector = footerCorners[MIN_MOVE_POS_INDEX];
 
-#if UNITY_STANDALONE_WIN
+/*#if UNITY_STANDALONE_WIN
         // 取得する座標の番号
         int MAX_WINDOW_POS_INDEX = 2;
         int MIN_WINDOW_POS_INDEX = 0;
@@ -70,7 +70,7 @@ public class FieldSize : SingletonMonoBehaviour<FieldSize>
         Vector3[] footerCorners_pc = new Vector3[4];
         _footer.GetWorldCorners(footerCorners_pc);
         _minWindowVector = footerCorners_pc[MIN_WINDOW_POS_INDEX];
-#endif
+#endif*/
     }
 	#endregion
 }

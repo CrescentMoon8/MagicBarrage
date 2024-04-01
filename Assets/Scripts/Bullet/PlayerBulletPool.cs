@@ -29,7 +29,7 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 	#endregion
 
 	#region プロパティ
-	//public List<PlayerBullet> LendedPlayerBulletList { get { return _lendedPlayerBulletList; } }
+	
 	#endregion
 
 	#region メソッド
