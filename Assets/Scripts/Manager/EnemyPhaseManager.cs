@@ -76,28 +76,16 @@ public class EnemyPhaseManager : SingletonMonoBehaviour<EnemyPhaseManager>, IEne
                 {
                     _phaseState = PhaseState.Second;
 
-                    ClearCurrentPhaseList();
-                    AddCurrentPhaseList((int)PhaseState.Second);
-
-                    for (int i = 0; i < _enemyPhaseList[(int)PhaseState.Second].Count; i++)
-                    {
-                        _enemyPhaseList[(int)PhaseState.Second][i].SetActive(true);
-                    }
+                    NextPhasePreparation((int)PhaseState.Second);
                 }
-				break;
+                break;
 
 			case PhaseState.Second:
                 if (_enemyPhaseList[(int)PhaseState.Second].Count <= 0)
                 {
                     _phaseState = PhaseState.Third;
 
-                    ClearCurrentPhaseList();
-                    AddCurrentPhaseList((int)PhaseState.Third);
-
-                    for (int i = 0; i < _enemyPhaseList[(int)PhaseState.Third].Count; i++)
-                    {
-                        _enemyPhaseList[(int)PhaseState.Third][i].SetActive(true);
-                    }
+                    NextPhasePreparation((int)PhaseState.Third);
                 }
                 break;
 
@@ -106,13 +94,7 @@ public class EnemyPhaseManager : SingletonMonoBehaviour<EnemyPhaseManager>, IEne
                 {
                     _phaseState = PhaseState.Boss;
 
-                    ClearCurrentPhaseList();
-                    AddCurrentPhaseList((int)PhaseState.Boss);
-
-                    for (int i = 0; i < _enemyPhaseList[(int)PhaseState.Boss].Count; i++)
-                    {
-                        _enemyPhaseList[(int)PhaseState.Boss][i].SetActive(true);
-                    }
+                    NextPhasePreparation((int)PhaseState.Boss);
                 }
                 break;
 
@@ -135,6 +117,21 @@ public class EnemyPhaseManager : SingletonMonoBehaviour<EnemyPhaseManager>, IEne
 				break;
 		}
 	}
+
+    /// <summary>
+    /// 現在のフェーズの敵リストの更新とオブジェクトの表示をを行う
+    /// </summary>
+    /// <param name="nextPhaseNumber">次のフェーズ番号</param>
+    private void NextPhasePreparation(int nextPhaseNumber)
+    {
+        ClearCurrentPhaseList();
+        AddCurrentPhaseList(nextPhaseNumber);
+
+        for (int i = 0; i < _enemyPhaseList[nextPhaseNumber].Count; i++)
+        {
+            _enemyPhaseList[nextPhaseNumber][i].SetActive(true);
+        }
+    }
 
     /// <summary>
     /// リストにそれぞれのエネミーを追加する
@@ -169,18 +166,29 @@ public class EnemyPhaseManager : SingletonMonoBehaviour<EnemyPhaseManager>, IEne
         }
     }
 
+    /// <summary>
+    /// 現在のフェーズの敵オブジェクトとインターフェースをリストに追加する
+    /// </summary>
+    /// <param name="phaseNumber"></param>
     private void AddCurrentPhaseList(int phaseNumber)
     {
         _currentPhaseEnemyList = _enemyPhaseList[phaseNumber];
         _currentPhaseIDamageableList = _enemyIDamageableList[phaseNumber];
     }
 
+    /// <summary>
+    /// 現在のフェーズの敵オブジェクトとインターフェースのリストを初期化する
+    /// </summary>
     private void ClearCurrentPhaseList()
     {
         _currentPhaseEnemyList.Clear();
         _currentPhaseIDamageableList.Clear();
     }
 
+    /// <summary>
+    /// 現在のフェーズの敵リストから死んだ敵を削除する
+    /// </summary>
+    /// <param name="enemy"></param>
     public void DownEnemyCount(GameObject enemy)
     {
         _currentPhaseEnemyList.Remove(enemy);
