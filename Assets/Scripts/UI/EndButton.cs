@@ -6,6 +6,9 @@
 // ---------------------------------------------------------
 using UnityEngine;
 
+/// <summary>
+/// ゲームを終了させるボタン
+/// </summary>
 public class EndButton : MonoBehaviour
 {
 

@@ -12,12 +12,19 @@ using UnityEngine;
 public class ShotParameter
 {
     #region 変数
+	// 射手の位置
     private Vector3 _shooterPos = default;
+	// 撃ちたい角度
 	private float _centerAngle = default;
+	// 角度を何分割するか
 	private int _angleSplit = default;
-	private int _angleWidth = default;
+    // 撃ちたい角度の±いくらか
+    private int _angleWidth = default;
+	// 撃つ弾の番号
 	private int _bulletNumber = default;
+	// 弾の動き方
 	private Bullet.MoveType _moveType = default;
+	// 弾の速度変化
 	private Bullet.SpeedType _speedType = default;
     #endregion
 

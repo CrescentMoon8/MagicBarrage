@@ -9,6 +9,9 @@ using TMPro;
 using System.IO;
 using System.Text;
 
+/// <summary>
+/// スコアを管理するクラス
+/// </summary>
 public class ScoreManager : SingletonMonoBehaviour<ScoreManager>
 {
 	#region 変数

@@ -7,18 +7,25 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// ボスが死んだときのアニメーションを管理するクラス
+/// </summary>
 public class BossDeadAnimation : MonoBehaviour
 {
 	#region 変数
+	// 死亡時に生成するパーティクル
 	[SerializeField]
-	private GameObject _deadParticles = default;
+	private GameObject _deadParticle = default;
 
+	// 死亡時に再生するパーティクルのリスト
 	[SerializeField]
 	private List<ParticleSystem> _deadParticleList = new List<ParticleSystem>();
 
 	[SerializeField]
 	private SpriteRenderer _bossSpriteRenderer = default;
+	// ボスの透明度を変化させるためのColor
 	private Color _color = default;
+	// ボスのアニメーションにかかる時間
 	private const float ANIMATION_TIME = 3.6f;
 	#endregion
 
@@ -28,11 +35,11 @@ public class BossDeadAnimation : MonoBehaviour
 
 	#region メソッド
 	/// <summary>
-	/// 初期化処理
+	/// ボス死亡時のアニメーションの初期化処理
 	/// </summary>
 	public void DeadAnimationAwake()
 	{
-		GameObject deadParticles = Instantiate(_deadParticles);
+		GameObject deadParticles = Instantiate(_deadParticle);
 
 		_color = _bossSpriteRenderer.color;
 
@@ -64,6 +71,7 @@ public class BossDeadAnimation : MonoBehaviour
 			return true;
         }
 
+		// 徐々に透明にする
 		_color.a -= 1 / ANIMATION_TIME * Time.deltaTime;
 
 		_bossSpriteRenderer.color = _color;
@@ -71,6 +79,7 @@ public class BossDeadAnimation : MonoBehaviour
 		return false;
     }
 
+	// アニメーションが再生中か
 	private bool IsPlaying()
     {
 		// リストの一番最後の再生が終わったら

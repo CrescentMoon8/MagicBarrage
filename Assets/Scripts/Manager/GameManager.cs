@@ -8,6 +8,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// ゲームの流れを管理するクラス
+/// </summary>
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
 	#region 変数
@@ -23,6 +26,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     [SerializeField]
 	private GameState _gameState = GameState.Start;
+
+    // スタート処理が終わっているか
+    private bool _isStarted = false;
 
 	private string _gameOverSceneName = "GameOver";
 	private string _clearSceneName = "Result";
@@ -66,6 +72,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 				PlayerBulletPool.Instance.BulletAwake();
 				EnemyBulletPool.Instance.BulletAwake();
 
+                _isStarted = true;
 				_gameState = GameState.Play;
                 break;
 
@@ -135,6 +142,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             _pausePanel.gameObject.SetActive(false);
             _pauseText.gameObject.SetActive(false);
             _retryButton.gameObject.SetActive(false);
+            if(!_isStarted)
+            {
+                _gameState = GameState.Start;
+                return;
+            }
             _gameState = GameState.Play;
         }
     }

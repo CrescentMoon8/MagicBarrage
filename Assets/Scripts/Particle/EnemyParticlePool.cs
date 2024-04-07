@@ -8,16 +8,19 @@ using UnityEngine;
 using System.Collections.Generic;
 
 /// <summary>
-/// パーティクル用のオブジェクトプールクラス
+/// 敵のパーティクル用のオブジェクトプールクラス
 /// </summary>
 public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
 {
 	#region 変数
+    // 敵の弾が当たった時のパーティクルを生成する数
 	private const int ENEMY_PARTICLE_AMOUNT = 2;
+    // 敵が死亡した時のパーティクルを生成する数
 	private const int DEAD_PARTICLE_AMOUNT = 3;
 
     private const int DEAD_PARTICLE_NUMBER = -1;
 
+    // それぞれの敵用の色を格納するリスト
     private List<Color> _particleColorList = new List<Color>();
     private Color32 _red = new Color32(207, 0, 0, 255);
     private Color32 _blue = new Color32(0, 3, 207, 255);
@@ -37,11 +40,6 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
     private ParticleScript _deadParticlePrefab = default;
     private Queue<ParticleScript> _deadParticlePool = new Queue<ParticleScript>();
     private Dictionary<ParticleScript, ParticleSystem> _deadParticleSystemDic = new Dictionary<ParticleScript, ParticleSystem>();
-
-    [SerializeField]
-    private ParticleScript _bossDeadParticlePrefab = default;
-    private ParticleScript _bossDeadParticleScript = default;
-    private ParticleSystem _bossDeadPrticleSystem = default;
     #endregion
 
     #region メソッド
@@ -55,6 +53,7 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
 		_enemyParticleParent = GameObject.FindWithTag("EnemyParticlePool").transform;
 		_deadParticleParent = GameObject.FindWithTag("DeadParticlePool").transform;
 
+        // 敵の色をリストに追加する
         _particleColorList.Add(_red);
         _particleColorList.Add(_blue);
         _particleColorList.Add(_yellow);
@@ -62,14 +61,14 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
         _particleColorList.Add(_purple);
 
         GenerateParticlePool();
-
-        _bossDeadParticleScript = Instantiate(_bossDeadParticlePrefab, _deadParticleParent);
-
-        _bossDeadPrticleSystem = _bossDeadParticleScript.GetComponent<ParticleSystem>();
     }
 
+    /// <summary>
+    /// パーティクルのオブジェクトプールを生成する
+    /// </summary>
     private void GenerateParticlePool()
     {
+        // 敵の弾が当たった時のパーティクルを生成する
         for (int i = 0; i < ENEMY_PARTICLE_AMOUNT; i++)
         {
             ParticleScript bulletParticle = Instantiate(_enemyBulletParticlePrefab, _enemyParticleParent);
@@ -81,6 +80,7 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
             _enemyBulletParticlePool.Enqueue(bulletParticle);
         }
 
+        // 死亡時のパーティクルを生成する
         for (int i = 0; i < DEAD_PARTICLE_AMOUNT; i++)
         {
             ParticleScript deadParticle = Instantiate(_deadParticlePrefab, _deadParticleParent);
@@ -94,7 +94,7 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
     }
 
     /// <summary>
-    /// エネミーのパーティクルを追加で生成する
+    /// 敵のパーティクルを追加で生成する
     /// </summary>
     private void AddEnemyParticle()
     {
@@ -108,7 +108,7 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
     }
 
     /// <summary>
-    /// プレイヤーの弾用パーティクルを貸し出す
+    /// 敵の弾用パーティクルを貸し出す
     /// </summary>
     /// <param name="startPos">パーティクルを配置する座標</param>
     /// <param name="bulletNumber">弾の種類（どの敵が撃った弾か）</param>
@@ -121,6 +121,7 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
             AddEnemyParticle();
         }
 
+        // 敵の番号を計算する
         int particleNumber = bulletNumber / 2;
 
         ParticleScript particle = _enemyBulletParticlePool.Dequeue();
@@ -133,6 +134,7 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
 
         ParticleSystem.MainModule main = _enemyParticleSystemDic[particle].main;
 
+        // パーティクルの色をそれぞれの敵の色に変える
         main.startColor = _particleColorList[particleNumber];
 
         particle.ParticleNumber = particleNumber;
@@ -140,6 +142,12 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
         return particle;
     }
 
+    /// <summary>
+    /// 敵の死亡用パーティクルを貸し出す
+    /// </summary>
+    /// <param name="startPos">パーティクルを配置する座標</param>
+    /// <param name="particleNumber">敵の種類（どの敵が死んだか）</param>
+    /// <returns></returns>
     public ParticleScript LendEnemyDeadParticle(Vector3 startPos, int particleNumber)
     {
         ParticleScript particle = _deadParticlePool.Dequeue();
@@ -157,13 +165,6 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
         particle.ParticleNumber = DEAD_PARTICLE_NUMBER;
 
         return particle;
-    }
-
-    public void LendBossDeadParticle(Vector3 startPos)
-    {
-       _bossDeadParticleScript.transform.position = startPos;
-
-        _bossDeadParticleScript.SettingParticleType = ParticleScript.ParticleType.Enemy;
     }
 
     /// <summary>

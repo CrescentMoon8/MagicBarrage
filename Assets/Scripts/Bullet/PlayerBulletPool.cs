@@ -8,28 +8,21 @@ using UnityEngine;
 using System.Collections.Generic;
 
 /// <summary>
-/// プレイヤーが撃った弾用のオブジェクトプールクラス
+/// プレイヤーの弾用のオブジェクトプールクラス
 /// </summary>
 public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 {
-	#region 変数
-	private const int MAX_GENERATE_PLAYER_BULLET = 45;
-
-	private const int PLAYER_BULLET_NUMBER = -1;
+    #region 変数
+    // 生成する弾の数
+    private const int MAX_GENERATE_PLAYER_BULLET = 45;
 
 	[SerializeField]
 	private PlayerBullet _playerBulletPrefab = default;
 
-	private Transform _playerBulletParent = default;
+    // 生成する弾の親オブジェクト
+    private Transform _playerBulletParent = default;
 
 	private Queue<PlayerBullet> _playerBulletsPool = new Queue<PlayerBullet>();
-
-	// 貸し出されているプレイヤーの弾を格納するリスト
-	//private List<PlayerBullet> _lendedPlayerBulletList = new List<PlayerBullet>();
-	#endregion
-
-	#region プロパティ
-	
 	#endregion
 
 	#region メソッド
@@ -52,7 +45,8 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 	/// </summary>
 	private void GenerateBulletPool()
 	{
-		for (int i = 0; i < MAX_GENERATE_PLAYER_BULLET; i++)
+        // 指定した数分だけ生成する
+        for (int i = 0; i < MAX_GENERATE_PLAYER_BULLET; i++)
 		{
 			PlayerBullet bullet = Instantiate(_playerBulletPrefab, _playerBulletParent);
 
@@ -77,9 +71,11 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 	/// <summary>
 	/// 弾をプレイヤーに貸し出す
 	/// </summary>
+	/// <param name="shotPos">生成位置</param>
 	/// <returns>弾のスクリプト</returns>
 	public PlayerBullet LendPlayerBullet(Vector3 shotPos)
 	{
+		// プールに弾がなければ
 		if (_playerBulletsPool.Count <= 0)
 		{
 			AddPlayerBulletPool();
@@ -89,11 +85,7 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 
 		bullet.transform.position = shotPos;
 
-		bullet.SettingBulletNumber = PLAYER_BULLET_NUMBER;
-
 		bullet.gameObject.SetActive(true);
-
-		//_lendedPlayerBulletList.Add(bullet);
 
 		return bullet;
 	}
@@ -107,8 +99,6 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 		bullet.gameObject.SetActive(false);
 
 		_playerBulletsPool.Enqueue(bullet);
-
-		//_lendedPlayerBulletList.Remove(bullet);
 	}
 	#endregion
 }

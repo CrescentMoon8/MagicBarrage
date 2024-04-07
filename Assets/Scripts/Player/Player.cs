@@ -12,6 +12,9 @@ using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 
+/// <summary>
+/// プレイヤーのすべてを担うクラス（旧）
+/// </summary>
 public class Player : MonoBehaviour, IDamageable, IPlayerPos
 {
     #region 変数

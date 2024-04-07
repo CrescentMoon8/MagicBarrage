@@ -6,6 +6,9 @@
 // ---------------------------------------------------------
 using UnityEngine;
 
+/// <summary>
+/// 弾のテンプレートを管理するクラス
+/// </summary>
 [CreateAssetMenu(menuName = "ScriptableObject/BarrageTemplate", fileName = "BarrageTemplate")]
 public class BarrageTemplate : ScriptableObject
 {

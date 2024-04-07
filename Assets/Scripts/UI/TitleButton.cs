@@ -7,6 +7,9 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// タイトルに移動させるボタン
+/// </summary>
 public class TitleButton : MonoBehaviour
 {
 	#region 変数

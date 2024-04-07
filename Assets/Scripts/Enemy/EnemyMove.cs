@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Splines;
 
 /// <summary>
-/// エネミーの移動処理を行うクラス
+/// 敵の移動処理を行うクラス
 /// </summary>
 public class EnemyMove
 {
@@ -30,9 +30,12 @@ public class EnemyMove
 
     // Splineの長さに対する現在位置の割合（始点：０　終点：１）
     private float _moveRatio = 0f;
-	private Vector3 differencePos = Vector3.zero;
+    // 敵の初期位置と移動開始点のずれ
+    private Vector3 differencePos = Vector3.zero;
+    // 読み込む移動経路の番号
     private int _splineIndex = 0;
 
+    // 移動に使うスプラインコンテナ
 	private SplineContainer _enterSplineContainer = default;
 	//private SplineContainer _exitSplineContainer = default;
 	#endregion
@@ -63,6 +66,7 @@ public class EnemyMove
         float firstSplinePosX = _enterSplineContainer.Splines[_splineIndex].EvaluatePosition(0).x;
         float firstSplinePosY = _enterSplineContainer.Splines[_splineIndex].EvaluatePosition(0).y;
 
+        // 敵の初期位置と移動開始点のずれを計算する
         differencePos = new Vector3(nowEnemyPosX - firstSplinePosX, nowEnemyPosY - firstSplinePosY, 0);
     }
 

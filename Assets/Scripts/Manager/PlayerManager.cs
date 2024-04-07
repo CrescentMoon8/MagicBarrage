@@ -8,6 +8,9 @@ using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
+/// <summary>
+/// プレイヤーを管理するクラス
+/// </summary>
 public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 {
 	#region 変数
@@ -38,7 +41,7 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 
     private PlayerInput _playerInput = default;
 	private PlayerMove _playerMove = default;
-	private PlayerShot _playerShot = default;
+	private PlayerBulletPut _playerBulletPut = default;
 	private PlayerHp _playerHp = default;
 
 #if UNITY_STANDALONE_WIN
@@ -83,7 +86,7 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 
 		_playerInput = new PlayerInput();
 		_playerMove = new PlayerMove();
-		_playerShot = new PlayerShot();
+		_playerBulletPut = new PlayerBulletPut();
 		_playerHp = new PlayerHp(_playerCoreCollider,
 								GetComponent<SpriteRenderer>(),
 								GetComponent<Animator>(),
@@ -114,7 +117,7 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 			_playerHp.AnimationPlayTime();
 		}
 
-		_playerShot.AddShotTime();
+		_playerBulletPut.AddShotTime();
 
 #if UNITY_IOS || UNITY_EDITOR
 		// 触れている指が一本以上あるか
@@ -176,7 +179,7 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>, IPlayerPos
 
 		if (_isShot)
         {
-			_playerShot.Shot(this.transform.position, _isHard);
+			_playerBulletPut.Put(this.transform.position, _isHard);
         }
     }
 

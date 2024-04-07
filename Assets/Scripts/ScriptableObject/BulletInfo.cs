@@ -6,6 +6,9 @@
 // ---------------------------------------------------------
 using UnityEngine;
 
+/// <summary>
+/// 弾の番号をまとめているクラス
+/// </summary>
 [CreateAssetMenu(menuName ="ScriptableObject/Bulletonfo", fileName = "BulletInfo")]
 public class BulletInfo : ScriptableObject
 {

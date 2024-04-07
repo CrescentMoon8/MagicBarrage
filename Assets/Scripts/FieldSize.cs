@@ -6,6 +6,9 @@
 // ---------------------------------------------------------
 using UnityEngine;
 
+/// <summary>
+/// ゲーム画面（UI部分を除く）大きさを計算するクラス
+/// </summary>
 public class FieldSize : SingletonMonoBehaviour<FieldSize>
 {
     #region 変数

@@ -8,7 +8,7 @@ using UnityEngine;
 using System.Collections.Generic;
 
 /// <summary>
-/// エネミーが撃った弾用のオブジェクトプールクラス
+/// 敵の弾用のオブジェクトプールクラス
 /// </summary>
 public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 {
@@ -16,7 +16,6 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 	// 生成する弾の数
 	private int[] _maxGenerateEnemyBullet = { 250, 50 };
 	
-	//private const int ALL_ENEMY_BULLET = 10;
 	// 生成する弾の種類
 	private const int ENEMY_BULLET_KINDS = 2;
 
@@ -32,14 +31,6 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 
 	// 貸し出した弾のSpriteを変えるためのSpriteRendererを保管するDictionaryのList
 	private List<Dictionary<EnemyBullet, SpriteRenderer>> _spriteRendererList = new List<Dictionary<EnemyBullet, SpriteRenderer>>();
-
-	// 貸し出されているエネミーの弾を格納するリスト
-	//[SerializeField]
-	//private List<EnemyBullet> _lendedEnemyBulletList = new List<EnemyBullet>();
-	#endregion
-
-	#region プロパティ
-	
 	#endregion
 
 	#region メソッド
@@ -62,11 +53,13 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 	/// </summary>
     private void GenerateBulletPool()
 	{
+		// 弾の種類分だけ生成する
         for (int i = 0; i < ENEMY_BULLET_KINDS; i++)
         {
 			Dictionary<EnemyBullet, SpriteRenderer> spriteRendererDic = new Dictionary<EnemyBullet, SpriteRenderer>();
 			Queue<EnemyBullet> bulletPool = new Queue<EnemyBullet>();
 
+			// 配列の値で指定した数分だけ生成する
 			for (int k = 0; k < _maxGenerateEnemyBullet[i]; k++)
             {
 				EnemyBullet bullet = Instantiate(_enemyBulletPrefabs[i], _enemyBulletParent);
@@ -87,7 +80,7 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
     }
 
 	/// <summary>
-	/// エネミーの弾を追加で生成する
+	/// 敵の弾を追加で生成する
 	/// </summary>
 	/// <param name="bulletKindsNumber">弾の種類</param>
 	private void AddEnemyBulletPool(int bulletKindsNumber)
@@ -105,7 +98,7 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 	}
 
 	/// <summary>
-	/// 弾をエネミーに貸し出す
+	/// 弾を敵に貸し出す
 	/// </summary>
 	/// <param name="shotPos">弾を配置する座標</param>
 	/// <param name="bulletNumber">弾の番号</param>
@@ -134,8 +127,6 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 
 		bullet.gameObject.SetActive(true);
 
-		//_lendedEnemyBulletList.Add(bullet);
-
 		return bullet;
 	}
 
@@ -148,8 +139,6 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
         bullet.gameObject.SetActive(false);
 
 		_enemyBulletsPool[bulletNumber % 2].Enqueue(bullet);
-
-		//_lendedEnemyBulletList.Remove(bullet);
 	}
 
 	#endregion

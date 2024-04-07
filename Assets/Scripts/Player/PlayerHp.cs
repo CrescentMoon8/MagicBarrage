@@ -107,6 +107,7 @@ public class PlayerHp : IDamageable
         {
             _damageAnimationTime += Time.deltaTime;
 
+            // アニメーションが終了したかどうか
             if (_damageAnimationTime >= DAMAGE_ANIMATION)
             {
                 _damageAnimationTime = 0;
@@ -126,6 +127,10 @@ public class PlayerHp : IDamageable
         _isDead = true;
     }
 
+    /// <summary>
+    /// パーティクルの再生がされているかどうか
+    /// </summary>
+    /// <returns>パーティクルの再生の有無</returns>
     public bool ParticleIsPlaying()
     {
         return _particleScript.IsPlaying();

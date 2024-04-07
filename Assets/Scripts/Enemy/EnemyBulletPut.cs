@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// EnemyShot.cs
+// EnemyBulletPut.cs
 //
 // 作成日:2024/02/06
 // 作成者:小林慎
@@ -9,14 +9,16 @@ using UnityEngine;
 /// <summary>
 /// エネミーの弾の配置処理を行うクラス
 /// </summary>
-public class EnemyShot
+public class EnemyBulletPut
 {
     #region 変数
+    // 弾を撃つ間隔を計る
     private float _shotTime = 0f;
 
+    // 弾を配置する円の半径
     private float _radius = 0f;
 
-    public EnemyShot(float radius)
+    public EnemyBulletPut(float radius)
 	{
         _radius = radius;
 	}
@@ -55,7 +57,7 @@ public class EnemyShot
         {
 			// 0の位置がUnity上の-90にあたるため、ADJUST_ANGLEを足すことでUnityに合わせる
             // そのうえで、開始位置をずらすためにminAngleを足す
-            Vector3 shotPos = Calculation.CirclePosCalculate(shotParameter.ShooterPos, (maxAngle / shotParameter.AngleSplit) * i + minAngle, _radius);
+            Vector3 shotPos = Calculation.Instance.CirclePosCalculate(shotParameter.ShooterPos, (maxAngle / shotParameter.AngleSplit) * i + minAngle, _radius);
 
             EnemyBullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotPos, shotParameter.BulletNumber);
 
@@ -80,7 +82,7 @@ public class EnemyShot
         for (int i = 0; i < shotParameter.AngleSplit; i++)
         {
             // 0の位置がUnity上の-90にあたるため、ADJUST_ANGLEを足すことでUnityに合わせる
-            Vector3 shotPos = Calculation.CirclePosCalculate(shotParameter.ShooterPos, (maxAngle / shotParameter.AngleSplit) * i + shotParameter.CenterAngle, _radius);
+            Vector3 shotPos = Calculation.Instance.CirclePosCalculate(shotParameter.ShooterPos, (maxAngle / shotParameter.AngleSplit) * i + shotParameter.CenterAngle, _radius);
 
             EnemyBullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotPos, shotParameter.BulletNumber);
 
@@ -102,7 +104,7 @@ public class EnemyShot
         for (int i = 0; i < shotParameter.AngleSplit; i++)
         {
             // 0の位置がUnity上の-90にあたるため、ADJUST_ANGLEを足すことでUnityに合わせる
-            Vector3 shotPos = Calculation.CirclePosCalculate(shotParameter.ShooterPos, (maxAngle / shotParameter.AngleSplit) * i + shotParameter.CenterAngle, _radius);
+            Vector3 shotPos = Calculation.Instance.CirclePosCalculate(shotParameter.ShooterPos, (maxAngle / shotParameter.AngleSplit) * i + shotParameter.CenterAngle, _radius);
 
             EnemyBullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotPos, shotParameter.BulletNumber);
 

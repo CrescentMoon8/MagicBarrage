@@ -6,6 +6,9 @@
 // ---------------------------------------------------------
 using UnityEngine;
 
+/// <summary>
+/// 敵の情報を管理しているクラス
+/// </summary>
 [CreateAssetMenu(menuName = "ScriptableObject/EnemyData", fileName = "EnemyData")]
 public class EnemyData : ScriptableObject
 {

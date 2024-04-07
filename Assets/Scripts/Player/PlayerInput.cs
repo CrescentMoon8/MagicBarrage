@@ -14,7 +14,9 @@ using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 /// </summary>
 public class PlayerInput
 {
+    #region 変数
     private ParticleSystem _touchParticle = default;
+    #endregion
 
     #region メソッド
     /// <summary>

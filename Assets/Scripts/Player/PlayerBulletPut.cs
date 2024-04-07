@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// PlayerShot.cs
+// PlayerBulletPut.cs
 //
 // 作成日:2024/02/14
 // 作成者:小林慎
@@ -9,10 +9,11 @@ using UnityEngine;
 /// <summary>
 /// プレイヤーの弾の配置処理を行うクラス
 /// </summary>
-public class PlayerShot
+public class PlayerBulletPut
 {
     #region 変数
     private float _shotTime = 0.1f;
+    // 撃つ間隔
     private const float SHOT_INTERVAL = 0.1f;
 
     // 弾の開始位置を調整するための変数
@@ -39,24 +40,28 @@ public class PlayerShot
     }
 
     /// <summary>
-    /// プレイヤーの
+    /// プレイヤーの弾を配置する
     /// </summary>
-    /// <param name="shotPos"></param>
-    /// <param name="isHard"></param>
-    public void Shot(Vector3 shotPos, bool isHard)
+    /// <param name="shotPos">配置する位置</param>
+    /// <param name="isHard">ゲームの難易度</param>
+    public void Put(Vector3 shotPos, bool isHard)
     {
         if (_shotTime >= SHOT_INTERVAL)
         {
+            // 縦の位置を調整する
             shotPos.y += SHOT_POS_DIFFERENCE_Y;
 
+            // 直線弾を配置する
             for (int bulletCount = 0; bulletCount < LINE_BULLET_AMOUNT; bulletCount++)
             {
                 if (bulletCount % 2 == 0)
                 {
+                    // 横の位置を調整する
                     shotPos.x += SHOT_POS_DIFFERENCE_X * bulletCount;
                 }
                 else
                 {
+                    // 横の位置を調整する
                     shotPos.x -= SHOT_POS_DIFFERENCE_X * bulletCount;
                 }
 
@@ -69,17 +74,22 @@ public class PlayerShot
                 _bulletCount++;
             }
 
+            // 追尾弾を配置する（Hard時は直線弾）
+            // 要改良部分
             for (int bulletCount = _bulletCount; bulletCount < TRACKING_BULLET_AMOUNT + _bulletCount; bulletCount++)
             {
                 if (bulletCount % 2 == 0)
                 {
+                    // 横の位置を調整する
                     shotPos.x += SHOT_POS_DIFFERENCE_X * bulletCount;
                 }
                 else
                 {
+                    // 横の位置を調整する
                     shotPos.x -= SHOT_POS_DIFFERENCE_X * bulletCount;
                 }
 
+                // 改良対象部分
                 if (isHard)
                 {
                     PlayerBullet bullet = PlayerBulletPool.Instance.LendPlayerBullet(shotPos);

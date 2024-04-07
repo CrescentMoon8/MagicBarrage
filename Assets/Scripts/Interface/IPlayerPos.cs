@@ -5,8 +5,6 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
-using System;
-using System.Collections;
 
 public interface IPlayerPos
 {

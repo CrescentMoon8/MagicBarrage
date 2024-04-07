@@ -6,6 +6,9 @@
 // ---------------------------------------------------------
 using UnityEngine;
 
+/// <summary>
+/// 弾の移動処理、回転処理、敵のダメージ処理の呼び出しを行う
+/// </summary>
 public class EnemyBullet : Bullet
 {
 	#region 変数
@@ -17,19 +20,26 @@ public class EnemyBullet : Bullet
 	private const float ACCELERATION_RATE = 0.2f;
 	//弾の減速率
 	private const float DECELERATION_RATE = 0.1f;
-	// エネミーの弾の速度を調整する（高くすれば遅く、低くすれば早くなる）
+	// 敵の弾の速度を調整する（高くすれば遅く、低くすれば早くなる）
 	[SerializeField]
 	private float _enemyBulletSpeedDevisor = 15f;
 
 	// プレイヤーが持つダメージ用インターフェース
 	private IDamageable _playerIDamageable = default;
-	#endregion
 
-	#region メソッド
-	/// <summary>
-	/// 初期化処理
-	/// </summary>
-	private void Awake()
+    // どの敵からどの弾が撃たれたかの判別用番号
+    private int _bulletNumber = 0;
+    #endregion
+
+    #region プロパティ
+    public int SettingBulletNumber { set { _bulletNumber = value; } }
+    #endregion
+
+    #region メソッド
+    /// <summary>
+    /// 初期化処理
+    /// </summary>
+    private void Awake()
 	{
 		base.GetIPlayerPos();
 
@@ -80,16 +90,20 @@ public class EnemyBullet : Bullet
 		{
 			case MoveType.Line:
 				SpeedChange();
-				movePos += transform.up / _enemyBulletSpeedDevisor;
+
+                // 移動量の計算
+                movePos += transform.up / _enemyBulletSpeedDevisor;
 				break;
 
 			case MoveType.Tracking:
 				//SpeedChange();
-				float direction = Calculation.TargetDirectionAngle(_iPlayerPos.PlayerPos, this.transform.position);
+				// 弾からプレイヤーへの角度を計算
+				float direction = Calculation.Instance.TargetDirectionAngle(_iPlayerPos.PlayerPos, this.transform.position);
 				Quaternion targetRotation = Quaternion.Euler(Vector3.forward * direction);
 				//（現在角度、目標方向、どれぐらい曲がるか）
 				rotateAngle = Quaternion.RotateTowards(this.transform.rotation, targetRotation, 0.5f);
 
+				// 移動量の計算
 				movePos += transform.up / _enemyBulletSpeedDevisor;
 				break;
 
@@ -99,9 +113,13 @@ public class EnemyBullet : Bullet
 				break;
 		}
 
+		// 移動と回転を同時に行う
 		this.transform.SetPositionAndRotation(movePos, rotateAngle);
 	}
 
+	/// <summary>
+	/// 弾のスピードを変化させる
+	/// </summary>
 	private void SpeedChange()
 	{
 		switch (_speedType)
@@ -146,22 +164,24 @@ public class EnemyBullet : Bullet
 			EnemyBulletPool.Instance.ReturnBullet(this, _bulletNumber);
 
 			// 各状態を初期化する
-			_moveType = MoveType.Line;
-			_speedType = SpeedType.Middle;
+			base._moveType = MoveType.Line;
+			base._speedType = SpeedType.Middle;
 			_enemyBulletSpeedDevisor = MIDDLE_SPEED;
 		}
 
 		if (collision.CompareTag("Player"))
 		{
 			_playerIDamageable.Damage();
+
+			// 弾が壊れた時のパーティクルを取り出して再生する
 			ParticleScript enemyParticle = EnemyParticlePool.Instance.LendEnemyParicle(this.transform.position, _bulletNumber);
 			enemyParticle.Play();
+
 			EnemyBulletPool.Instance.ReturnBullet(this, _bulletNumber);
 
 			// 各状態を初期化する
 			base._moveType = MoveType.Line;
 			base._speedType = SpeedType.Middle;
-
 			this.transform.rotation = Quaternion.identity;
 			_enemyBulletSpeedDevisor = MIDDLE_SPEED;
 		}

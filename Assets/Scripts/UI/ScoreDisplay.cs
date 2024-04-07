@@ -9,6 +9,9 @@ using TMPro;
 using System.IO;
 using System.Text;
 
+/// <summary>
+/// スコアを表示させるためのクラス
+/// </summary>
 public class ScoreDisplay : MonoBehaviour
 {
 	#region 変数

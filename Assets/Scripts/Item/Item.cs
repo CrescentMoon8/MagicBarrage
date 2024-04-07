@@ -12,6 +12,7 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
 	#region 変数
+	// アイテムを取得した時の点数
 	private int scorePoint = 1000;
 
 	// アイテムの落下速度（大きければ遅く、小さければ早くなる）

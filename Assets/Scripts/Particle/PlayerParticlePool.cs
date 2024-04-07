@@ -7,14 +7,19 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// プレイヤーのパーティクル用のオブジェクトプールクラス
+/// </summary>
 public class PlayerParticlePool : SingletonMonoBehaviour<PlayerParticlePool>
 {
     #region 変数
+    // プレイヤーの弾が当たった時のパーティクルを生成する数
     private const int PLAYER_PARTICLE_AMOUNT = 15;
 
+    // プレイヤーの弾が当たった時のパーティクルの番号
     private const int PLAYER_BULLET_PARTICLE_NUMBER = -1;
 
-    // プレイヤーカラー
+    // プレイヤーの色
     private Color32 _pink = new Color32(255, 125, 218, 255);
 
     private Transform _playerParticleParent = default;
@@ -48,8 +53,12 @@ public class PlayerParticlePool : SingletonMonoBehaviour<PlayerParticlePool>
         _deadParticleSystem = _deadParticleScriptl.GetComponent<ParticleSystem>();
     }
 
+    /// <summary>
+    /// パーティクルのオブジェクトプールを生成する
+    /// </summary>
     private void GenerateParticlePool()
     {
+        // プレイヤーの弾が当たった時のパーティクルを生成する
         for (int i = 0; i < PLAYER_PARTICLE_AMOUNT; i++)
         {
             _playerBulletParticlePool.Enqueue(Instantiate(_playerBulletParticlePrefab, _playerParticleParent));
@@ -90,6 +99,11 @@ public class PlayerParticlePool : SingletonMonoBehaviour<PlayerParticlePool>
         return particle;
     }
 
+    /// <summary>
+    /// プレイヤーが死亡した時のパーティクルを配置する
+    /// </summary>
+    /// <param name="startPos">パーティクルを配置する位置</param>
+    /// <returns>パーティクルのスクリプト</returns>
     public ParticleScript SetPlayerDeadParticle(Vector3 startPos)
     {
         _deadParticleScriptl.transform.position = startPos;

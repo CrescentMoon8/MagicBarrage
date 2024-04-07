@@ -8,6 +8,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
+/// <summary>
+/// フェーズの管理を行うクラス
+/// </summary>
 public class EnemyPhaseManager : SingletonMonoBehaviour<EnemyPhaseManager>, IEnemyList
 {
 	#region 変数
@@ -23,14 +26,20 @@ public class EnemyPhaseManager : SingletonMonoBehaviour<EnemyPhaseManager>, IEne
 	[SerializeField]
 	private PhaseState _phaseState = PhaseState.First;
 
+    // フェーズごとの敵オブジェクトをまとめているオブジェクト
     private GameObject _enemysObject = default;
 
+    // それぞれのフェーズに出てくる敵のリスト
     private List<List<GameObject>> _enemyPhaseList = new List<List<GameObject>>();
+    // それぞれのフェーズに出てくる敵のダメージ用インターフェースのリスト
     private List<List<IDamageable>> _enemyIDamageableList = new List<List<IDamageable>>();
 
+    // 現在のフェーズに出てくる敵のリスト
     private List<GameObject> _currentPhaseEnemyList = new List<GameObject>();
+    // 現在のフェーズに出てくる敵のダメージ用インターフェースのリスト
     private List<IDamageable> _currentPhaseIDamageableList = new List<IDamageable>();
 
+    // すべてのフェーズが終了したか
     [SerializeField]
     private bool _isEnd = false;
 
@@ -46,7 +55,7 @@ public class EnemyPhaseManager : SingletonMonoBehaviour<EnemyPhaseManager>, IEne
 
     #region メソッド
     /// <summary>
-    /// 初期化処理
+    /// フェーズの初期化処理
     /// </summary>
     public void EnemyPhaseAwake()
     {
@@ -140,11 +149,13 @@ public class EnemyPhaseManager : SingletonMonoBehaviour<EnemyPhaseManager>, IEne
     {
         _enemysObject = GameObject.FindWithTag("Enemys");
 
+        // フェーズのオブジェクトの数分処理する
         for (int phaseCount = 1; phaseCount <= _enemysObject.transform.childCount; phaseCount++)
         {
             List<GameObject> enemyList = new List<GameObject>();
             List<IDamageable> interfaceList = new List<IDamageable>();
 
+            // フェーズのオブジェクトの子になっている敵の数分処理する
             for (int enemyCount = 1; enemyCount <= _enemysObject.transform.GetChild(phaseCount - 1).childCount; enemyCount++)
             {
                 Transform enemy = _enemysObject.transform.GetChild(phaseCount - 1).GetChild(enemyCount - 1);

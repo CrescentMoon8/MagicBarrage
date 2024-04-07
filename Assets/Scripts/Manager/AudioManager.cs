@@ -18,6 +18,7 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
 	// プレイヤーが死亡した時のSE
 	[SerializeField]
 	private AudioClip _playerDeadSe = default;
+	// プレイヤーが弾を撃った時のSE
 	[SerializeField]
 	private AudioClip _playerShotSe = default;
 

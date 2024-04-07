@@ -7,7 +7,7 @@
 using UnityEngine;
 
 /// <summary>
-/// 弾の移動処理、回転処理、プレイヤー・エネミーのダメージ処理の呼び出しを行う
+/// 弾の移動処理、回転処理、プレイヤー・敵のダメージ処理の呼び出しを行う
 /// </summary>
 public abstract class Bullet : MonoBehaviour
 {
@@ -46,23 +46,24 @@ public abstract class Bullet : MonoBehaviour
     [SerializeField]
     protected SpeedType _speedType = SpeedType.Middle;
 
+    // プレイヤーの位置参照用インターフェース
     protected IPlayerPos _iPlayerPos = default;
-
-    // どの敵からどの弾が撃たれたかの判別用番号
-    protected int _bulletNumber = 0;
     #endregion
 
     #region プロパティ
     public MoveType SettingMoveType {  set { _moveType = value; } }
     public SpeedType SettingSpeedType { set { _speedType = value; } }
-    public int SettingBulletNumber {  set { _bulletNumber = value; } }
     #endregion
 
     #region メソッド
+    /// <summary>
+    /// プレイヤーの位置参照用インターフェースを取得する
+    /// </summary>
     protected void GetIPlayerPos()
     {
         _iPlayerPos = GameObject.FindWithTag("Player").GetComponent<PlayerManager>();
     }
+
     /// <summary>
     /// 弾の初期化処理
     /// </summary>

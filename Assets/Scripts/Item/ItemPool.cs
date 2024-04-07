@@ -39,6 +39,7 @@ public class ItemPool : MonoBehaviour
 	/// </summary>
 	private void GenerateItemPool()
     {
+		// 指定した数分まで生成する
         for (int i = 0; i < MAX_GENERATE_ITEM_AMOUNT; i++)
         {
 			Item item = Instantiate(_itemPrefab, _itemParent).GetComponent<Item>();

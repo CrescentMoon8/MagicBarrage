@@ -8,13 +8,14 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// エネミーのHPを管理するクラス
+/// 敵のHPを管理するクラス
 /// RigidBody2DとCircleCollider2Dの実装を必須とする
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D), typeof(CircleCollider2D))]
 public class EnemyHp : MonoBehaviour, IDamageable
 {
 	#region 変数
+	// 敵の番号
 	protected int _enemyNumber = 0;
 	private const int BOSS_NUMBER = 5;
 
@@ -71,7 +72,7 @@ public class EnemyHp : MonoBehaviour, IDamageable
     /// <summary>
     /// 敵の上にHPバーを追従させる
     /// </summary>
-    /// <param name="enemyPos">追従対象のエネミーの座標</param>
+    /// <param name="enemyPos">追従対象の敵の座標</param>
     protected void FollowHpBar(Vector3 enemyPos)
 	{
         Vector3 hpBarPos = enemyPos;
@@ -80,7 +81,7 @@ public class EnemyHp : MonoBehaviour, IDamageable
     }
 
 	/// <summary>
-	/// エネミーのダメージ処理を行う
+	/// 敵のダメージ処理を行う
 	/// </summary>
 	public void Damage()
 	{
@@ -113,7 +114,7 @@ public class EnemyHp : MonoBehaviour, IDamageable
 	}
 
 	/// <summary>
-	/// エネミーの死亡処理を行う
+	/// 敵の死亡処理を行う
 	/// </summary>
 	private void EnemyDead()
 	{

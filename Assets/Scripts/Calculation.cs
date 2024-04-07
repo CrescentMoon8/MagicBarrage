@@ -1,17 +1,21 @@
 // ---------------------------------------------------------
-// Calculatinon.cs
+// Calculation.cs
 //
 // 作成日:2024/02/18
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
 
-public static class Calculation
+/// <summary>
+/// 計算を行う処理をまとめたクラス
+/// </summary>
+public class Calculation : SingletonMonoBehaviour<Calculation>
 {
     #region 定数
     // 角度をUnity基準に合わせるための定数
     private const int ADJUST_ANGLE = 90;
     #endregion
+
     #region メソッド
     /// <summary>
     /// 自身と対象の距離を計算する
@@ -19,7 +23,7 @@ public static class Calculation
     /// <param name="targetPos"></param>
     /// <param name="myPos"></param>
     /// <returns></returns>
-    public static float TargetDistance(Vector3 targetPos, Vector3 myPos)
+    public float TargetDistance(Vector3 targetPos, Vector3 myPos)
     {
         Vector3 distanceVector = targetPos - myPos;
         return Mathf.Pow(distanceVector.x, 2) + Mathf.Pow(distanceVector.y, 2);
@@ -31,7 +35,7 @@ public static class Calculation
     /// <param name="targetPos">対象の座標</param>
     /// <param name="shooterPos">射手の座標</param>
     /// <returns>対象への角度</returns>
-    public static int TargetDirectionAngle(Vector3 targetPos, Vector3 shooterPos)
+    public int TargetDirectionAngle(Vector3 targetPos, Vector3 shooterPos)
     {
         Vector3 distanceVector = targetPos - shooterPos;
 
@@ -56,7 +60,7 @@ public static class Calculation
     /// <param name="radius">配置したい円の半径</param>
     /// <param name="angle">中心角</param>
     /// <returns>円周上の座標</returns>
-    public static Vector3 CirclePosCalculate(Vector3 shooterPos, float angle, float radius)
+    public Vector3 CirclePosCalculate(Vector3 shooterPos, float angle, float radius)
     {
         Vector3 circlePos = shooterPos;
 

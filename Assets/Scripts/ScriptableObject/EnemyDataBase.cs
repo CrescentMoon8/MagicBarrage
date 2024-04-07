@@ -7,6 +7,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// 敵の情報をまとめているクラス
+/// </summary>
 [CreateAssetMenu(menuName = "ScriptableObject/EnemyDataBase", fileName = "EnemyDataBase")]
 public class EnemyDataBase : ScriptableObject
 {
@@ -18,5 +21,4 @@ public class EnemyDataBase : ScriptableObject
 	public readonly int GREEN_SLIME = 3;
 	public readonly int PURPLE_SLIME = 4;
     public readonly int BOSS_SLIME = 5;
-
 }

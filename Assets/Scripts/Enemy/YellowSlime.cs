@@ -15,19 +15,29 @@ public class YellowSlime : EnemyHp
     // 角度を何分割するか
     private int _angleSplit = 6;
 
+    // 弾を撃つ間隔
     private const float BULLET_INTERVAL = 0.15f;
+    // 弾を撃つ間隔を計る
     private float _bulletTime = 0f;
+    // 撃つ弾の数
     private const float BULLET_AMOUNT = 36;
+    // 撃った弾の数
     private int _bulletCount = 0;
 
+    // 最大角度
+    private const int MAX_ANGLE = 360;
+    // 下方向
+    private const int DIRECTION_DOWN = 180;
+
+    // 全体の弾を撃つ間隔
     private const float SHOT_INTERVAL = 0f;
 
-    private EnemyShot _enemyBulletPut = default;
+    private EnemyBulletPut _enemyBulletPut = default;
     private EnemyMove _enemyMove = default;
     private BulletInfo _bulletInfo = default;
     private EnemyDataBase _enemyDataBase = default;
-    [SerializeField]
-    private BarrageTemplate _barrageTemplate = default;
+    /*[SerializeField]
+    private BarrageTemplate _barrageTemplate = default;*/
     #endregion
 
     #region メソッド
@@ -36,29 +46,36 @@ public class YellowSlime : EnemyHp
     /// </summary>
     private void OnEnable()
     {
-        _enemyBulletPut = new EnemyShot(this.transform.localScale.x / 2);
+        // 移動と攻撃のためのスクリプトを生成する
+        _enemyBulletPut = new EnemyBulletPut(this.transform.localScale.x / 2);
         _enemyMove = new EnemyMove();
 
+        // 弾の情報を敵のデータベースをロードする
         _bulletInfo = Addressables.LoadAssetAsync<BulletInfo>("BulletInfo").WaitForCompletion();
         _enemyDataBase = Addressables.LoadAssetAsync<EnemyDataBase>("EnemyDataBase").WaitForCompletion();
 
+        // 敵のデータベースから必要な情報を取得する
         EnemyData enemyData = _enemyDataBase._enemyDataList[_enemyDataBase.YELLOW_SLIME];
         base._enemyNumber = _enemyDataBase.YELLOW_SLIME;
 
+        // 不要になった敵のデータベースをアンロードする
+        Addressables.Release(_enemyDataBase);
+
+        // HPの設定を行う
         base._hpValue = enemyData._maxHp;
         base._hpSlider.maxValue = base._hpValue;
         base._hpSlider.value = base._hpValue;
 
+        // 倒されたときに獲得できるスコアの設定
         base._killPoint = EnemyHp.NOMAL_KILL_POINT;
 
+        // 敵の移動経路の設定
         _enemyMove.SetSplineContainer(enemyData._splineIndex);
         _enemyMove.DifferencePosInitialize(this.transform.position);
-
-        Addressables.Release(_enemyDataBase);
     }
 
     /// <summary>
-	/// 非アクティブになったときにBulletInfoをアンロードする
+	/// 非アクティブになったときに弾の情報をアンロードする
 	/// </summary>
     private void OnDisable()
     {
@@ -81,6 +98,7 @@ public class YellowSlime : EnemyHp
 
         base.FollowHpBar(this.transform.position);
 
+        // 画面内にいて、弾を撃つ間隔が過ぎていれば
         if (_isInsideCamera && _enemyBulletPut.IsShot(SHOT_INTERVAL))
         {
             /* 
@@ -93,7 +111,7 @@ public class YellowSlime : EnemyHp
 
             if (_bulletTime >= BULLET_INTERVAL && _bulletCount < BULLET_AMOUNT)
             {
-                // 射撃に必要なパラメータを生成する
+                // 発射に必要なパラメータを生成する
                 ShotParameter lineShotParameter = new ShotParameter(this.transform.position, _targetAngle, _bulletInfo.YERROW_NOMAL_BULLET, Bullet.MoveType.Line, Bullet.SpeedType.Middle);
                 _enemyBulletPut.LineShot(lineShotParameter);
                 //base._puttingEnemyBullet.FanShot(this.transform.position, _centerAngle, _angleSplit, _angleWidth, 4, Bullet.MoveType.Line);
@@ -102,11 +120,11 @@ public class YellowSlime : EnemyHp
                 _bulletCount++;
                 _bulletTime = 0;
                 // +=で反時計回り、-=で時計回り
-                _targetAngle -= 360 / BULLET_AMOUNT;
+                _targetAngle -= MAX_ANGLE / BULLET_AMOUNT;
             }
             else
             {
-                _targetAngle = 180;
+                _targetAngle = DIRECTION_DOWN;
                 _bulletCount = 0;
                 _enemyBulletPut.ResetShotTime();
             }

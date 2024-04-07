@@ -8,6 +8,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+/// <summary>
+/// ゲームシーンに移動するボタン
+/// </summary>
 public class MoveGameSceneButton : MonoBehaviour
 {
     #region メソッド

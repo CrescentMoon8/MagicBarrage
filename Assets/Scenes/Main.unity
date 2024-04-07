@@ -573,7 +573,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e9b8878758769d45abbbd8a2642b0ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _deadParticles: {fileID: 8133198247835361198, guid: 40791a0eb6f013d4b8f8a17bb6c6589f, type: 3}
+  _deadParticle: {fileID: 8133198247835361198, guid: 40791a0eb6f013d4b8f8a17bb6c6589f, type: 3}
   _deadParticleList: []
   _bossSpriteRenderer: {fileID: 1765811806}
 --- !u!1 &183459610
@@ -807,7 +807,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemyBulletParticlePrefab: {fileID: 4392557197883352667, guid: b4f9d7cbd70cc3743ad1649025af5c0a, type: 3}
   _deadParticlePrefab: {fileID: 4353740234168242686, guid: 07e11f86ae29e6645a7b956000506624, type: 3}
-  _bossDeadParticlePrefab: {fileID: 4353740234168242686, guid: 07e11f86ae29e6645a7b956000506624, type: 3}
 --- !u!114 &230712460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6387,6 +6386,50 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &1645823364
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1645823365}
+  - component: {fileID: 1645823366}
+  m_Layer: 0
+  m_Name: Calculation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1645823365
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1645823364}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1681727624}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1645823366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1645823364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1fe4c35ac9fae94cace7c5a01dd7726, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1649068371
 GameObject:
   m_ObjectHideFlags: 0
@@ -6536,6 +6579,7 @@ Transform:
   - {fileID: 155683933}
   - {fileID: 1094604516}
   - {fileID: 1888840365}
+  - {fileID: 1645823365}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1701650709
@@ -8341,8 +8385,8 @@ MonoBehaviour:
   _isHard: 0
   _lifeUiParent: {fileID: 7823227134143577050}
   _brokenHeart: {fileID: 21300000, guid: d04c07c3c54cab044bbdb61a69e2a6cb, type: 3}
-  _isDebug: 0
-  _isDebugDifficult: 0
+  _isDebug: 1
+  _isDebugDifficult: 1
 --- !u!1 &2066235703
 GameObject:
   m_ObjectHideFlags: 0

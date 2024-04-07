@@ -5,19 +5,23 @@
 // 作成者:小林慎
 // ---------------------------------------------------------
 using UnityEngine;
-using System;
-using System.Collections;
 
+/// <summary>
+/// ゲームの難易度を管理するクラス
+/// </summary>
 public class GameDataManager : SingletonMonoBehaviour<GameDataManager>
 {
 	#region 変数
 	// Easyならfalse、Hardならtrue
 	[SerializeField]
-	private bool _playerDifficult = false; 
-	#endregion
+	private bool _playerDifficult = false;
+    #endregion
 
-	#region プロパティ
-	public bool PlayerDifficult {  get { return _playerDifficult; } }
+    #region プロパティ
+    /// <summary>
+    /// Easyならfalse、Hardならtrue
+    /// </summary>
+    public bool PlayerDifficult {  get { return _playerDifficult; } }
 	#endregion
 
 	#region メソッド
