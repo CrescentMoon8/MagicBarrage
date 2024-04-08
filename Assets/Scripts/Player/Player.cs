@@ -146,7 +146,7 @@ public class Player : MonoBehaviour, IDamageable, IPlayerPos
 
             for (int bulletCount = 1; bulletCount <= LINE_BULLET_AMOUNT; bulletCount++)
             {
-                PlayerBullet bullet = PlayerBulletPool.Instance.LendPlayerBullet(shotPos);
+                PlayerBullet bullet = PlayerBulletPool.Instance.LendBullet(shotPos);
 
                 bullet.SettingMoveType = Bullet.MoveType.Line;
 
@@ -166,7 +166,7 @@ public class Player : MonoBehaviour, IDamageable, IPlayerPos
 
                 if(isHard)
                 {
-                    PlayerBullet bullet = PlayerBulletPool.Instance.LendPlayerBullet(shotPos);
+                    PlayerBullet bullet = PlayerBulletPool.Instance.LendBullet(shotPos);
 
                     bullet.SettingMoveType = Bullet.MoveType.Line;
 
@@ -174,7 +174,7 @@ public class Player : MonoBehaviour, IDamageable, IPlayerPos
                 }
                 else
                 {
-                    PlayerBullet bullet = PlayerBulletPool.Instance.LendPlayerBullet(shotPos);
+                    PlayerBullet bullet = PlayerBulletPool.Instance.LendBullet(shotPos);
 
                     bullet.SettingMoveType = Bullet.MoveType.Tracking;
 

@@ -14,20 +14,20 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 {
 	#region 変数
 	// 生成する弾の数
-	private int[] _maxGenerateEnemyBullet = { 250, 50 };
+	private int[] _maxGenerateBullet = { 250, 50 };
 	
 	// 生成する弾の種類
-	private const int ENEMY_BULLET_KINDS = 2;
+	private const int BULLET_KINDS = 2;
 
 	[SerializeField]
-	private List<EnemyBullet> _enemyBulletPrefabs = default;
+	private List<EnemyBullet> _bulletPrefabs = default;
 	[SerializeField]
-	private List<Sprite> _enemyBulletSprite = default;
+	private List<Sprite> _bulletSprite = default;
 
 	// 生成する弾の親オブジェクト
-	private Transform _enemyBulletParent = default;
+	private Transform _bulletParent = default;
 
-	private List<Queue<EnemyBullet>> _enemyBulletsPool = new List<Queue<EnemyBullet>>();
+	private List<Queue<EnemyBullet>> _bulletsPool = new List<Queue<EnemyBullet>>();
 
 	// 貸し出した弾のSpriteを変えるためのSpriteRendererを保管するDictionaryのList
 	private List<Dictionary<EnemyBullet, SpriteRenderer>> _spriteRendererList = new List<Dictionary<EnemyBullet, SpriteRenderer>>();
@@ -41,9 +41,9 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 	{
 		base.Awake();
 
-		_enemyBulletsPool.Clear();
+		_bulletsPool.Clear();
 
-        _enemyBulletParent = GameObject.FindWithTag("EnemyBulletPool").transform;
+        _bulletParent = GameObject.FindWithTag("EnemyBulletPool").transform;
 
 		GenerateBulletPool();
 	}
@@ -54,15 +54,15 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
     private void GenerateBulletPool()
 	{
 		// 弾の種類分だけ生成する
-        for (int i = 0; i < ENEMY_BULLET_KINDS; i++)
+        for (int i = 0; i < BULLET_KINDS; i++)
         {
 			Dictionary<EnemyBullet, SpriteRenderer> spriteRendererDic = new Dictionary<EnemyBullet, SpriteRenderer>();
 			Queue<EnemyBullet> bulletPool = new Queue<EnemyBullet>();
 
 			// 配列の値で指定した数分だけ生成する
-			for (int k = 0; k < _maxGenerateEnemyBullet[i]; k++)
+			for (int k = 0; k < _maxGenerateBullet[i]; k++)
             {
-				EnemyBullet bullet = Instantiate(_enemyBulletPrefabs[i], _enemyBulletParent);
+				EnemyBullet bullet = Instantiate(_bulletPrefabs[i], _bulletParent);
 
 				SpriteRenderer spriteRenderer = bullet.GetComponent<SpriteRenderer>();
 
@@ -75,7 +75,7 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
             }
 
 			_spriteRendererList.Add(spriteRendererDic);
-			_enemyBulletsPool.Add(bulletPool);
+			_bulletsPool.Add(bulletPool);
 		}
     }
 
@@ -83,9 +83,9 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 	/// 敵の弾を追加で生成する
 	/// </summary>
 	/// <param name="bulletKindsNumber">弾の種類</param>
-	private void AddEnemyBulletPool(int bulletKindsNumber)
+	private void AddBulletPool(int bulletKindsNumber)
     {
-		EnemyBullet bullet = Instantiate(_enemyBulletPrefabs[bulletKindsNumber], _enemyBulletParent);
+		EnemyBullet bullet = Instantiate(_bulletPrefabs[bulletKindsNumber], _bulletParent);
 
 		SpriteRenderer spriteRenderer = bullet.GetComponent<SpriteRenderer>();
 
@@ -94,7 +94,7 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 
 		bullet.gameObject.SetActive(false);
 
-		_enemyBulletsPool[bulletKindsNumber].Enqueue(bullet);
+		_bulletsPool[bulletKindsNumber].Enqueue(bullet);
 	}
 
 	/// <summary>
@@ -103,22 +103,22 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 	/// <param name="shotPos">弾を配置する座標</param>
 	/// <param name="bulletNumber">弾の番号</param>
 	/// <returns>弾のスクリプト</returns>
-	public EnemyBullet LendEnemyBullet(Vector3 shotPos, int bulletNumber)
+	public EnemyBullet LendBullet(Vector3 shotPos, int bulletNumber)
 	{
 		// 弾の種類を判別する（0 or 1）
 		int bulletKindsNumber = bulletNumber % 2;
 
 		// プールの中身がなかったら
-		if (_enemyBulletsPool[bulletKindsNumber].Count <= 0)
+		if (_bulletsPool[bulletKindsNumber].Count <= 0)
 		{
-			AddEnemyBulletPool(bulletKindsNumber);
+			AddBulletPool(bulletKindsNumber);
 		}
 
-		EnemyBullet bullet = _enemyBulletsPool[bulletKindsNumber].Dequeue();
+		EnemyBullet bullet = _bulletsPool[bulletKindsNumber].Dequeue();
 
 		// 取り出した弾のスクリプトを使って、それに対応するSpriteRendererを取り出しす
 		// 取り出した弾のSpriteを弾の番号に対応するSpriteに変更する
-		_spriteRendererList[bulletKindsNumber][bullet].sprite = _enemyBulletSprite[bulletNumber];
+		_spriteRendererList[bulletKindsNumber][bullet].sprite = _bulletSprite[bulletNumber];
 
 		bullet.transform.position = shotPos;
 
@@ -138,7 +138,7 @@ public class EnemyBulletPool : SingletonMonoBehaviour<EnemyBulletPool>
 	{
         bullet.gameObject.SetActive(false);
 
-		_enemyBulletsPool[bulletNumber % 2].Enqueue(bullet);
+		_bulletsPool[bulletNumber % 2].Enqueue(bullet);
 	}
 
 	#endregion

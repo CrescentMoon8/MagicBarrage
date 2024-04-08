@@ -65,7 +65,7 @@ public class PlayerBulletPut
                     shotPos.x -= SHOT_POS_DIFFERENCE_X * bulletCount;
                 }
 
-                PlayerBullet bullet = PlayerBulletPool.Instance.LendPlayerBullet(shotPos);
+                PlayerBullet bullet = PlayerBulletPool.Instance.LendBullet(shotPos);
 
                 bullet.SettingMoveType = Bullet.MoveType.Line;
 
@@ -92,7 +92,7 @@ public class PlayerBulletPut
                 // 改良対象部分
                 if (isHard)
                 {
-                    PlayerBullet bullet = PlayerBulletPool.Instance.LendPlayerBullet(shotPos);
+                    PlayerBullet bullet = PlayerBulletPool.Instance.LendBullet(shotPos);
 
 
                     bullet.SettingMoveType = Bullet.MoveType.Line;
@@ -101,7 +101,7 @@ public class PlayerBulletPut
                 }
                 else
                 {
-                    PlayerBullet bullet = PlayerBulletPool.Instance.LendPlayerBullet(shotPos);
+                    PlayerBullet bullet = PlayerBulletPool.Instance.LendBullet(shotPos);
 
                     bullet.SettingMoveType = Bullet.MoveType.Tracking;
 

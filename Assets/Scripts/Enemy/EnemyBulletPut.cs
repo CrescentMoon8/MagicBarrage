@@ -30,7 +30,7 @@ public class EnemyBulletPut
 	/// </summary>
     public void LineShot(ShotParameter shotParameter)
     {
-        EnemyBullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotParameter.ShooterPos, shotParameter.BulletNumber);
+        EnemyBullet bullet = EnemyBulletPool.Instance.LendBullet(shotParameter.ShooterPos, shotParameter.BulletNumber);
 
         bullet.SettingMoveType = shotParameter.MoveType;
 
@@ -59,7 +59,7 @@ public class EnemyBulletPut
             // そのうえで、開始位置をずらすためにminAngleを足す
             Vector3 shotPos = Calculation.Instance.CirclePosCalculate(shotParameter.ShooterPos, (maxAngle / shotParameter.AngleSplit) * i + minAngle, _radius);
 
-            EnemyBullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotPos, shotParameter.BulletNumber);
+            EnemyBullet bullet = EnemyBulletPool.Instance.LendBullet(shotPos, shotParameter.BulletNumber);
 
             bullet.SettingMoveType = shotParameter.MoveType;
 
@@ -84,7 +84,7 @@ public class EnemyBulletPut
             // 0の位置がUnity上の-90にあたるため、ADJUST_ANGLEを足すことでUnityに合わせる
             Vector3 shotPos = Calculation.Instance.CirclePosCalculate(shotParameter.ShooterPos, (maxAngle / shotParameter.AngleSplit) * i + shotParameter.CenterAngle, _radius);
 
-            EnemyBullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotPos, shotParameter.BulletNumber);
+            EnemyBullet bullet = EnemyBulletPool.Instance.LendBullet(shotPos, shotParameter.BulletNumber);
 
             bullet.SettingMoveType = shotParameter.MoveType;
 
@@ -106,7 +106,7 @@ public class EnemyBulletPut
             // 0の位置がUnity上の-90にあたるため、ADJUST_ANGLEを足すことでUnityに合わせる
             Vector3 shotPos = Calculation.Instance.CirclePosCalculate(shotParameter.ShooterPos, (maxAngle / shotParameter.AngleSplit) * i + shotParameter.CenterAngle, _radius);
 
-            EnemyBullet bullet = EnemyBulletPool.Instance.LendEnemyBullet(shotPos, shotParameter.BulletNumber);
+            EnemyBullet bullet = EnemyBulletPool.Instance.LendBullet(shotPos, shotParameter.BulletNumber);
 
             bullet.SettingMoveType = shotParameter.MoveType;
 

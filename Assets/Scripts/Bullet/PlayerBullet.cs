@@ -13,7 +13,7 @@ public class PlayerBullet : Bullet
 {
     #region 変数
     // プレイヤーの弾の速度を調整する（高くすれば遅く、低くすれば早くなる）
-    private float _playerBulletSpeedDevisor = 3f;
+    private float _speedDevisor = 3f;
 
 	// 敵とプレイヤーのベクトル差分
 	[SerializeField]
@@ -69,7 +69,7 @@ public class PlayerBullet : Bullet
 		{
 			case MoveType.Line:
                 // 移動量の計算
-                movePos += transform.up / _playerBulletSpeedDevisor;
+                movePos += transform.up / _speedDevisor;
 				break;
 
 			case MoveType.Tracking:
@@ -86,7 +86,7 @@ public class PlayerBullet : Bullet
                 rotateAngle = Quaternion.Euler(Vector3.forward * angle);
 
                 // 移動量の計算
-                movePos += transform.up / _playerBulletSpeedDevisor;
+                movePos += transform.up / _speedDevisor;
 				break;
 
 			case MoveType.Curve:

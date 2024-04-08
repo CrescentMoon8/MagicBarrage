@@ -14,20 +14,20 @@ public class PlayerParticlePool : SingletonMonoBehaviour<PlayerParticlePool>
 {
     #region 変数
     // プレイヤーの弾が当たった時のパーティクルを生成する数
-    private const int PLAYER_PARTICLE_AMOUNT = 15;
+    private const int BULLET_PARTICLE_AMOUNT = 15;
 
     // プレイヤーの弾が当たった時のパーティクルの番号
-    private const int PLAYER_BULLET_PARTICLE_NUMBER = -1;
+    private const int BULLET_PARTICLE_NUMBER = -1;
 
     // プレイヤーの色
     private Color32 _pink = new Color32(255, 125, 218, 255);
 
-    private Transform _playerParticleParent = default;
+    private Transform _bulletParticleParent = default;
     private Transform _deadParticleParent = default;
 
     [SerializeField]
-    private ParticleScript _playerBulletParticlePrefab = default;
-    private Queue<ParticleScript> _playerBulletParticlePool = new Queue<ParticleScript>();
+    private ParticleScript _bulletParticlePrefab = default;
+    private Queue<ParticleScript> _bulletParticlePool = new Queue<ParticleScript>();
 
     [SerializeField]
     private ParticleScript _deadParticlePrefab = default;
@@ -43,7 +43,7 @@ public class PlayerParticlePool : SingletonMonoBehaviour<PlayerParticlePool>
     {
         base.Awake();
 
-        _playerParticleParent = GameObject.FindWithTag("PlayerParticlePool").transform;
+        _bulletParticleParent = GameObject.FindWithTag("PlayerParticlePool").transform;
         _deadParticleParent = GameObject.FindWithTag("DeadParticlePool").transform;
 
         GenerateParticlePool();
@@ -59,9 +59,9 @@ public class PlayerParticlePool : SingletonMonoBehaviour<PlayerParticlePool>
     private void GenerateParticlePool()
     {
         // プレイヤーの弾が当たった時のパーティクルを生成する
-        for (int i = 0; i < PLAYER_PARTICLE_AMOUNT; i++)
+        for (int i = 0; i < BULLET_PARTICLE_AMOUNT; i++)
         {
-            _playerBulletParticlePool.Enqueue(Instantiate(_playerBulletParticlePrefab, _playerParticleParent));
+            _bulletParticlePool.Enqueue(Instantiate(_bulletParticlePrefab, _bulletParticleParent));
         }
     }
 
@@ -70,7 +70,7 @@ public class PlayerParticlePool : SingletonMonoBehaviour<PlayerParticlePool>
     /// </summary>
     private void AddPlayerParticle()
     {
-        _playerBulletParticlePool.Enqueue(Instantiate(_playerBulletParticlePrefab, _playerParticleParent));
+        _bulletParticlePool.Enqueue(Instantiate(_bulletParticlePrefab, _bulletParticleParent));
     }
 
     /// <summary>
@@ -81,12 +81,12 @@ public class PlayerParticlePool : SingletonMonoBehaviour<PlayerParticlePool>
     public ParticleScript LendPlayerParticle(Vector3 startPos)
     {
         // パーティクルが足りなければ追加する
-        if (_playerBulletParticlePool.Count <= 0)
+        if (_bulletParticlePool.Count <= 0)
         {
             AddPlayerParticle();
         }
 
-        ParticleScript particle = _playerBulletParticlePool.Dequeue();
+        ParticleScript particle = _bulletParticlePool.Dequeue();
 
         particle.transform.position = startPos;
 
@@ -94,7 +94,7 @@ public class PlayerParticlePool : SingletonMonoBehaviour<PlayerParticlePool>
 
         particle.SettingParticleType = ParticleScript.ParticleType.Player;
 
-        particle.ParticleNumber = PLAYER_BULLET_PARTICLE_NUMBER;
+        particle.ParticleNumber = BULLET_PARTICLE_NUMBER;
 
         return particle;
     }
@@ -121,9 +121,9 @@ public class PlayerParticlePool : SingletonMonoBehaviour<PlayerParticlePool>
     /// </summary>
     /// <param name="particleScript">返却するパーティクル</param>
     /// <param name="particleNumber">パーティクル判別用番号</param>
-    public void ReturnPool(ParticleScript particleScript, int particleNumber = PLAYER_BULLET_PARTICLE_NUMBER)
+    public void ReturnPool(ParticleScript particleScript, int particleNumber = BULLET_PARTICLE_NUMBER)
     {
-        _playerBulletParticlePool.Enqueue(particleScript);
+        _bulletParticlePool.Enqueue(particleScript);
 
         particleScript.SettingParticleType = ParticleScript.ParticleType.None;
     }

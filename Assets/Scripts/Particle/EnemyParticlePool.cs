@@ -14,7 +14,7 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
 {
 	#region 変数
     // 敵の弾が当たった時のパーティクルを生成する数
-	private const int ENEMY_PARTICLE_AMOUNT = 2;
+	private const int BULLET_PARTICLE_AMOUNT = 2;
     // 敵が死亡した時のパーティクルを生成する数
 	private const int DEAD_PARTICLE_AMOUNT = 3;
 
@@ -28,13 +28,13 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
     private Color32 _green = new Color32(43, 207, 0, 255);
     private Color32 _purple = new Color32(166, 0, 207, 255);
 
-    private Transform _enemyParticleParent = default;
+    private Transform _bulletParticleParent = default;
     private Transform _deadParticleParent = default;
 
     [SerializeField]
-	private ParticleScript _enemyBulletParticlePrefab = default;
-    private Queue<ParticleScript> _enemyBulletParticlePool = new Queue<ParticleScript>();
-    private Dictionary<ParticleScript, ParticleSystem> _enemyParticleSystemDic = new Dictionary<ParticleScript, ParticleSystem>();
+	private ParticleScript _bulletParticlePrefab = default;
+    private Queue<ParticleScript> _bulletParticlePool = new Queue<ParticleScript>();
+    private Dictionary<ParticleScript, ParticleSystem> _bulletParticleSystemDic = new Dictionary<ParticleScript, ParticleSystem>();
 
     [SerializeField]
     private ParticleScript _deadParticlePrefab = default;
@@ -50,7 +50,7 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
     {
         base.Awake();
 
-		_enemyParticleParent = GameObject.FindWithTag("EnemyParticlePool").transform;
+		_bulletParticleParent = GameObject.FindWithTag("EnemyParticlePool").transform;
 		_deadParticleParent = GameObject.FindWithTag("DeadParticlePool").transform;
 
         // 敵の色をリストに追加する
@@ -69,15 +69,15 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
     private void GenerateParticlePool()
     {
         // 敵の弾が当たった時のパーティクルを生成する
-        for (int i = 0; i < ENEMY_PARTICLE_AMOUNT; i++)
+        for (int i = 0; i < BULLET_PARTICLE_AMOUNT; i++)
         {
-            ParticleScript bulletParticle = Instantiate(_enemyBulletParticlePrefab, _enemyParticleParent);
+            ParticleScript bulletParticle = Instantiate(_bulletParticlePrefab, _bulletParticleParent);
 
             ParticleSystem particleSystem = bulletParticle.GetComponent<ParticleSystem>();
 
-            _enemyParticleSystemDic.Add(bulletParticle, particleSystem);
+            _bulletParticleSystemDic.Add(bulletParticle, particleSystem);
 
-            _enemyBulletParticlePool.Enqueue(bulletParticle);
+            _bulletParticlePool.Enqueue(bulletParticle);
         }
 
         // 死亡時のパーティクルを生成する
@@ -98,13 +98,13 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
     /// </summary>
     private void AddEnemyParticle()
     {
-        ParticleScript bulletParticle = Instantiate(_enemyBulletParticlePrefab, _enemyParticleParent);
+        ParticleScript bulletParticle = Instantiate(_bulletParticlePrefab, _bulletParticleParent);
 
         ParticleSystem particleSystem = bulletParticle.GetComponent<ParticleSystem>();
 
-        _enemyParticleSystemDic.Add(bulletParticle, particleSystem);
+        _bulletParticleSystemDic.Add(bulletParticle, particleSystem);
 
-        _enemyBulletParticlePool.Enqueue(bulletParticle);
+        _bulletParticlePool.Enqueue(bulletParticle);
     }
 
     /// <summary>
@@ -116,7 +116,7 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
     public ParticleScript LendEnemyParicle(Vector3 startPos, int bulletNumber)
     {
         // パーティクルが足りなければ追加する
-        if (_enemyBulletParticlePool.Count <= 0)
+        if (_bulletParticlePool.Count <= 0)
         {
             AddEnemyParticle();
         }
@@ -124,7 +124,7 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
         // 敵の番号を計算する
         int particleNumber = bulletNumber / 2;
 
-        ParticleScript particle = _enemyBulletParticlePool.Dequeue();
+        ParticleScript particle = _bulletParticlePool.Dequeue();
 
         particle.transform.position = startPos;
 
@@ -132,7 +132,7 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
 
         particle.SettingParticleType = ParticleScript.ParticleType.Enemy;
 
-        ParticleSystem.MainModule main = _enemyParticleSystemDic[particle].main;
+        ParticleSystem.MainModule main = _bulletParticleSystemDic[particle].main;
 
         // パーティクルの色をそれぞれの敵の色に変える
         main.startColor = _particleColorList[particleNumber];
@@ -181,7 +181,7 @@ public class EnemyParticlePool : SingletonMonoBehaviour<EnemyParticlePool>
                 break;
 
             default:
-                _enemyBulletParticlePool.Enqueue(particleScript);
+                _bulletParticlePool.Enqueue(particleScript);
                 break;
         }
 

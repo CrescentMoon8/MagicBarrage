@@ -22,7 +22,7 @@ public class EnemyBullet : Bullet
 	private const float DECELERATION_RATE = 0.1f;
 	// 敵の弾の速度を調整する（高くすれば遅く、低くすれば早くなる）
 	[SerializeField]
-	private float _enemyBulletSpeedDevisor = 15f;
+	private float _speedDevisor = 15f;
 
 	// プレイヤーが持つダメージ用インターフェース
 	private IDamageable _playerIDamageable = default;
@@ -54,23 +54,23 @@ public class EnemyBullet : Bullet
 		switch (base._speedType)
 		{
 			case SpeedType.Low:
-				_enemyBulletSpeedDevisor = LOW_SPEED;
+				_speedDevisor = LOW_SPEED;
 				break;
 
 			case SpeedType.Middle:
-				_enemyBulletSpeedDevisor = MIDDLE_SPEED;
+				_speedDevisor = MIDDLE_SPEED;
 				break;
 
 			case SpeedType.High:
-				_enemyBulletSpeedDevisor = HIGH_SPEED;
+				_speedDevisor = HIGH_SPEED;
 				break;
 
 			case SpeedType.Acceleration:
-				_enemyBulletSpeedDevisor = LOW_SPEED;
+				_speedDevisor = LOW_SPEED;
 				break;
 
 			case SpeedType.Deceleration:
-				_enemyBulletSpeedDevisor = HIGH_SPEED;
+				_speedDevisor = HIGH_SPEED;
 				break;
 
 			default:
@@ -92,7 +92,7 @@ public class EnemyBullet : Bullet
 				SpeedChange();
 
                 // 移動量の計算
-                movePos += transform.up / _enemyBulletSpeedDevisor;
+                movePos += transform.up / _speedDevisor;
 				break;
 
 			case MoveType.Tracking:
@@ -104,7 +104,7 @@ public class EnemyBullet : Bullet
 				rotateAngle = Quaternion.RotateTowards(this.transform.rotation, targetRotation, 0.5f);
 
 				// 移動量の計算
-				movePos += transform.up / _enemyBulletSpeedDevisor;
+				movePos += transform.up / _speedDevisor;
 				break;
 
 			case MoveType.Curve:
@@ -125,30 +125,30 @@ public class EnemyBullet : Bullet
 		switch (_speedType)
 		{
 			case SpeedType.Low:
-				_enemyBulletSpeedDevisor = LOW_SPEED;
+				_speedDevisor = LOW_SPEED;
 				break;
 
 			case SpeedType.Middle:
-				_enemyBulletSpeedDevisor = MIDDLE_SPEED;
+				_speedDevisor = MIDDLE_SPEED;
 				break;
 
 			case SpeedType.High:
-				_enemyBulletSpeedDevisor = HIGH_SPEED;
+				_speedDevisor = HIGH_SPEED;
 				break;
 
 			case SpeedType.Acceleration:
 				// 速度上限になるまで加速する
-				if (_enemyBulletSpeedDevisor >= HIGH_SPEED)
+				if (_speedDevisor >= HIGH_SPEED)
 				{
-					_enemyBulletSpeedDevisor -= ACCELERATION_RATE;
+					_speedDevisor -= ACCELERATION_RATE;
 				}
 				break;
 
 			case SpeedType.Deceleration:
 				// 速度下限になるまで減速する
-				if (_enemyBulletSpeedDevisor <= LOW_SPEED)
+				if (_speedDevisor <= LOW_SPEED)
 				{
-					_enemyBulletSpeedDevisor += DECELERATION_RATE;
+					_speedDevisor += DECELERATION_RATE;
 				}
 				break;
 
@@ -166,7 +166,7 @@ public class EnemyBullet : Bullet
 			// 各状態を初期化する
 			base._moveType = MoveType.Line;
 			base._speedType = SpeedType.Middle;
-			_enemyBulletSpeedDevisor = MIDDLE_SPEED;
+			_speedDevisor = MIDDLE_SPEED;
 		}
 
 		if (collision.CompareTag("Player"))
@@ -183,7 +183,7 @@ public class EnemyBullet : Bullet
 			base._moveType = MoveType.Line;
 			base._speedType = SpeedType.Middle;
 			this.transform.rotation = Quaternion.identity;
-			_enemyBulletSpeedDevisor = MIDDLE_SPEED;
+			_speedDevisor = MIDDLE_SPEED;
 		}
 	}
 	#endregion

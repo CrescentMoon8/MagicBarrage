@@ -14,15 +14,15 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 {
     #region 変数
     // 生成する弾の数
-    private const int MAX_GENERATE_PLAYER_BULLET = 45;
+    private const int MAX_GENERATE_BULLET = 45;
 
 	[SerializeField]
-	private PlayerBullet _playerBulletPrefab = default;
+	private PlayerBullet _bulletPrefab = default;
 
     // 生成する弾の親オブジェクト
-    private Transform _playerBulletParent = default;
+    private Transform _bulletParent = default;
 
-	private Queue<PlayerBullet> _playerBulletsPool = new Queue<PlayerBullet>();
+	private Queue<PlayerBullet> _bulletsPool = new Queue<PlayerBullet>();
 	#endregion
 
 	#region メソッド
@@ -33,9 +33,9 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 	{
 		base.Awake();
 
-		_playerBulletsPool.Clear();
+		_bulletsPool.Clear();
 
-		_playerBulletParent = GameObject.FindWithTag("PlayerBulletPool").transform;
+		_bulletParent = GameObject.FindWithTag("PlayerBulletPool").transform;
 
 		GenerateBulletPool();
 	}
@@ -46,26 +46,26 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 	private void GenerateBulletPool()
 	{
         // 指定した数分だけ生成する
-        for (int i = 0; i < MAX_GENERATE_PLAYER_BULLET; i++)
+        for (int i = 0; i < MAX_GENERATE_BULLET; i++)
 		{
-			PlayerBullet bullet = Instantiate(_playerBulletPrefab, _playerBulletParent);
+			PlayerBullet bullet = Instantiate(_bulletPrefab, _bulletParent);
 
 			bullet.gameObject.SetActive(false);
 
-			_playerBulletsPool.Enqueue(bullet);
+			_bulletsPool.Enqueue(bullet);
 		}
 	}
 
 	/// <summary>
 	/// プレイヤーの弾を追加で生成する
 	/// </summary>
-	private void AddPlayerBulletPool()
+	private void AddBulletPool()
 	{
-		PlayerBullet bullet = Instantiate(_playerBulletPrefab, _playerBulletParent);
+		PlayerBullet bullet = Instantiate(_bulletPrefab, _bulletParent);
 
 		bullet.gameObject.SetActive(false);
 
-		_playerBulletsPool.Enqueue(bullet);
+		_bulletsPool.Enqueue(bullet);
 	}
 
 	/// <summary>
@@ -73,15 +73,15 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 	/// </summary>
 	/// <param name="shotPos">生成位置</param>
 	/// <returns>弾のスクリプト</returns>
-	public PlayerBullet LendPlayerBullet(Vector3 shotPos)
+	public PlayerBullet LendBullet(Vector3 shotPos)
 	{
 		// プールに弾がなければ
-		if (_playerBulletsPool.Count <= 0)
+		if (_bulletsPool.Count <= 0)
 		{
-			AddPlayerBulletPool();
+			AddBulletPool();
 		}
 
-		PlayerBullet bullet = _playerBulletsPool.Dequeue();
+		PlayerBullet bullet = _bulletsPool.Dequeue();
 
 		bullet.transform.position = shotPos;
 
@@ -98,7 +98,7 @@ public class PlayerBulletPool : SingletonMonoBehaviour<PlayerBulletPool>
 	{
 		bullet.gameObject.SetActive(false);
 
-		_playerBulletsPool.Enqueue(bullet);
+		_bulletsPool.Enqueue(bullet);
 	}
 	#endregion
 }
